@@ -20,4 +20,8 @@ public class Groups {
     @JoinColumn(name = "subject_id")
     private Subjects subjects;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "lang_id")
+    private Language language;
+
 }

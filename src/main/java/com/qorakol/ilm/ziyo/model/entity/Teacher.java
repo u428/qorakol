@@ -3,6 +3,7 @@ package com.qorakol.ilm.ziyo.model.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "teacher")
@@ -46,6 +47,13 @@ public class Teacher {
     @OneToOne()
     @JoinColumn(name = "photo_id")
     private Images images;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "auth_id")
+    private AuthEntity authEntity;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Language> languages;
 
 
 

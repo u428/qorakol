@@ -30,4 +30,10 @@ public class Student {
     @Enumerated(EnumType.STRING)
     @JoinColumn(name = "status")
     private StudentStatus studentStatus;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "auth_id")
+    private AuthEntity authEntity;
+
+
 }
