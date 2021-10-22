@@ -16,7 +16,7 @@ public class Priviliges {
 
     private String name;
 
-    @ManyToOne()
-    @JoinColumn(name = "role_id")
-    private Roles roles;
+//    @ManyToOne()
+//    @JoinColumn(name = "role_id")
+//    private Roles roles;
 }

@@ -1,17 +1,71 @@
 package com.qorakol.ilm.ziyo.controller;
 
+import com.qorakol.ilm.ziyo.constant.reg.Registers;
+import com.qorakol.ilm.ziyo.model.dto.RegTeacherDto;
+import com.qorakol.ilm.ziyo.security.CurrentUser;
+import com.qorakol.ilm.ziyo.service.interfaces.AuthService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.net.MalformedURLException;
 
 @RestController
 @RequestMapping(value = "/auth")
 public class AuthController {
+
+    private final AuthService authService;
+
+    @Autowired
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
 
     @GetMapping(value ="/get")
     public ResponseEntity<?> get(){
         return ResponseEntity.ok("Hello");
     }
 
+    @GetMapping(value = "/check_login")
+    public ResponseEntity<?> checkLogin(@RequestParam(name = "login") String login){
+        return ResponseEntity.ok(authService.checkLogin(login));
+    }
+
+    @PostMapping(value = Registers.RegisterTeacher)
+    public ResponseEntity<?> regTeacher(@Valid @RequestBody RegTeacherDto regTeacherDto){
+
+        try {
+            authService.createTeacher(regTeacherDto);
+            return ResponseEntity.ok("SUCCESS");
+        }catch (Exception e){
+            return ResponseEntity.ok(e.getMessage());
+        }
+    }
+
+    @PostMapping(value = Registers.RegisterTeacher)
+    public ResponseEntity<?> regStudent(@Valid @RequestBody RegTeacherDto regTeacherDto){
+        try {
+            authService.createStudent(regTeacherDto);
+            return ResponseEntity.ok("SUCCESS");
+        }catch (Exception e){
+            return ResponseEntity.ok(e.getMessage());
+        }
+    }
+
+    @GetMapping(value = "/images")
+    public ResponseEntity images(@RequestParam Long id) throws MalformedURLException {
+        return authService.images(id);
+    }
+
+    @GetMapping(value = "get_role")
+    public ResponseEntity getRole(@CurrentUser String login){
+        return ResponseEntity.ok(authService.getRoles(login));
+    }
+
+    @GetMapping(value = "get_current_user")
+    public ResponseEntity getCurrentUser(@CurrentUser String login){
+        return ResponseEntity.ok(authService.getCurrentUser(login));
+    }
 }

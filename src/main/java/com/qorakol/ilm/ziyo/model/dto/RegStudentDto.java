@@ -4,30 +4,23 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 
-import javax.persistence.Column;
+import javax.validation.constraints.NotEmpty;
+
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Data
-public class RegTeacherDto {
+public class RegStudentDto {
 
+    @NotEmpty
     public String firstName;
-
+    @NotEmpty
     public String lastName;
-
-    public String middleName;
-
+    @NotEmpty
     public String telNomer;
-
-    public String tgLink;
-
-    public String inLink;
-
-    public String fLink;
-
-    public String gmail;
-
+    @NotEmpty
+    public String qTelNomer;
+    @NotEmpty
     public String description;
 
-    public String login;
+    public Long studentId;
 
-    public String password;
 }

@@ -2,12 +2,14 @@ package com.qorakol.ilm.ziyo.model.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 
 import javax.persistence.*;
 
 
 @Entity
 @Table(name = "sys_images")
+@Data
 public class Images {
 
     @Id
@@ -18,6 +20,7 @@ public class Images {
     private String name;
 
     @Column
+    @JsonIgnore
     private String extention;
 
     @Column

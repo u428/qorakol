@@ -1,5 +1,6 @@
 package com.qorakol.ilm.ziyo.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "teacher")
+@Data
 public class Teacher {
 
     @Id
@@ -40,14 +42,11 @@ public class Teacher {
 
     private String description;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "role_id", nullable = false)
-    private Roles roles;
-
     @OneToOne()
     @JoinColumn(name = "photo_id")
     private Images images;
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "auth_id")
     private AuthEntity authEntity;

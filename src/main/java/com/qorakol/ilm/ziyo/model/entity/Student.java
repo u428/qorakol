@@ -1,5 +1,6 @@
 package com.qorakol.ilm.ziyo.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qorakol.ilm.ziyo.constant.StudentStatus;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     @Column(name = "id")
     private Long id;
 
@@ -27,11 +29,8 @@ public class Student {
 
     private String description;
 
-    @Enumerated(EnumType.STRING)
-    @JoinColumn(name = "status")
-    private StudentStatus studentStatus;
-
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
     @JoinColumn(name = "auth_id")
     private AuthEntity authEntity;
 

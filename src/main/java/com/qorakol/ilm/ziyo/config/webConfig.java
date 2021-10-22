@@ -44,7 +44,7 @@ public class webConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
                 .permitAll()
-                .antMatchers(HttpMethod.GET, "/auth/checkTelNomer")
+                .antMatchers(HttpMethod.GET, "/auth/check_login")
                 .permitAll()
                 .antMatchers(HttpMethod.GET, "/auth/image")
                 .permitAll()

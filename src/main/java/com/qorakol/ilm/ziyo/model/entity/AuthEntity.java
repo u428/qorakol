@@ -21,4 +21,11 @@ public class AuthEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "role_id", nullable = false)
+    private Long rolesId;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "role_id", nullable = false, insertable = false, updatable = false)
+    private Roles roles;
+
 }
