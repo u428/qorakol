@@ -1,6 +1,7 @@
 package com.qorakol.ilm.ziyo.controller;
 
 import com.qorakol.ilm.ziyo.constant.reg.Registers;
+import com.qorakol.ilm.ziyo.model.dto.RegStudentDto;
 import com.qorakol.ilm.ziyo.model.dto.RegTeacherDto;
 import com.qorakol.ilm.ziyo.security.CurrentUser;
 import com.qorakol.ilm.ziyo.service.interfaces.AuthService;
@@ -22,12 +23,6 @@ public class AuthController {
         this.authService = authService;
     }
 
-
-    @GetMapping(value ="/get")
-    public ResponseEntity<?> get(){
-        return ResponseEntity.ok("Hello");
-    }
-
     @GetMapping(value = "/check_login")
     public ResponseEntity<?> checkLogin(@RequestParam(name = "login") String login){
         return ResponseEntity.ok(authService.checkLogin(login));
@@ -35,7 +30,6 @@ public class AuthController {
 
     @PostMapping(value = Registers.RegisterTeacher)
     public ResponseEntity<?> regTeacher(@Valid @RequestBody RegTeacherDto regTeacherDto){
-
         try {
             authService.createTeacher(regTeacherDto);
             return ResponseEntity.ok("SUCCESS");
@@ -44,10 +38,10 @@ public class AuthController {
         }
     }
 
-    @PostMapping(value = Registers.RegisterTeacher)
-    public ResponseEntity<?> regStudent(@Valid @RequestBody RegTeacherDto regTeacherDto){
+    @PostMapping(value = Registers.RegisterStudent)
+    public ResponseEntity<?> regStudent(@Valid @RequestBody RegStudentDto regStudentDto){
         try {
-            authService.createStudent(regTeacherDto);
+            authService.createStudent(regStudentDto);
             return ResponseEntity.ok("SUCCESS");
         }catch (Exception e){
             return ResponseEntity.ok(e.getMessage());

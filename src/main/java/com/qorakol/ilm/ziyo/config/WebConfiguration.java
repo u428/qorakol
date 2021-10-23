@@ -4,6 +4,7 @@ import com.qorakol.ilm.ziyo.constant.SecurityConstants;
 import com.qorakol.ilm.ziyo.security.AuthenticationFilter;
 import com.qorakol.ilm.ziyo.security.AuthorizationFilter;
 import com.qorakol.ilm.ziyo.service.interfaces.AuthService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -13,18 +14,21 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class webConfig extends WebSecurityConfigurerAdapter {
+public class WebConfiguration extends WebSecurityConfigurerAdapter {
 
     private final AuthService authService;
-    //    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
-    public webConfig(AuthService authService) {
+    @Autowired
+    public WebConfiguration(AuthService authService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.authService = authService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
 
@@ -69,7 +73,7 @@ public class webConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
+        auth.userDetailsService(authService).passwordEncoder(bCryptPasswordEncoder);
     }
 
     public AuthenticationFilter getAuthenticationFilter() throws Exception{

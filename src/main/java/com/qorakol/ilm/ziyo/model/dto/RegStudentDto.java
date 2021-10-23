@@ -23,4 +23,5 @@ public class RegStudentDto {
 
     public Long studentId;
 
+
 }

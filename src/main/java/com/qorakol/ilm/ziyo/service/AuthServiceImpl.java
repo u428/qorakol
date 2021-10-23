@@ -1,6 +1,7 @@
 package com.qorakol.ilm.ziyo.service;
 
 import com.qorakol.ilm.ziyo.constant.RoleContants;
+import com.qorakol.ilm.ziyo.model.dto.RegStudentDto;
 import com.qorakol.ilm.ziyo.model.dto.RegTeacherDto;
 import com.qorakol.ilm.ziyo.model.entity.*;
 import com.qorakol.ilm.ziyo.repository.*;
@@ -59,7 +60,11 @@ public class AuthServiceImpl implements AuthService {
         teacherRepository.save(teacher);
     }
     @Override
-    public void createStudent(RegTeacherDto regTeacherDto) {
+    public void createStudent(RegStudentDto regStudentDto) {
+        Student student =  new Student();
+        BeanUtils.copyProperties(regStudentDto, student);
+
+
 
     }
 
@@ -110,6 +115,10 @@ public class AuthServiceImpl implements AuthService {
 //                new SimpleGrantedAuthority(priviliges.getName())).collect(Collectors.toSet());
         authorities.add(new SimpleGrantedAuthority("ROLE_"+authEntity.getRoles().getName()));
         return authorities;
+    }
+
+    public void addRole(Roles roles){
+        roleRepository.save(roles);
     }
 
 
