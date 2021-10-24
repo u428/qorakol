@@ -21,7 +21,4 @@ public class RegStudentDto {
     @NotEmpty
     public String description;
 
-    public Long studentId;
-
-
 }

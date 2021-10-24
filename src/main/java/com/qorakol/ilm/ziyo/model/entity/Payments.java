@@ -7,16 +7,13 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "sys_language")
+@Table(name = "student_payment")
 @Data
-public class Language {
+public class Payments {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    @JsonIgnore
     private Long id;
 
-    private String name;
 
 }

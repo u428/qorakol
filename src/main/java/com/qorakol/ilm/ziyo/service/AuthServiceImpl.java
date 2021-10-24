@@ -1,8 +1,10 @@
 package com.qorakol.ilm.ziyo.service;
 
 import com.qorakol.ilm.ziyo.constant.RoleContants;
+import com.qorakol.ilm.ziyo.constant.StudentStatus;
 import com.qorakol.ilm.ziyo.model.dto.RegStudentDto;
 import com.qorakol.ilm.ziyo.model.dto.RegTeacherDto;
+import com.qorakol.ilm.ziyo.model.dto.SToGroup;
 import com.qorakol.ilm.ziyo.model.entity.*;
 import com.qorakol.ilm.ziyo.repository.*;
 import com.qorakol.ilm.ziyo.service.interfaces.AuthService;
@@ -31,14 +33,16 @@ public class AuthServiceImpl implements AuthService {
     private final RoleRepository roleRepository;
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
+    private final GroupsRepository groupsRepository;
 
     @Autowired
-    public AuthServiceImpl(AuthRepository authRepository, ImagesRepository imagesRepository, RoleRepository roleRepository, TeacherRepository teacherRepository, StudentRepository studentRepository) {
+    public AuthServiceImpl(AuthRepository authRepository, ImagesRepository imagesRepository, RoleRepository roleRepository, TeacherRepository teacherRepository, StudentRepository studentRepository, GroupsRepository groupsRepository) {
         this.authRepository = authRepository;
         this.imagesRepository = imagesRepository;
         this.roleRepository = roleRepository;
         this.teacherRepository = teacherRepository;
         this.studentRepository = studentRepository;
+        this.groupsRepository = groupsRepository;
     }
 
     @Override
@@ -60,12 +64,12 @@ public class AuthServiceImpl implements AuthService {
         teacherRepository.save(teacher);
     }
     @Override
-    public void createStudent(RegStudentDto regStudentDto) {
+    public Long createStudent(RegStudentDto regStudentDto) {
         Student student =  new Student();
         BeanUtils.copyProperties(regStudentDto, student);
-
-
-
+        student.setStatus(StudentStatus.YANGI);
+        Long result = studentRepository.save(student).getId();
+        return result;
     }
 
     @Override
@@ -82,6 +86,23 @@ public class AuthServiceImpl implements AuthService {
         }
         result.put("role", authEntity.getRoles());
         return result;
+    }
+
+    @Override
+    public void studentAddGroup(SToGroup sToGroup) {
+        AuthEntity authEntity = new AuthEntity();
+        authEntity.setLogin(sToGroup.getLogin());
+        authEntity.setPassword(sToGroup.getPassword());
+        Roles roles = roleRepository.findByName(RoleContants.STUDENT);
+        authEntity.setRoles(roles);
+        authRepository.save(authEntity);
+        Student student = studentRepository.findById(sToGroup.getStudentId()).get();
+        Groups groups = groupsRepository.findById(sToGroup.getGroupId()).get();
+        student.setAuthEntity(authEntity);
+        Set<Groups> groupsSet= student.getGroupsSet();
+        groupsSet.add(groups);
+        student.setGroupsSet(groupsSet);
+        studentRepository.save(student);
     }
 
     @Override

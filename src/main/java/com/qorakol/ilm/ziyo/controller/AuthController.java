@@ -3,6 +3,7 @@ package com.qorakol.ilm.ziyo.controller;
 import com.qorakol.ilm.ziyo.constant.reg.Registers;
 import com.qorakol.ilm.ziyo.model.dto.RegStudentDto;
 import com.qorakol.ilm.ziyo.model.dto.RegTeacherDto;
+import com.qorakol.ilm.ziyo.model.dto.SToGroup;
 import com.qorakol.ilm.ziyo.security.CurrentUser;
 import com.qorakol.ilm.ziyo.service.interfaces.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,13 +39,18 @@ public class AuthController {
         }
     }
 
+    @PostMapping(value = "/student_group")
+    public ResponseEntity studentGroup(@Valid @RequestBody SToGroup sToGroup){
+        authService.studentAddGroup(sToGroup);
+        return ResponseEntity.ok("SUCCESS");
+    }
+
     @PostMapping(value = Registers.RegisterStudent)
     public ResponseEntity<?> regStudent(@Valid @RequestBody RegStudentDto regStudentDto){
         try {
-            authService.createStudent(regStudentDto);
-            return ResponseEntity.ok("SUCCESS");
+            return ResponseEntity.ok(authService.createStudent(regStudentDto));
         }catch (Exception e){
-            return ResponseEntity.ok(e.getMessage());
+            return ResponseEntity.ok("-1");
         }
     }
 
