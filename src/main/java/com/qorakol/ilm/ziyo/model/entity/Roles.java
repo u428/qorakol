@@ -14,11 +14,9 @@ public class Roles {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    @JsonIgnore
     private Long id;
 
-    @Column(nullable = false, name = "name")
+    @Column(name = "name")
     @Enumerated(EnumType.STRING)
     private RoleContants name;
 

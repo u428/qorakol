@@ -1,5 +1,6 @@
 package com.qorakol.ilm.ziyo.service.interfaces;
 
+import com.qorakol.ilm.ziyo.model.dto.AdminDto;
 import com.qorakol.ilm.ziyo.model.dto.RegStudentDto;
 import com.qorakol.ilm.ziyo.model.dto.RegTeacherDto;
 import com.qorakol.ilm.ziyo.model.dto.SToGroup;
@@ -25,4 +26,8 @@ public interface AuthService extends UserDetailsService {
     Map<String, Object> getCurrentUser(String login);
 
     void studentAddGroup(SToGroup sToGroup);
+
+    void addAdmin(AdminDto adminDto);
+
+    void addRole();
 }

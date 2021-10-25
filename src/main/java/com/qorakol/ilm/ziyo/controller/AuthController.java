@@ -1,6 +1,7 @@
 package com.qorakol.ilm.ziyo.controller;
 
 import com.qorakol.ilm.ziyo.constant.reg.Registers;
+import com.qorakol.ilm.ziyo.model.dto.AdminDto;
 import com.qorakol.ilm.ziyo.model.dto.RegStudentDto;
 import com.qorakol.ilm.ziyo.model.dto.RegTeacherDto;
 import com.qorakol.ilm.ziyo.model.dto.SToGroup;
@@ -67,5 +68,18 @@ public class AuthController {
     @GetMapping(value = "get_current_user")
     public ResponseEntity getCurrentUser(@CurrentUser String login){
         return ResponseEntity.ok(authService.getCurrentUser(login));
+    }
+
+    @PostMapping(value = "add_admin")
+    public ResponseEntity addAdmin(@RequestBody AdminDto adminDto){
+        authService.addAdmin(adminDto);
+        return ResponseEntity.ok("SUCCESS");
+    }
+
+
+    @GetMapping()
+    public String addRole(){
+        authService.addRole();
+        return "sda";
     }
 }

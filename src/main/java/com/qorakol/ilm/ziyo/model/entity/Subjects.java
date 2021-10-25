@@ -12,16 +12,21 @@ public class Subjects {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+
     private Long id;
 
-    private String name;
+    @Column(name = "name_uz")
+    private String nameUz;
+
+    @Column(name = "name_ru")
+    private String nameRu;
+
+    @Column(name = "name_en")
+    private String nameEn;
 
     private String description;
 
     @OneToMany(mappedBy = "subjects")
     private List<Groups> groups;
-
-
 
 }

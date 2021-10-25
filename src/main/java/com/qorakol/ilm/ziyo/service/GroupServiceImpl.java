@@ -5,6 +5,7 @@ import com.qorakol.ilm.ziyo.model.entity.Groups;
 import com.qorakol.ilm.ziyo.repository.GroupsRepository;
 import com.qorakol.ilm.ziyo.repository.LanguageRepository;
 import com.qorakol.ilm.ziyo.service.interfaces.GroupService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +24,14 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public void save(NewGroup newGroup) {
         Groups groups = new Groups();
+        BeanUtils.copyProperties(newGroup, groups);
         groups.setName(newGroup.getName());
         groups.setLanguageId(newGroup.getLanguageId());
         groups.setSubjectId(newGroup.getSubjectId());
         groups.setBegin(newGroup.getBegin());
         groups.setFinish(newGroup.getFinish());
         groups.setTeacherId(newGroup.getTeacherId());
+        groups.setPrice(newGroup.getPrice());
         groupsRepository.save(groups);
     }
 }

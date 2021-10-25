@@ -4,24 +4,18 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 
-import java.util.Date;
-
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Data
-public class NewGroup {
+public class AdminDto {
 
-    public String name;
+    private String login;
 
-    public Date begin;
+    private String password;
 
-    public Date finish;
+    private String telNomer;
 
-    public Long teacherId;
+    private String firstName;
 
-    public double price;
-
-    public Long subjectId;
-
-    public Long languageId;
+    private String lastName;
 
 }

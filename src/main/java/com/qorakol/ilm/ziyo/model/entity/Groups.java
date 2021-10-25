@@ -27,6 +27,9 @@ public class Groups {
     @Column
     private Date finish;
 
+    @Column(name = "price")
+    private double price;
+
     @Column(name = "subject_id")
     private Long subjectId;
 

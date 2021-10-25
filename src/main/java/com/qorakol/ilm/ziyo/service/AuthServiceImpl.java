@@ -2,6 +2,7 @@ package com.qorakol.ilm.ziyo.service;
 
 import com.qorakol.ilm.ziyo.constant.RoleContants;
 import com.qorakol.ilm.ziyo.constant.StudentStatus;
+import com.qorakol.ilm.ziyo.model.dto.AdminDto;
 import com.qorakol.ilm.ziyo.model.dto.RegStudentDto;
 import com.qorakol.ilm.ziyo.model.dto.RegTeacherDto;
 import com.qorakol.ilm.ziyo.model.dto.SToGroup;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
@@ -34,15 +36,20 @@ public class AuthServiceImpl implements AuthService {
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
     private final GroupsRepository groupsRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final LanguageRepository languageRepository;
+
 
     @Autowired
-    public AuthServiceImpl(AuthRepository authRepository, ImagesRepository imagesRepository, RoleRepository roleRepository, TeacherRepository teacherRepository, StudentRepository studentRepository, GroupsRepository groupsRepository) {
+    public AuthServiceImpl(AuthRepository authRepository, ImagesRepository imagesRepository, RoleRepository roleRepository, TeacherRepository teacherRepository, StudentRepository studentRepository, GroupsRepository groupsRepository, BCryptPasswordEncoder bCryptPasswordEncoder, LanguageRepository languageRepository) {
         this.authRepository = authRepository;
         this.imagesRepository = imagesRepository;
         this.roleRepository = roleRepository;
         this.teacherRepository = teacherRepository;
         this.studentRepository = studentRepository;
         this.groupsRepository = groupsRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.languageRepository = languageRepository;
     }
 
     @Override
@@ -56,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
         BeanUtils.copyProperties(regTeacherDto, teacher);
         AuthEntity authEntity=new AuthEntity();
         authEntity.setLogin(regTeacherDto.getLogin());
-        authEntity.setPassword(regTeacherDto.getPassword());
+        authEntity.setPassword(bCryptPasswordEncoder.encode(regTeacherDto.getPassword()));
         Roles role = roleRepository.findByName(RoleContants.TEACHER);
         authEntity.setRolesId(role.getId());
         authRepository.save(authEntity);
@@ -92,7 +99,7 @@ public class AuthServiceImpl implements AuthService {
     public void studentAddGroup(SToGroup sToGroup) {
         AuthEntity authEntity = new AuthEntity();
         authEntity.setLogin(sToGroup.getLogin());
-        authEntity.setPassword(sToGroup.getPassword());
+        authEntity.setPassword(bCryptPasswordEncoder.encode(sToGroup.getPassword()));
         Roles roles = roleRepository.findByName(RoleContants.STUDENT);
         authEntity.setRoles(roles);
         authRepository.save(authEntity);
@@ -102,6 +109,21 @@ public class AuthServiceImpl implements AuthService {
         Set<Groups> groupsSet= student.getGroupsSet();
         groupsSet.add(groups);
         student.setGroupsSet(groupsSet);
+        studentRepository.save(student);
+    }
+
+    @Override
+    public void addAdmin(AdminDto adminDto) {
+        Student student = new Student();
+        student.setFirstName(adminDto.getFirstName());
+        student.setLastName(adminDto.getLastName());
+        AuthEntity authEntity=new AuthEntity();
+        authEntity.setLogin(adminDto.getLogin());
+        authEntity.setPassword(bCryptPasswordEncoder.encode(adminDto.getPassword()));
+        Roles roles = roleRepository.findByName(RoleContants.ADMIN);
+        authEntity.setRolesId(roles.getId());
+        student.setAuthEntity(authEntity);
+
         studentRepository.save(student);
     }
 
@@ -142,5 +164,34 @@ public class AuthServiceImpl implements AuthService {
         roleRepository.save(roles);
     }
 
+    @Override
+    public void addRole(){
+//        Roles roles = new Roles();
+//        roles.setLevel(1);
+//        roles.setName(RoleContants.SUPER_ADMIN);
+//        roleRepository.save(roles);
+//        Roles roles2 = new Roles();
+//        roles2.setLevel(2);
+//        roles2.setName(RoleContants.ADMIN);
+//        roleRepository.save(roles2);
+//        Roles roles3 = new Roles();
+//        roles3.setLevel(3);
+//        roles3.setName(RoleContants.TEACHER);
+//        roleRepository.save(roles3);
+//        Roles roles4 = new Roles();
+//        roles4.setLevel(4);
+//        roles4.setName(RoleContants.STUDENT);
+//        roleRepository.save(roles4);
+        Language language = new Language();
+        language.setName("English");
+        Language language2 = new Language();
+        language2.setName("Русский");
+        Language language3 = new Language();
+        language3.setName("O'zbek");
+        languageRepository.save(language3);
+        languageRepository.save(language2);
+        languageRepository.save(language);
+
+    }
 
 }

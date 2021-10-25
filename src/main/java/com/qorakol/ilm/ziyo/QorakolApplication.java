@@ -1,7 +1,10 @@
 package com.qorakol.ilm.ziyo;
 
 import com.qorakol.ilm.ziyo.constant.RoleContants;
+import com.qorakol.ilm.ziyo.model.entity.Language;
 import com.qorakol.ilm.ziyo.model.entity.Roles;
+import com.qorakol.ilm.ziyo.repository.RoleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -14,16 +17,12 @@ public class QorakolApplication {
 		SpringApplication.run(QorakolApplication.class, args);
 	}
 
+
 	@Bean
-	public BCryptPasswordEncoder encryp(){
+	public BCryptPasswordEncoder encoder(){
 		return new BCryptPasswordEncoder();
 	}
 
-	private void addRole(){
-		Roles roles = new Roles();
-		roles.setLevel(1);
-		roles.setName(RoleContants.SUPER_ADMIN);
 
-	}
 
 }

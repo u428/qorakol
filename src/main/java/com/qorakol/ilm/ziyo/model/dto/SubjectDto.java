@@ -1,21 +1,20 @@
 package com.qorakol.ilm.ziyo.model.dto;
 
+
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 
 @Data
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class SToGroup {
+public class SubjectDto {
 
-    public Long studentId;
+    public String nameUz;
 
-    public Long groupId;
+    public String nameRu;
 
-    public String login;
+    public String nameEn;
 
-    public String password;
+    public String description;
 
 }
-
-
