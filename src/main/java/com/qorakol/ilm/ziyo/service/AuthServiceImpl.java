@@ -21,10 +21,13 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.MalformedURLException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 @Service
@@ -39,6 +42,7 @@ public class AuthServiceImpl implements AuthService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final LanguageRepository languageRepository;
 
+    private Path fileStoragePath;
 
     @Autowired
     public AuthServiceImpl(AuthRepository authRepository, ImagesRepository imagesRepository, RoleRepository roleRepository, TeacherRepository teacherRepository, StudentRepository studentRepository, GroupsRepository groupsRepository, BCryptPasswordEncoder bCryptPasswordEncoder, LanguageRepository languageRepository) {
@@ -50,6 +54,8 @@ public class AuthServiceImpl implements AuthService {
         this.groupsRepository = groupsRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.languageRepository = languageRepository;
+
+        fileStoragePath = Paths.get("java/java_teacher").toAbsolutePath().normalize();
     }
 
     @Override
@@ -68,8 +74,29 @@ public class AuthServiceImpl implements AuthService {
         authEntity.setRolesId(role.getId());
         authRepository.save(authEntity);
         teacher.setAuthEntity(authEntity);
-        teacherRepository.save(teacher);
+        try {
+            MultipartFile multipartFile = regTeacherDto.getFiles();
+            Images images = new Images();
+            images.setContentType(multipartFile.getContentType());
+            images.setName(multipartFile.getOriginalFilename());
+            images.setFileSize(multipartFile.getSize());
+            imagesRepository.save(images);
+            String AA = multipartFile.getOriginalFilename();
+            String fileName = String.valueOf(images.getId()) + AA.substring(AA.length() - 4, AA.length());
+            images.setExtention(AA.substring(AA.length() - 4));
+            System.out.println(fileStoragePath);
+            Path filePath = Paths.get(fileStoragePath + "//" + fileName);
+            images.setUploadPath(String.valueOf(filePath));
+            Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            imagesRepository.save(images);
+            teacher.setImagesId(images.getId());
+            teacherRepository.save(teacher);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
     }
+
     @Override
     public Long createStudent(RegStudentDto regStudentDto) {
         Student student =  new Student();
@@ -123,7 +150,6 @@ public class AuthServiceImpl implements AuthService {
         Roles roles = roleRepository.findByName(RoleContants.ADMIN);
         authEntity.setRolesId(roles.getId());
         student.setAuthEntity(authEntity);
-
         studentRepository.save(student);
     }
 
@@ -143,9 +169,6 @@ public class AuthServiceImpl implements AuthService {
         return authRepository.findByLogin(login).getRoles();
     }
 
-
-
-
     @Override
     public User loadUserByUsername(String s) throws UsernameNotFoundException {
         AuthEntity user=authRepository.findByLogin(s);
@@ -158,10 +181,6 @@ public class AuthServiceImpl implements AuthService {
 //                new SimpleGrantedAuthority(priviliges.getName())).collect(Collectors.toSet());
         authorities.add(new SimpleGrantedAuthority("ROLE_"+authEntity.getRoles().getName()));
         return authorities;
-    }
-
-    public void addRole(Roles roles){
-        roleRepository.save(roles);
     }
 
     @Override
@@ -182,15 +201,15 @@ public class AuthServiceImpl implements AuthService {
 //        roles4.setLevel(4);
 //        roles4.setName(RoleContants.STUDENT);
 //        roleRepository.save(roles4);
-        Language language = new Language();
-        language.setName("English");
-        Language language2 = new Language();
-        language2.setName("Русский");
-        Language language3 = new Language();
-        language3.setName("O'zbek");
-        languageRepository.save(language3);
-        languageRepository.save(language2);
-        languageRepository.save(language);
+//        Language language = new Language();
+//        language.setName("English");
+//        Language language2 = new Language();
+//        language2.setName("Русский");
+//        Language language3 = new Language();
+//        language3.setName("O'zbek");
+//        languageRepository.save(language3);
+//        languageRepository.save(language2);
+//        languageRepository.save(language);
 
     }
 

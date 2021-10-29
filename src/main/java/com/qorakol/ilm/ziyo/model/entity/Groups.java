@@ -41,6 +41,9 @@ public class Groups {
 
     private String description;
 
+    @Column(name = "image_id")
+    private Long ImagesId;
+
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "teacher_id", insertable = false, updatable = false)
@@ -55,5 +58,9 @@ public class Groups {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "lang_id", insertable = false, updatable = false)
     private Language language;
+
+    @OneToOne
+    @JoinColumn(name = "image_id", insertable = false, updatable = false)
+    private Images images;
 
 }

@@ -1,24 +1,22 @@
 package com.qorakol.ilm.ziyo.model.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
-@Table(name = "student_payment")
+@Table(name = "activation")
 @Data
-public class Payments {
+public class Activation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "summa")
-    private double summa;
+    @Column(name = "active")
+    private boolean active;
 
     @Column(name = "student_id")
     private Long studentId;
@@ -26,21 +24,11 @@ public class Payments {
     @Column(name = "group_id")
     private Long groupId;
 
-    @Column(name = "dars_soati_uchun")
-    private int darsSoati;
-
     @OneToOne
     @JoinColumn(name = "student_id", insertable = false, updatable = false)
     private Student student;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "group_id", insertable = false, updatable = false)
     private Groups groups;
-
-    @Temporal(TemporalType.DATE)
-    @CreatedDate
-    @Column
-    private Date time;
-
-
 }

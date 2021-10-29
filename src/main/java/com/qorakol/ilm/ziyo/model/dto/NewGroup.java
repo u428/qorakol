@@ -3,6 +3,7 @@ package com.qorakol.ilm.ziyo.model.dto;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -23,5 +24,7 @@ public class NewGroup {
     public Long subjectId;
 
     public Long languageId;
+
+    public MultipartFile files;
 
 }

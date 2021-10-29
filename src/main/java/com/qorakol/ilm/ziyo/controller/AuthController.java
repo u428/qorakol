@@ -30,8 +30,9 @@ public class AuthController {
         return ResponseEntity.ok(authService.checkLogin(login));
     }
 
-    @PostMapping(value = Registers.RegisterTeacher)
-    public ResponseEntity<?> regTeacher(@Valid @RequestBody RegTeacherDto regTeacherDto){
+    @PostMapping(value = Registers.RegisterTeacher,
+            consumes = {"multipart/form-data", "application/json"})
+    public ResponseEntity<?> regTeacher(@Valid @ModelAttribute RegTeacherDto regTeacherDto){
         try {
             authService.createTeacher(regTeacherDto);
             return ResponseEntity.ok("SUCCESS");

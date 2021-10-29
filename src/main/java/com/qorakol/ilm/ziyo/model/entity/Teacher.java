@@ -42,9 +42,8 @@ public class Teacher {
 
     private String description;
 
-    @OneToOne()
-    @JoinColumn(name = "photo_id")
-    private Images images;
+    @Column(name = "image_id")
+    private Long ImagesId;
 
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
@@ -53,6 +52,10 @@ public class Teacher {
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<Language> languages;
+
+    @OneToOne
+    @JoinColumn(name = "image_id", insertable = false, updatable = false)
+    private Images images;
 
 
 

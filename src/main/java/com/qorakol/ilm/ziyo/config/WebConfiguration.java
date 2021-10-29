@@ -31,12 +31,14 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-
-
-
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("src/main/resources/static/**");
+        web.ignoring().antMatchers("/v2/api-docs",
+                "/configuration/ui",
+                "/swagger-resources/**",
+                "/configuration/security",
+                "/swagger-ui.html",
+                "/webjars/**");
     }
 
     @Override
@@ -81,7 +83,7 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
     public AuthenticationFilter getAuthenticationFilter() throws Exception{
         final AuthenticationFilter filter=new AuthenticationFilter(authenticationManager());
         filter.setFilterProcessesUrl("/auth/login");
-//        filter.setPostOnly(true);
+        filter.setPostOnly(true);
         return filter;
     }
 

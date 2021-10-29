@@ -15,18 +15,16 @@ public class Attendances {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "student_id")
-    private Long studentId;
+    @Column(name = "activation_id")
+    private Long activationId;
 
-    @Column(name = "group_id")
-    private Long groupId;
+    @ManyToOne()
+    @JoinColumn(name = "activation_id", insertable = false, updatable = false)
+    private Activation activation;
 
-    @OneToOne
-    @JoinColumn(name = "student_id", insertable = false, updatable = false)
-    private Student student;
 
-    @OneToOne
-    @JoinColumn(name = "group_id", insertable = false, updatable = false)
-    private Groups groups;
+
+
+
 
 }

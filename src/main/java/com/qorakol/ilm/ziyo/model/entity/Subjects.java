@@ -12,7 +12,6 @@ public class Subjects {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
 
     @Column(name = "name_uz")
@@ -27,6 +26,6 @@ public class Subjects {
     private String description;
 
     @OneToMany(mappedBy = "subjects")
-    private List<Groups> groups;
+    private List<Groups> groups ;
 
 }

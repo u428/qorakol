@@ -7,4 +7,8 @@ public interface StaticService {
     Object getAllLang();
 
     void addSubject(SubjectDto subjectDto);
+
+    Object getMainImages();
+
+    Object getAllSubjects();
 }
