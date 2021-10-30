@@ -17,7 +17,7 @@ public interface AuthService extends UserDetailsService {
 
     void createTeacher(RegTeacherDto regTeacherDto);
 
-    ResponseEntity images(Long id) throws MalformedURLException;
+
 
     Roles getRoles(String login);
 

@@ -56,10 +56,7 @@ public class AuthController {
         }
     }
 
-    @GetMapping(value = "/images")
-    public ResponseEntity images(@RequestParam Long id) throws MalformedURLException {
-        return authService.images(id);
-    }
+
 
     @GetMapping(value = "get_role")
     public ResponseEntity getRole(@CurrentUser String login){

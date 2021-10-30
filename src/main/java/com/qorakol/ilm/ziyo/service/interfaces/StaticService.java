@@ -2,6 +2,9 @@ package com.qorakol.ilm.ziyo.service.interfaces;
 
 
 import com.qorakol.ilm.ziyo.model.dto.SubjectDto;
+import org.springframework.http.ResponseEntity;
+
+import java.net.MalformedURLException;
 
 public interface StaticService {
     Object getAllLang();
@@ -11,4 +14,6 @@ public interface StaticService {
     Object getMainImages();
 
     Object getAllSubjects();
+
+    ResponseEntity images(Long id) throws MalformedURLException;
 }

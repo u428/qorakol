@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.net.MalformedURLException;
 
 @RestController
 @RequestMapping(value = "/static")
@@ -19,6 +22,11 @@ public class StaticController {
         this.service = service;
     }
 
+    @GetMapping(value = "/images")
+    public ResponseEntity images(@RequestParam Long id) throws MalformedURLException {
+        return service.images(id);
+    }
+
     @GetMapping(value = "/get_language")
     public ResponseEntity getSubjects(){
         return ResponseEntity.ok(service.getAllSubjects());
@@ -29,7 +37,7 @@ public class StaticController {
         return ResponseEntity.ok(service.getAllLang());
     }
 
-    @GetMapping(value = "get_main_images")
+    @GetMapping(value = "/get_main_images")
     public ResponseEntity getMainImages(){
         return ResponseEntity.ok(service.getMainImages());
     }

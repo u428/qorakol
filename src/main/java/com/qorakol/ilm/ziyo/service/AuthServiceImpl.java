@@ -153,16 +153,7 @@ public class AuthServiceImpl implements AuthService {
         studentRepository.save(student);
     }
 
-    @Override
-    public ResponseEntity images(Long id) throws MalformedURLException {
-        Images images=imagesRepository.findById(id).get();
-        Path path= Paths.get(images.getUploadPath());
-        Resource resource= new UrlResource(path.toUri());
-        return ResponseEntity.ok()
-                .contentType(MediaType.valueOf(images.getContentType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline;fileName="+resource.getFilename())
-                .body(resource);
-    }
+
 
     @Override
     public Roles getRoles(String login) {
