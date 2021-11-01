@@ -30,6 +30,11 @@ public class Groups {
     @Column(name = "price")
     private double price;
 
+    private String description;
+
+
+    private boolean delete = false;
+
     @Column(name = "subject_id")
     private Long subjectId;
 
@@ -38,8 +43,6 @@ public class Groups {
 
     @Column(name = "teacher_id")
     private Long teacherId;
-
-    private String description;
 
     @Column(name = "image_id")
     private Long ImagesId;

@@ -23,8 +23,6 @@ import org.springframework.stereotype.Service;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Service
@@ -47,11 +45,35 @@ public class StaticServiceImpl implements StaticService {
     }
 
     @Override
+    public Object getAllSubjects() {
+        return subjectsRepository.findAllByDeleteIsFalse();
+    }
+
+    @Override
     public void addSubject(SubjectDto subjectDto) {
         Subjects subjects = new Subjects();
         BeanUtils.copyProperties(subjectDto, subjects);
         subjectsRepository.save(subjects);
     }
+
+    @Override
+    public Object putSubject(Long id, SubjectDto subjectDto) {
+        Subjects subject = subjectsRepository.findByIdAndDeleteIsFalse(id);
+        if (subject !=null) {
+            BeanUtils.copyProperties(subjectDto, subjectDto);
+            subjectsRepository.save(subject);
+            return "SUCCESS";
+        }else return "ERROR";
+    }
+
+    @Override
+    public Object deleteSubject(Long id) {
+        Subjects subjects = subjectsRepository.findByIdAndDeleteIsFalse(id);
+        subjects.setDelete(true);
+        subjectsRepository.save(subjects);
+        return true;
+    }
+
 
     @Override
     public ResponseEntity images(Long id) throws MalformedURLException {
@@ -64,15 +86,13 @@ public class StaticServiceImpl implements StaticService {
                 .body(resource);
     }
 
+
     @Override
     public Object getMainImages() {
         Pageable pageable= PageRequest.of(0, 3);
-        Page<MainImage> imagePage = mainImagesRepository.findAll(pageable);
+        Page<MainImage> imagePage = mainImagesRepository.findAllByDeleteIsFalse(pageable);
         return imagePage;
     }
 
-    @Override
-    public Object getAllSubjects() {
-        return subjectsRepository.findAll();
-    }
+
 }

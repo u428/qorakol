@@ -20,6 +20,8 @@ public class AuthEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
+    private boolean delete = false;
+
     @Column(name = "role_id", nullable = false)
     private Long rolesId;
 

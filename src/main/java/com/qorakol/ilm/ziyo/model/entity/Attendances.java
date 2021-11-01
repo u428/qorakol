@@ -15,6 +15,10 @@ public class Attendances {
     @Column(name = "id")
     private Long id;
 
+    private boolean delete = false;
+
+    private boolean counted = false;
+
     @Column(name = "activation_id")
     private Long activationId;
 

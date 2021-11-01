@@ -20,6 +20,8 @@ public class MainImage {
 
     private String descryption;
 
+    private boolean delete = false;
+
     @Column(name = "image_id")
     private Long ImagesId;
 

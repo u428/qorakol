@@ -16,4 +16,8 @@ public interface StaticService {
     Object getAllSubjects();
 
     ResponseEntity images(Long id) throws MalformedURLException;
+
+    Object putSubject(Long id, SubjectDto subjectDto);
+
+    Object deleteSubject(Long id);
 }

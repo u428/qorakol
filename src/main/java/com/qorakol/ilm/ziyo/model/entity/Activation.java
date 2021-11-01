@@ -18,6 +18,8 @@ public class Activation {
     @Column(name = "active")
     private boolean active;
 
+    private boolean delete = false;
+
     @Column(name = "student_id")
     private Long studentId;
 
