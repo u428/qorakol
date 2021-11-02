@@ -11,4 +11,6 @@ public interface AdminService {
     Object putImage(MainImageDto mainImageDto);
 
     Object paying(PaymentDto paymentDto);
+
+    Object changePayment(PaymentDto paymentDto);
 }

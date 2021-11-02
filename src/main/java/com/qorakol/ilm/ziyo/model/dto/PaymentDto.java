@@ -9,6 +9,8 @@ import lombok.Data;
 @Data
 public class PaymentDto {
 
+    public Long id;
+
     public double summa;
 
     public Long studentId;

@@ -72,5 +72,10 @@ public class AdminController {
         return ResponseEntity.ok(adminService.paying(paymentDto));
     }
 
+    @PutMapping(value = "/change_payment")
+    public ResponseEntity changePayment(@RequestBody PaymentDto paymentDto){
+        return ResponseEntity.ok(adminService.changePayment(paymentDto));
+    }
+
 
 }

@@ -3,10 +3,7 @@ package com.qorakol.ilm.ziyo.service;
 import com.qorakol.ilm.ziyo.model.dto.MainImageDto;
 import com.qorakol.ilm.ziyo.model.dto.NewGroup;
 import com.qorakol.ilm.ziyo.model.dto.PaymentDto;
-import com.qorakol.ilm.ziyo.model.entity.Groups;
-import com.qorakol.ilm.ziyo.model.entity.Images;
-import com.qorakol.ilm.ziyo.model.entity.MainImage;
-import com.qorakol.ilm.ziyo.model.entity.Payments;
+import com.qorakol.ilm.ziyo.model.entity.*;
 import com.qorakol.ilm.ziyo.repository.*;
 import com.qorakol.ilm.ziyo.service.interfaces.AdminService;
 import org.springframework.beans.BeanUtils;
@@ -20,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -30,16 +28,20 @@ public class AdminServiceImpl implements AdminService {
     private final ImagesRepository imagesRepository;
     private final MainImagesRepository mainImagesRepository;
     private final PaymentRepository paymentRepository;
+    private final AttendanceRepository attendanceRepository;
+    private final ActivationRepository activationRepository;
 
     private Path fileStoragePath;
 
     @Autowired
-    public AdminServiceImpl(GroupsRepository groupsRepository, LanguageRepository languageRepository, ImagesRepository imagesRepository, MainImagesRepository mainImagesRepository, PaymentRepository paymentRepository) {
+    public AdminServiceImpl(GroupsRepository groupsRepository, LanguageRepository languageRepository, ImagesRepository imagesRepository, MainImagesRepository mainImagesRepository, PaymentRepository paymentRepository, AttendanceRepository attendanceRepository, ActivationRepository activationRepository) {
         this.groupsRepository = groupsRepository;
         this.languageRepository = languageRepository;
         this.imagesRepository = imagesRepository;
         this.mainImagesRepository = mainImagesRepository;
         this.paymentRepository = paymentRepository;
+        this.attendanceRepository = attendanceRepository;
+        this.activationRepository = activationRepository;
         fileStoragePath = Paths.get("java/java_code").toAbsolutePath().normalize();
     }
 
@@ -121,17 +123,57 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Object paying(PaymentDto paymentDto) {
+        Activation activation = activationRepository.findByStudentIdAndDeleteIsFalse(paymentDto.getStudentId());
         Payments payments = new Payments();
         Groups groups = groupsRepository.findById(paymentDto.getGroupId()).get();
         payments.setSumma(paymentDto.getSumma());
         payments.setDarsSoati(groups.getPrice()/paymentDto.getSumma());
         payments.setGroupId(paymentDto.getGroupId());
-        payments.setGroupId(paymentDto.getStudentId());
+        payments.setStudentId(paymentDto.getStudentId());
         payments.setTime(new Date());
         paymentRepository.save(payments);
 
         double a = paymentRepository.findById(payments.getId()-1).get().getQolganDarsi();
         a+=payments.getDarsSoati();
+        List<Attendances> attendancesLIst = attendanceRepository.findAllByCountedIsFalseOOrderById();
+        for (Attendances attendances: attendancesLIst){
+            if (a==0){
+                activation.setActive(false);
+                break;
+            }
+            attendances.setCounted(true);
+            a--;
+            attendanceRepository.save(attendances);
+            activation.setActive(false);
+        }
+        activationRepository.save(activation);
+        payments.setQolganDarsi(a);
+        paymentRepository.save(payments);
+        return "SUCCESS";
+    }
+
+    @Override
+    public Object changePayment(PaymentDto paymentDto) {
+        Activation activation = activationRepository.findByStudentIdAndDeleteIsFalse(paymentDto.getStudentId());
+        Payments payments = paymentRepository.findById(paymentDto.getId()).get();
+        Groups groups = groupsRepository.findById(paymentDto.getGroupId()).get();
+        payments.setSumma(paymentDto.getSumma());
+        payments.setGroupId(paymentDto.getGroupId());
+        payments.setStudentId(paymentDto.getStudentId());
+        payments.setTime(new Date());
+        paymentRepository.save(payments);
+        double b = paymentDto.getSumma()/groups.getPrice();
+        double a = paymentRepository.findById(payments.getId()-1).get().getQolganDarsi();
+        double r = a+payments.getDarsSoati();
+        r-=payments.getQolganDarsi();
+        a+=b;
+        r=a-r;
+        if (r>0){
+
+        }else
+
+
+
 
 
         return null;

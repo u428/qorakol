@@ -16,7 +16,7 @@ public class Activation {
     private Long id;
 
     @Column(name = "active")
-    private boolean active;
+    private boolean active = false;
 
     private boolean delete = false;
 
