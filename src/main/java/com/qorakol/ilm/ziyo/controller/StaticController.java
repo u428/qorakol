@@ -42,5 +42,9 @@ public class StaticController {
         return ResponseEntity.ok(service.getMainImages());
     }
 
+    @GetMapping(value = "/get_group")
+    public ResponseEntity getGroup(){
+        return ResponseEntity.ok(service.getGroup());
+    }
 
 }

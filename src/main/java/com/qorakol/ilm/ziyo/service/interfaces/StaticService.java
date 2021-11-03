@@ -20,4 +20,6 @@ public interface StaticService {
     Object putSubject(Long id, SubjectDto subjectDto);
 
     Object deleteSubject(Long id);
+
+    Object getGroup();
 }

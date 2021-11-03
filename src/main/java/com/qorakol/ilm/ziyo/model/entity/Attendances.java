@@ -2,8 +2,10 @@ package com.qorakol.ilm.ziyo.model.entity;
 
 
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "student_attendance")
@@ -21,6 +23,11 @@ public class Attendances {
 
     @Column(name = "activation_id")
     private Long activationId;
+
+    @Temporal(TemporalType.DATE)
+    @CreatedDate
+    @Column
+    private Date time;
 
     @ManyToOne()
     @JoinColumn(name = "activation_id", insertable = false, updatable = false)
