@@ -1,5 +1,6 @@
 package com.qorakol.ilm.ziyo.service;
 
+import com.qorakol.ilm.ziyo.model.dto.CheckStudents;
 import com.qorakol.ilm.ziyo.model.entity.Activation;
 import com.qorakol.ilm.ziyo.model.entity.AuthEntity;
 import com.qorakol.ilm.ziyo.model.entity.Groups;
@@ -44,6 +45,20 @@ public class TeacherServiceImpl implements TeacherService {
     public Object getGroupStudents(String login, Long id) {
         List<Activation> activation = activationRepository.findAllByGroupIdAndDeleteIsFalse(id);
         return activation;
+    }
+
+    @Override
+    public Object checkStudent(String login, CheckStudents checkStudents) {
+        AuthEntity authEntity = authRepository.findByLogin(login);
+        Teacher teacher = teacherRepository.findByAuthEntity(authEntity);
+
+        Groups groups = groupsRepository.findById(checkStudents.getGroupId()).get();
+
+        for ()
+        Activation activation = activationRepository.findByStudentIdAndGroupId()
+
+
+        return null;
     }
 
 

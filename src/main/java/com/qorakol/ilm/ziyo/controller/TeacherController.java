@@ -1,5 +1,6 @@
 package com.qorakol.ilm.ziyo.controller;
 
+import com.qorakol.ilm.ziyo.model.dto.CheckStudents;
 import com.qorakol.ilm.ziyo.security.CurrentUser;
 import com.qorakol.ilm.ziyo.service.interfaces.TeacherService;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +19,10 @@ public class TeacherController {
     }
 
 
-//    @PostMapping(value = "/student_check")
-//    public ResponseEntity studentCheck(@CurrentUser String login, List<Long> ids){
-//        return ResponseEntity.ok(teacherService.checkStudent(login, ids));
-//    }
+    @PostMapping(value = "/student_check")
+    public ResponseEntity studentCheck(@CurrentUser String login, @RequestBody CheckStudents checkStudents){
+        return ResponseEntity.ok(teacherService.checkStudent(login, checkStudents));
+    }
 
 
     @GetMapping(value = "/groups")

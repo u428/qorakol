@@ -47,4 +47,9 @@ public class StaticController {
         return ResponseEntity.ok(service.getGroup());
     }
 
+    @GetMapping(value = "/get_student")
+    public ResponseEntity getStudent(@RequestParam(name = "id") Long id){
+        return ResponseEntity.ok(service.getStudent(id));
+    }
+
 }

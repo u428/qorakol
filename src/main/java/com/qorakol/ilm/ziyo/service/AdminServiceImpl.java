@@ -135,7 +135,7 @@ public class AdminServiceImpl implements AdminService {
 
         double a = paymentRepository.findByIdAndOrderByDate(payments.getId()-1).getQolganDarsi();
         a+=payments.getDarsSoati();
-        List<Attendances> attendancesLIst = attendanceRepository.findAllByCountedIsFalseOOrderById();
+        List<Attendances> attendancesLIst = attendanceRepository.findAllByCountedIsFalseOrderById();
         for (Attendances attendances: attendancesLIst){
             if (a==0){
                 activation.setActive(false);

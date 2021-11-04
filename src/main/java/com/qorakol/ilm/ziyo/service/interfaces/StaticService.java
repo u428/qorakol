@@ -22,4 +22,6 @@ public interface StaticService {
     Object deleteSubject(Long id);
 
     Object getGroup();
+
+    Object getStudent(Long id);
 }

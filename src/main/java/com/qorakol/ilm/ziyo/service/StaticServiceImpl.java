@@ -1,10 +1,7 @@
 package com.qorakol.ilm.ziyo.service;
 
 import com.qorakol.ilm.ziyo.model.dto.SubjectDto;
-import com.qorakol.ilm.ziyo.model.entity.Groups;
-import com.qorakol.ilm.ziyo.model.entity.Images;
-import com.qorakol.ilm.ziyo.model.entity.MainImage;
-import com.qorakol.ilm.ziyo.model.entity.Subjects;
+import com.qorakol.ilm.ziyo.model.entity.*;
 import com.qorakol.ilm.ziyo.repository.*;
 import com.qorakol.ilm.ziyo.service.interfaces.StaticService;
 import org.springframework.beans.BeanUtils;
@@ -35,17 +32,21 @@ public class StaticServiceImpl implements StaticService {
     private final ImagesRepository imagesRepository;
     private final GroupsRepository groupsRepository;
     private final ActivationRepository activationRepository;
+    private final AttendanceRepository attendanceRepository;
     private final TeacherRepository teacherRepository;
+    private final StudentRepository studentRepository;
 
 
-    public StaticServiceImpl(LanguageRepository languageRepository, SubjectsRepository subjectsRepository, MainImagesRepository mainImagesRepository, ImagesRepository imagesRepository, GroupsRepository groupsRepository, ActivationRepository activationRepository, TeacherRepository teacherRepository) {
+    public StaticServiceImpl(LanguageRepository languageRepository, SubjectsRepository subjectsRepository, MainImagesRepository mainImagesRepository, ImagesRepository imagesRepository, GroupsRepository groupsRepository, ActivationRepository activationRepository, AttendanceRepository attendanceRepository, TeacherRepository teacherRepository, StudentRepository studentRepository) {
         this.languageRepository = languageRepository;
         this.subjectsRepository = subjectsRepository;
         this.mainImagesRepository = mainImagesRepository;
         this.imagesRepository = imagesRepository;
         this.groupsRepository = groupsRepository;
         this.activationRepository = activationRepository;
+        this.attendanceRepository = attendanceRepository;
         this.teacherRepository = teacherRepository;
+        this.studentRepository = studentRepository;
     }
 
     @Override
@@ -95,11 +96,24 @@ public class StaticServiceImpl implements StaticService {
             map.put("language", languageRepository.findById(groups.getLanguageId()).get());
             map.put("subject", subjectsRepository.findById(groups.getSubjectId()).get());
             map.put("teacher", teacherRepository.findById(groups.getTeacherId()).get());
-
-
-
             list.add(map);
         }
+
+        return "sdadawd";
+    }
+
+    @Override
+    public Object getStudent(Long id) {
+        Student student = studentRepository.findById(id).get();
+        Activation activation = activationRepository.findByStudentIdAndDeleteIsFalse(id);
+        Groups groups = groupsRepository.findById(activation.getGroupId()).get();
+        List<Attendances> attendancesLIst = attendanceRepository.findAllByCountedIsTrueAndActivationId(activation.getId());
+        Map<String, Object> map = new HashMap<>();
+        map.put("student", student);
+        map.put("tolanmagan_darslari", attendancesLIst);
+        map.put("xolati", activation);
+        map.put("groups", groups);
+        return map;
     }
 
 

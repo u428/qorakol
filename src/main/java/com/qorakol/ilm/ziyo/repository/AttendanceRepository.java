@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface AttendanceRepository extends JpaRepository<Attendances, Long>, JpaSpecificationExecutor<Attendances> {
 
-    List<Attendances> findAllByCountedIsFalseOOrderById();
+    List<Attendances> findAllByCountedIsFalseOrderById();
 
     List<Attendances> findAllByCountedIsTrueAndActivationId(Long id);
 
