@@ -133,9 +133,6 @@ public class AuthServiceImpl implements AuthService {
         Student student = studentRepository.findById(sToGroup.getStudentId()).get();
         Groups groups = groupsRepository.findById(sToGroup.getGroupId()).get();
         student.setAuthEntity(authEntity);
-        Set<Groups> groupsSet= student.getGroupsSet();
-        groupsSet.add(groups);
-        student.setGroupsSet(groupsSet);
         studentRepository.save(student);
     }
 
