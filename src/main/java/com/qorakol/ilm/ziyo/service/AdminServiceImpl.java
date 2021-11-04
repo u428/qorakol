@@ -160,27 +160,23 @@ public class AdminServiceImpl implements AdminService {
         payments.setSumma(paymentDto.getSumma());
         payments.setGroupId(paymentDto.getGroupId());
         payments.setStudentId(paymentDto.getStudentId());
+        payments.setTime(new Date());
         paymentRepository.save(payments);
         double b = paymentDto.getSumma()/groups.getPrice();
-        double a = paymentRepository.findByIdAndOrderByDate(payments.getId()-1).getQolganDarsi();
+        double a = paymentRepository.findById(payments.getId()-1).get().getQolganDarsi();
         double r = a+payments.getDarsSoati();
         r-=payments.getQolganDarsi();
         a+=b;
         r=a-r;
         if (r>0){
-            payments.setQolganDarsi(r);
-        }else{
-            List<Attendances> attendances = attendanceRepository.findAllByCountedIsTrueAndActivationIdAndCounted(activation.getId(), Integer.parseInt(String.valueOf(Math.abs(r))));
-            for (Attendances attendances1: attendances){
-                attendances1.setCounted(false);
-                attendanceRepository.save(attendances1);
-            }
 
-            payments.setQolganDarsi(0);
-        }
-        payments.setDarsSoati(b);
-        paymentRepository.save(payments);
-        return "SUCCESS";
+        }else
+
+
+
+
+
+        return null;
     }
 
     private void addImage(MultipartFile multipartFile, Long id){

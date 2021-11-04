@@ -1,19 +1,12 @@
 package com.qorakol.ilm.ziyo.service;
 
 import com.qorakol.ilm.ziyo.model.dto.CheckStudents;
-import com.qorakol.ilm.ziyo.model.entity.Activation;
-import com.qorakol.ilm.ziyo.model.entity.AuthEntity;
-import com.qorakol.ilm.ziyo.model.entity.Groups;
-import com.qorakol.ilm.ziyo.model.entity.Teacher;
+import com.qorakol.ilm.ziyo.model.entity.*;
 import com.qorakol.ilm.ziyo.repository.*;
-import com.qorakol.ilm.ziyo.security.CurrentUser;
 import com.qorakol.ilm.ziyo.service.interfaces.TeacherService;
-import org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -24,13 +17,15 @@ public class TeacherServiceImpl implements TeacherService {
     private final TeacherRepository teacherRepository;
     private final GroupsRepository groupsRepository;
     private final ActivationRepository activationRepository;
+    private final AttendanceRepository attendanceRepository;
 
-    public TeacherServiceImpl(StudentRepository studentRepository, AuthRepository authRepository, TeacherRepository teacherRepository, GroupsRepository groupsRepository, ActivationRepository activationRepository) {
+    public TeacherServiceImpl(StudentRepository studentRepository, AuthRepository authRepository, TeacherRepository teacherRepository, GroupsRepository groupsRepository, ActivationRepository activationRepository, AttendanceRepository attendanceRepository) {
         this.studentRepository = studentRepository;
         this.authRepository = authRepository;
         this.teacherRepository = teacherRepository;
         this.groupsRepository = groupsRepository;
         this.activationRepository = activationRepository;
+        this.attendanceRepository = attendanceRepository;
     }
 
 
@@ -51,15 +46,15 @@ public class TeacherServiceImpl implements TeacherService {
     public Object checkStudent(String login, CheckStudents checkStudents) {
         AuthEntity authEntity = authRepository.findByLogin(login);
         Teacher teacher = teacherRepository.findByAuthEntity(authEntity);
-
         Groups groups = groupsRepository.findById(checkStudents.getGroupId()).get();
-
-        for ()
-        Activation activation = activationRepository.findByStudentIdAndGroupId()
-
-
-        return null;
+        for (Long id: checkStudents.getIds()){
+            Activation activation = activationRepository.findByStudentIdAndGroupId(id, groups.getId());
+            Attendances attendances = new Attendances();
+            attendances.setActivationId(activation.getId());
+            attendances.setTime(new Date());
+            attendanceRepository.save(attendances);
+        }
+        return "SUCCESS";
     }
-
 
 }
