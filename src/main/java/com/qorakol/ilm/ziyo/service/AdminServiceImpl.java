@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -42,7 +43,8 @@ public class AdminServiceImpl implements AdminService {
         this.paymentRepository = paymentRepository;
         this.attendanceRepository = attendanceRepository;
         this.activationRepository = activationRepository;
-        fileStoragePath = Paths.get("java/java_code").toAbsolutePath().normalize();
+        fileStoragePath = Paths.get("D:/IntellijIDEA/java/java_code").toAbsolutePath().normalize();
+
     }
 
     @Override
@@ -63,6 +65,7 @@ public class AdminServiceImpl implements AdminService {
             System.out.println(fileStoragePath);
             Path filePath = Paths.get(fileStoragePath + "//" + fileName);
             images.setUploadPath(String.valueOf(filePath));
+            Files.createDirectories(fileStoragePath);
             Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             imagesRepository.save(images);
             mainImage.setImagesId(images.getId());

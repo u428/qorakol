@@ -68,7 +68,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.getCurrentUser(login));
     }
 
-    @PostMapping(value = "add_admin")
+    @PostMapping(value = "/add_admin")
     public ResponseEntity addAdmin(@RequestBody AdminDto adminDto){
         authService.addAdmin(adminDto);
         return ResponseEntity.ok("SUCCESS");
@@ -79,5 +79,10 @@ public class AuthController {
     public String addRole(){
         authService.addRole();
         return "sda";
+    }
+
+    @GetMapping(value = "/get_admin")
+    public ResponseEntity getADmins(){
+        return ResponseEntity.ok(authService.getAdmins());
     }
 }

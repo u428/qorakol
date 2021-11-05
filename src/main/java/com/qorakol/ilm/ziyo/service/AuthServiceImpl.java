@@ -60,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean checkLogin(String login) {
-        return authRepository.existsByLogin(login);
+        return authRepository.existsAllByLogin(login);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Map<String, Object> getCurrentUser(String login) {
-        AuthEntity authEntity = authRepository.findByLogin(login);
+        AuthEntity authEntity = authRepository.findByLoginAndDeleteIsFalse(login);
         Teacher teacher = teacherRepository.findByAuthEntity(authEntity);
         Student student = null;
         Map<String, Object> result = new HashMap<>();
@@ -148,6 +148,7 @@ public class AuthServiceImpl implements AuthService {
         authEntity.setPassword(bCryptPasswordEncoder.encode(adminDto.getPassword()));
         Roles roles = roleRepository.findByName(RoleContants.ADMIN);
         authEntity.setRolesId(roles.getId());
+        authRepository.save(authEntity);
         student.setAuthId(authEntity.getId());
         studentRepository.save(student);
     }
@@ -156,12 +157,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Roles getRoles(String login) {
-        return authRepository.findByLogin(login).getRoles();
+        return authRepository.findByLoginAndDeleteIsFalse(login).getRoles();
     }
 
     @Override
     public User loadUserByUsername(String s) throws UsernameNotFoundException {
-        AuthEntity user=authRepository.findByLogin(s);
+        AuthEntity user=authRepository.findByLoginAndDeleteIsFalse(s);
         if (user == null) throw new UsernameNotFoundException(s);
         return new User(String.valueOf(user.getLogin()), user.getPassword(), getAuthority(user));
     }
@@ -201,6 +202,11 @@ public class AuthServiceImpl implements AuthService {
 //        languageRepository.save(language2);
 //        languageRepository.save(language);
 
+    }
+
+    @Override
+    public Object getAdmins() {
+        return authRepository.findAll();
     }
 
 }
