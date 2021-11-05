@@ -33,9 +33,12 @@ public class Student {
 
     private boolean delete = false;
 
+    @Column(name = "auth_id")
+    private Long authId;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JsonIgnore
-    @JoinColumn(name = "auth_id")
+    @JoinColumn(name = "auth_id", insertable = false, updatable = false)
     private AuthEntity authEntity;
 
     @Column(name = "status", nullable = false)

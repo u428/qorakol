@@ -139,14 +139,16 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void addAdmin(AdminDto adminDto) {
         Student student = new Student();
+        student.setStatus(StudentStatus.YANGI);
         student.setFirstName(adminDto.getFirstName());
         student.setLastName(adminDto.getLastName());
+        student.setTelNomer(adminDto.getTelNomer());
         AuthEntity authEntity=new AuthEntity();
         authEntity.setLogin(adminDto.getLogin());
         authEntity.setPassword(bCryptPasswordEncoder.encode(adminDto.getPassword()));
         Roles roles = roleRepository.findByName(RoleContants.ADMIN);
         authEntity.setRolesId(roles.getId());
-        student.setAuthEntity(authEntity);
+        student.setAuthId(authEntity.getId());
         studentRepository.save(student);
     }
 
