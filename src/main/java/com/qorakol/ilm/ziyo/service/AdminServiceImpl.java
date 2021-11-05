@@ -43,7 +43,7 @@ public class AdminServiceImpl implements AdminService {
         this.paymentRepository = paymentRepository;
         this.attendanceRepository = attendanceRepository;
         this.activationRepository = activationRepository;
-        fileStoragePath = Paths.get("D:/IntellijIDEA/java/java_code").toAbsolutePath().normalize();
+        fileStoragePath = Paths.get("/app/java/java_code").toAbsolutePath().normalize();
 
     }
 
