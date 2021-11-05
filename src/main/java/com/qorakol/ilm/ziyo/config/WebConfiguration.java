@@ -61,7 +61,7 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers(HttpMethod.GET, "/auth/image")
                 .permitAll()
-                .antMatchers(HttpMethod.POST, "/auth/add_admin")
+                .antMatchers(HttpMethod.POST, "/auth/**")
                 .permitAll()
 //               .antMatchers( "/users/**").hasRole(ApplicationUserRole.USER.name())
 
