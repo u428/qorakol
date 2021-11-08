@@ -58,12 +58,12 @@ public class AuthController {
 
 
 
-    @GetMapping(value = "get_role")
+    @GetMapping(value = "/get_role")
     public ResponseEntity getRole(@CurrentUser String login){
         return ResponseEntity.ok(authService.getRoles(login));
     }
 
-    @GetMapping(value = "get_current_user")
+    @GetMapping(value = "/get_current_user")
     public ResponseEntity getCurrentUser(@CurrentUser String login){
         return ResponseEntity.ok(authService.getCurrentUser(login));
     }
