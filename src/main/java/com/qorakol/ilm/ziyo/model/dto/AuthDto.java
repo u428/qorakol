@@ -10,7 +10,6 @@ import javax.validation.constraints.NotEmpty;
 @Data
 public class AuthDto {
 
-    @NotEmpty
     public String login;
 
     @NotEmpty

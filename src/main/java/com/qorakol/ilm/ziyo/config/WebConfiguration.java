@@ -63,14 +63,15 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/add_admin")
                 .permitAll()
+                .antMatchers(HttpMethod.GET, "/auth")
+                .permitAll()
 //               .antMatchers( "/users/**").hasRole(ApplicationUserRole.USER.name())
 
                 .anyRequest()
                 .authenticated()
                 .and()
 
-                .cors()
-                .and()
+                .cors().disable()
 
                 .addFilter(getAuthenticationFilter())
                 .addFilter(new AuthorizationFilter(authenticationManager()))
@@ -88,7 +89,7 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     public AuthenticationFilter getAuthenticationFilter() throws Exception{
-        final AuthenticationFilter filter=new AuthenticationFilter(authenticationManager());
+        final AuthenticationFilter filter=new AuthenticationFilter(authenticationManager(), authService);
         filter.setFilterProcessesUrl("/auth/login");
         filter.setPostOnly(true);
         return filter;
@@ -97,7 +98,7 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList("*")); // <-- you may change "*"
+        configuration.setAllowedOrigins(Collections.singletonList("/**")); // <-- you may change "*"
         configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Arrays.asList(
