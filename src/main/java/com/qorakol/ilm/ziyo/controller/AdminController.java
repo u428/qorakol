@@ -39,7 +39,7 @@ public class AdminController {
     public ResponseEntity putSubject(@PathVariable(name = "id") Long id, @RequestBody SubjectDto subjectDto){
         return ResponseEntity.ok(service.putSubject(id, subjectDto));
     }
-    @DeleteMapping(value = "delete_subject/{id}")
+    @DeleteMapping(value = "/delete_subject/{id}")
     public ResponseEntity deleteSubject(@PathVariable(name = "id") Long id){
         return ResponseEntity.ok(service.deleteSubject(id));
     }

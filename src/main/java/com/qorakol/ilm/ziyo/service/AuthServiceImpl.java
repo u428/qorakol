@@ -9,7 +9,6 @@ import com.qorakol.ilm.ziyo.model.dto.SToGroup;
 import com.qorakol.ilm.ziyo.model.entity.*;
 import com.qorakol.ilm.ziyo.repository.*;
 import com.qorakol.ilm.ziyo.service.interfaces.AuthService;
-import org.apache.catalina.valves.StuckThreadDetectionValve;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -61,8 +60,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean checkLogin(String login) {
-        boolean a = authRepository.existsAllByLogin(login);
-        return a;
+        return authRepository.existsByLogin(login);
     }
 
     @Override
@@ -116,13 +114,11 @@ public class AuthServiceImpl implements AuthService {
         Map<String, Object> result = new HashMap<>();
         if (teacher == null){
             student = studentRepository.findByAuthEntity(authEntity);
-            student.setAuthEntity(null);
-            student.setId(null);
             result.put("user", student);
         }else{
             result.put("user", teacher);
         }
-        result.put("role", authEntity.getRoles().getName());
+        result.put("role", authEntity.getRoles());
         return result;
     }
 
@@ -152,7 +148,6 @@ public class AuthServiceImpl implements AuthService {
         authEntity.setPassword(bCryptPasswordEncoder.encode(adminDto.getPassword()));
         Roles roles = roleRepository.findByName(RoleContants.ADMIN);
         authEntity.setRolesId(roles.getId());
-        authRepository.save(authEntity);
         student.setAuthId(authEntity.getId());
         studentRepository.save(student);
     }
@@ -180,32 +175,31 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void addRole(){
-        List<Roles> roleList = roleRepository.findAll();
-        Roles roles = new Roles();
-        roles.setLevel(1);
-        roles.setName(RoleContants.SUPER_ADMIN);
-        roleRepository.save(roles);
-        Roles roles2 = new Roles();
-        roles2.setLevel(2);
-        roles2.setName(RoleContants.ADMIN);
-        roleRepository.save(roles2);
-        Roles roles3 = new Roles();
-        roles3.setLevel(3);
-        roles3.setName(RoleContants.TEACHER);
-        roleRepository.save(roles3);
-        Roles roles4 = new Roles();
-        roles4.setLevel(4);
-        roles4.setName(RoleContants.STUDENT);
-        roleRepository.save(roles4);
-        Language language = new Language();
-        language.setName("English");
-        Language language2 = new Language();
-        language2.setName("Русский");
-        Language language3 = new Language();
-        language3.setName("O'zbek");
-        languageRepository.save(language3);
-        languageRepository.save(language2);
-        languageRepository.save(language);
+//        Roles roles = new Roles();
+//        roles.setLevel(1);
+//        roles.setName(RoleContants.SUPER_ADMIN);
+//        roleRepository.save(roles);
+//        Roles roles2 = new Roles();
+//        roles2.setLevel(2);
+//        roles2.setName(RoleContants.ADMIN);
+//        roleRepository.save(roles2);
+//        Roles roles3 = new Roles();
+//        roles3.setLevel(3);
+//        roles3.setName(RoleContants.TEACHER);
+//        roleRepository.save(roles3);
+//        Roles roles4 = new Roles();
+//        roles4.setLevel(4);
+//        roles4.setName(RoleContants.STUDENT);
+//        roleRepository.save(roles4);
+//        Language language = new Language();
+//        language.setName("English");
+//        Language language2 = new Language();
+//        language2.setName("Русский");
+//        Language language3 = new Language();
+//        language3.setName("O'zbek");
+//        languageRepository.save(language3);
+//        languageRepository.save(language2);
+//        languageRepository.save(language);
 
     }
 

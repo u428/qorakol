@@ -58,17 +58,17 @@ public class AuthController {
 
 
 
-    @GetMapping(value = "get_role")
+    @GetMapping(value = "/get_role")
     public ResponseEntity getRole(@CurrentUser String login){
         return ResponseEntity.ok(authService.getRoles(login));
     }
 
-    @GetMapping(value = "get_current_user")
+    @GetMapping(value = "/get_current_user")
     public ResponseEntity getCurrentUser(@CurrentUser String login){
         return ResponseEntity.ok(authService.getCurrentUser(login));
     }
 
-    @PostMapping(value = "add_admin")
+    @PostMapping(value = "/add_admin")
     public ResponseEntity addAdmin(@RequestBody AdminDto adminDto){
         authService.addAdmin(adminDto);
         return ResponseEntity.ok("SUCCESS");
@@ -79,5 +79,10 @@ public class AuthController {
     public String addRole(){
         authService.addRole();
         return "sda";
+    }
+
+    @GetMapping(value = "/get_admin")
+    public ResponseEntity getADmins(){
+        return ResponseEntity.ok(authService.getAdmins());
     }
 }

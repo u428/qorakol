@@ -31,7 +31,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Object getGroups(String login) {
-        AuthEntity authEntity = authRepository.findByLogin(login);
+        AuthEntity authEntity = authRepository.findByLoginAndDeleteIsFalse(login);
         Teacher teacher = teacherRepository.findByAuthEntity(authEntity);
         return groupsRepository.findAllByTeacherIdAndDeleteIsFalse(teacher.getId());
     }
@@ -44,7 +44,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Object checkStudent(String login, CheckStudents checkStudents) {
-        AuthEntity authEntity = authRepository.findByLogin(login);
+        AuthEntity authEntity = authRepository.findByLoginAndDeleteIsFalse(login);
         Teacher teacher = teacherRepository.findByAuthEntity(authEntity);
         Groups groups = groupsRepository.findById(checkStudents.getGroupId()).get();
         for (Long id: checkStudents.getIds()){

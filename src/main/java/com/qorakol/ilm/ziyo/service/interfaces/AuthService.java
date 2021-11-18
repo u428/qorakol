@@ -30,4 +30,6 @@ public interface AuthService extends UserDetailsService {
     void addAdmin(AdminDto adminDto);
 
     void addRole();
+
+    Object getAdmins();
 }
