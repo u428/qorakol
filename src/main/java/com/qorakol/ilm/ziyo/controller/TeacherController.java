@@ -27,7 +27,8 @@ public class TeacherController {
 
     @GetMapping(value = "/groups")
     public ResponseEntity getRoles(@CurrentUser String login){
-        return ResponseEntity.ok(teacherService.getGroups(login));
+//        return ResponseEntity.ok(teacherService.getGroups(login));
+        return null;
     }
 
     @GetMapping(value ="group_students")

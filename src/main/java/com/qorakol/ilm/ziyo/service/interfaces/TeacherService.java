@@ -3,7 +3,7 @@ package com.qorakol.ilm.ziyo.service.interfaces;
 import com.qorakol.ilm.ziyo.model.dto.CheckStudents;
 
 public interface TeacherService {
-    Object getGroups(String login);
+//    Object getGroups(String login);
 
     Object getGroupStudents(String login, Long id);
 
