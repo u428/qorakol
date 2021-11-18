@@ -60,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean checkLogin(String login) {
-        return authRepository.existsByLogin(login);
+        return authRepository.existsAllByLogin(login);
     }
 
     @Override

@@ -13,4 +13,5 @@ public interface AuthRepository extends JpaRepository<AuthEntity, Long> {
     AuthEntity findByLogin(String login);
 
     boolean existsByLogin(String login);
+    boolean existsAllByLogin(String login);
 }
