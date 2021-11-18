@@ -203,4 +203,9 @@ public class AuthServiceImpl implements AuthService {
 
     }
 
+    @Override
+    public Object getAdmins() {
+        return null;
+    }
+
 }
