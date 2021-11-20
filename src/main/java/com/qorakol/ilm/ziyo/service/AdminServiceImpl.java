@@ -115,7 +115,12 @@ public class AdminServiceImpl implements AdminService {
             MainImage mainImage = mainImagesRepository.findById(mainImageDto.getId()).get();
             BeanUtils.copyProperties(mainImageDto, mainImage);
             if (mainImageDto.getFiles()!=null){
-                addImage(mainImageDto.getFiles(), mainImage.getImagesId());
+                try {
+                    addImage(mainImageDto.getFiles(), mainImage.getImagesId());
+
+                }catch (Exception e){
+                    return e.getMessage();
+                }
             }
             mainImagesRepository.save(mainImage);
             return "SUCCESS";
@@ -183,7 +188,13 @@ public class AdminServiceImpl implements AdminService {
         return null;
     }
 
-    private void addImage(MultipartFile multipartFile, Long id){
+    @Override
+    public Object deleteImage(Long id) {
+        Images images = imagesRepository.findById(id).get();
+        return null;
+    }
+
+    private void addImage(MultipartFile multipartFile, Long id) throws IOException {
         String AA=multipartFile.getOriginalFilename();
         Images image = imagesRepository.findById(id).get();
         image.setFileSize(multipartFile.getSize());
@@ -202,8 +213,11 @@ public class AdminServiceImpl implements AdminService {
             System.out.println(filePath);
             System.out.println(path);
 
-            Files.delete(path);
+            if(Files.exists(path)){
+                Files.delete(path);
+            }
             Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+//            Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.ATOMIC_MOVE);
         } catch (IOException e) {
             e.printStackTrace();
         }
