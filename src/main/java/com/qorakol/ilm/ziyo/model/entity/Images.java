@@ -20,7 +20,6 @@ public class Images {
     private String name;
 
     @Column
-    @JsonIgnore
     private String extention;
 
     @Column
@@ -30,7 +29,10 @@ public class Images {
     @Column
     private String contentType;
 
-    @JsonIgnore
     @Column
     private String uploadPath;
+
+    @Column
+    private boolean delete = false;
+
 }

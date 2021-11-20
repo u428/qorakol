@@ -133,7 +133,7 @@ public class StaticServiceImpl implements StaticService {
     public Object getMainImages() {
         Pageable pageable= PageRequest.of(0, 3);
         Page<MainImage> imagePage = mainImagesRepository.findAllByDeleteIsFalse(pageable);
-        return imagePage;
+        return imagePage.getContent();
     }
 
 

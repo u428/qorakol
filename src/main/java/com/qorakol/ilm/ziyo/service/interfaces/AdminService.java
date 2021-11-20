@@ -13,4 +13,6 @@ public interface AdminService {
     Object paying(PaymentDto paymentDto);
 
     Object changePayment(PaymentDto paymentDto);
+
+    Object deleteImage(Long id);
 }
