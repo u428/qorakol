@@ -178,31 +178,31 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void addRole(){
-//        Roles roles = new Roles();
-//        roles.setLevel(1);
-//        roles.setName(RoleContants.SUPER_ADMIN);
-//        roleRepository.save(roles);
-//        Roles roles2 = new Roles();
-//        roles2.setLevel(2);
-//        roles2.setName(RoleContants.ADMIN);
-//        roleRepository.save(roles2);
-//        Roles roles3 = new Roles();
-//        roles3.setLevel(3);
-//        roles3.setName(RoleContants.TEACHER);
-//        roleRepository.save(roles3);
-//        Roles roles4 = new Roles();
-//        roles4.setLevel(4);
-//        roles4.setName(RoleContants.STUDENT);
-//        roleRepository.save(roles4);
-//        Language language = new Language();
-//        language.setName("English");
-//        Language language2 = new Language();
-//        language2.setName("Русский");
-//        Language language3 = new Language();
-//        language3.setName("O'zbek");
-//        languageRepository.save(language3);
-//        languageRepository.save(language2);
-//        languageRepository.save(language);
+        Roles roles = new Roles();
+        roles.setLevel(1);
+        roles.setName(RoleContants.SUPER_ADMIN);
+        roleRepository.save(roles);
+        Roles roles2 = new Roles();
+        roles2.setLevel(2);
+        roles2.setName(RoleContants.ADMIN);
+        roleRepository.save(roles2);
+        Roles roles3 = new Roles();
+        roles3.setLevel(3);
+        roles3.setName(RoleContants.TEACHER);
+        roleRepository.save(roles3);
+        Roles roles4 = new Roles();
+        roles4.setLevel(4);
+        roles4.setName(RoleContants.STUDENT);
+        roleRepository.save(roles4);
+        Language language = new Language();
+        language.setName("English");
+        Language language2 = new Language();
+        language2.setName("Русский");
+        Language language3 = new Language();
+        language3.setName("O'zbek");
+        languageRepository.save(language3);
+        languageRepository.save(language2);
+        languageRepository.save(language);
 
     }
 
