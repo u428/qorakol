@@ -62,7 +62,7 @@ public class AdminController {
         return ResponseEntity.ok( adminService.addMainImage(mainImageDto));
     }
 
-    @PutMapping(value = "put_main_image")
+    @PutMapping(value = "/put_main_image")
     public ResponseEntity putMainImage(@ModelAttribute MainImageDto mainImageDto){
         return ResponseEntity.ok(adminService.putImage(mainImageDto));
     }

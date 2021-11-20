@@ -7,6 +7,7 @@ import com.qorakol.ilm.ziyo.service.interfaces.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -26,6 +27,7 @@ import java.util.Collections;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@Import(SwaggerConfig.class)
 public class WebConfiguration extends WebSecurityConfigurerAdapter {
 
     private final AuthService authService;
