@@ -114,6 +114,9 @@ public class AuthServiceImpl implements AuthService {
         Map<String, Object> result = new HashMap<>();
         if (teacher == null){
             student = studentRepository.findByAuthEntity(authEntity);
+            student.setAuthEntity(null);
+            student.setId(null);
+            student.setAuthId(null);
             result.put("user", student);
         }else{
             result.put("user", teacher);
