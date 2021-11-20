@@ -151,6 +151,7 @@ public class AuthServiceImpl implements AuthService {
         authEntity.setPassword(bCryptPasswordEncoder.encode(adminDto.getPassword()));
         Roles roles = roleRepository.findByName(RoleContants.ADMIN);
         authEntity.setRolesId(roles.getId());
+        authRepository.save(authEntity);
         student.setAuthId(authEntity.getId());
         studentRepository.save(student);
     }
@@ -209,6 +210,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public Object getAdmins() {
         return null;
+    }
+
+    @Override
+    public Object getRole() {
+        return roleRepository.findAll();
     }
 
 }
