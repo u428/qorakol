@@ -17,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -67,24 +68,33 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
             try {
 
+                String user = Jwts.parser()
+                    .setSigningKey(SecurityConstants.TOKEN_SECRET)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+            if (user!=null){
+                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+            }
 
-                Jws<Claims> claimsJws = Jwts.parser()
-                        .setSigningKey(SecurityConstants.TOKEN_SECRET)
-                        .parseClaimsJws(token);
-                Claims body = claimsJws.getBody();
 
-                String username = body.getSubject();
-
-                List<Map<String, String>> authorities = (List<Map<String, String>>) body.get("authorities");
-
-                Set<SimpleGrantedAuthority> simpleGrantedAuthorities = authorities.stream()
-                        .map(m -> new SimpleGrantedAuthority(m.get("authority")))
-                        .collect(Collectors.toSet());
-                return new UsernamePasswordAuthenticationToken(
-                        username,
-                        null,
-                        simpleGrantedAuthorities
-                );
+//                Jws<Claims> claimsJws = Jwts.parser()
+//                        .setSigningKey(SecurityConstants.TOKEN_SECRET)
+//                        .parseClaimsJws(token);
+//                Claims body = claimsJws.getBody();
+//
+//                String username = body.getSubject();
+//
+////                List<Map<String, String>> authorities = (List<Map<String, String>>) body.get("authorities");
+////
+////                Set<SimpleGrantedAuthority> simpleGrantedAuthorities = authorities.stream()
+////                        .map(m -> new SimpleGrantedAuthority(m.get("authority")))
+////                        .collect(Collectors.toSet());
+//                return new UsernamePasswordAuthenticationToken(
+//                        username,
+//                        null,
+//                        new ArrayList<>()
+//                );
 
 
             }catch (JwtException e){
