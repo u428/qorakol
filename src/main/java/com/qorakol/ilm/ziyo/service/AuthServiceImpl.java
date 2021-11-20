@@ -211,10 +211,4 @@ public class AuthServiceImpl implements AuthService {
     public Object getAdmins() {
         return null;
     }
-
-    @Override
-    public Object getRole() {
-        return roleRepository.findAll();
-    }
-
 }
