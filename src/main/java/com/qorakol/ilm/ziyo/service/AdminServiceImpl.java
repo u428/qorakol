@@ -16,8 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -30,11 +29,12 @@ public class AdminServiceImpl implements AdminService {
     private final PaymentRepository paymentRepository;
     private final AttendanceRepository attendanceRepository;
     private final ActivationRepository activationRepository;
+    private final TeacherRepository teacherRepository;
 
     private Path fileStoragePath;
 
     @Autowired
-    public AdminServiceImpl(GroupsRepository groupsRepository, LanguageRepository languageRepository, ImagesRepository imagesRepository, MainImagesRepository mainImagesRepository, PaymentRepository paymentRepository, AttendanceRepository attendanceRepository, ActivationRepository activationRepository) {
+    public AdminServiceImpl(GroupsRepository groupsRepository, LanguageRepository languageRepository, ImagesRepository imagesRepository, MainImagesRepository mainImagesRepository, PaymentRepository paymentRepository, AttendanceRepository attendanceRepository, ActivationRepository activationRepository, TeacherRepository teacherRepository) {
         this.groupsRepository = groupsRepository;
         this.languageRepository = languageRepository;
         this.imagesRepository = imagesRepository;
@@ -42,7 +42,15 @@ public class AdminServiceImpl implements AdminService {
         this.paymentRepository = paymentRepository;
         this.attendanceRepository = attendanceRepository;
         this.activationRepository = activationRepository;
+        this.teacherRepository = teacherRepository;
         fileStoragePath = Paths.get("/app/java/java_code").toAbsolutePath().normalize();
+        if (!Files.exists(fileStoragePath)){
+            try {
+                Files.createDirectories(fileStoragePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
@@ -188,6 +196,20 @@ public class AdminServiceImpl implements AdminService {
     public Object deleteImage(Long id) {
         Images images = imagesRepository.findById(id).get();
         return null;
+    }
+
+    @Override
+    public Object getTeachers() {
+        List<Teacher> list = teacherRepository.findAllByDeleteIsFalse();
+        List<Map> returns = new ArrayList<>();
+        for (int i=0;i<list.size();i++){
+            Map<String, Object> map = new HashMap<>();
+            List<Groups> groups = groupsRepository.findAllByTeacherIdAndDeleteIsFalse(list.get(i).getId());
+            map.put("groups", groups.size());
+            map.put("teachers", list.get(i));
+            returns.add(map);
+        }
+        return returns;
     }
 
     private void addImage(MultipartFile multipartFile, Long id) throws IOException {

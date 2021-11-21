@@ -13,4 +13,6 @@ public interface SubjectsRepository extends JpaRepository<Subjects, Long> {
 
     List<Subjects> findAllByDeleteIsFalse();
 
+    List<Subjects> findAllByIdIn(List<Long> ids);
+
 }

@@ -11,11 +11,6 @@ import com.qorakol.ilm.ziyo.repository.*;
 import com.qorakol.ilm.ziyo.service.interfaces.AuthService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,7 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -41,11 +36,13 @@ public class AuthServiceImpl implements AuthService {
     private final GroupsRepository groupsRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final LanguageRepository languageRepository;
+    private final SubjectsRepository subjectsRepository;
+
 
     private Path fileStoragePath;
 
     @Autowired
-    public AuthServiceImpl(AuthRepository authRepository, ImagesRepository imagesRepository, RoleRepository roleRepository, TeacherRepository teacherRepository, StudentRepository studentRepository, GroupsRepository groupsRepository, BCryptPasswordEncoder bCryptPasswordEncoder, LanguageRepository languageRepository) {
+    public AuthServiceImpl(AuthRepository authRepository, ImagesRepository imagesRepository, RoleRepository roleRepository, TeacherRepository teacherRepository, StudentRepository studentRepository, GroupsRepository groupsRepository, BCryptPasswordEncoder bCryptPasswordEncoder, LanguageRepository languageRepository, SubjectsRepository subjectsRepository) {
         this.authRepository = authRepository;
         this.imagesRepository = imagesRepository;
         this.roleRepository = roleRepository;
@@ -54,8 +51,16 @@ public class AuthServiceImpl implements AuthService {
         this.groupsRepository = groupsRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.languageRepository = languageRepository;
+        this.subjectsRepository = subjectsRepository;
 
-        fileStoragePath = Paths.get("java/java_teacher").toAbsolutePath().normalize();
+        fileStoragePath = Paths.get("/app/java/java_teacher").toAbsolutePath().normalize();
+        if (!Files.exists(fileStoragePath)){
+            try {
+                Files.createDirectories(fileStoragePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -74,6 +79,10 @@ public class AuthServiceImpl implements AuthService {
         authEntity.setRolesId(role.getId());
         authRepository.save(authEntity);
         teacher.setAuthEntity(authEntity);
+        List<Subjects> subjectsList = subjectsRepository.findAllByIdIn(regTeacherDto.getSubjectIds());
+        List<Language> languageList = languageRepository.findAllByIdIn(regTeacherDto.getLangIds());
+        teacher.setLanguages(languageList);
+        teacher.setSubjects(subjectsList);
         try {
             MultipartFile multipartFile = regTeacherDto.getFiles();
             Images images = new Images();
@@ -87,6 +96,9 @@ public class AuthServiceImpl implements AuthService {
             System.out.println(fileStoragePath);
             Path filePath = Paths.get(fileStoragePath + "//" + fileName);
             images.setUploadPath(String.valueOf(filePath));
+            if(Files.exists(filePath)){
+                Files.delete(filePath);
+            }
             Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             imagesRepository.save(images);
             teacher.setImagesId(images.getId());
