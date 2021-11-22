@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+import java.util.List;
+
 @Data
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class RegTeacherDto {
 
     public String firstName;
@@ -32,4 +34,8 @@ public class RegTeacherDto {
     public String password;
 
     public MultipartFile files;
+
+    public List<Long> subjectIds;
+    public List<Long> langIds;
 }
+

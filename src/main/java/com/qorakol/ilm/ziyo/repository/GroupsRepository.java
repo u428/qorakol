@@ -11,4 +11,5 @@ public interface GroupsRepository extends JpaRepository<Groups, Long> {
 
     List<Groups> findAllByTeacherIdAndDeleteIsFalse(Long id);
     List<Groups> findAllByDeleteIsFalse();
+
 }

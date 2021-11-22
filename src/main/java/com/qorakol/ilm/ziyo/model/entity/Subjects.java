@@ -27,7 +27,4 @@ public class Subjects {
 
     private boolean delete = false;
 
-    @OneToMany(mappedBy = "subjects")
-    private List<Groups> groups ;
-
 }

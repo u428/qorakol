@@ -15,4 +15,6 @@ public interface AdminService {
     Object changePayment(PaymentDto paymentDto);
 
     Object deleteImage(Long id);
+
+    Object getTeachers();
 }

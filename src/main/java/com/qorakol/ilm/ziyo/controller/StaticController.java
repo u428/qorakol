@@ -29,12 +29,12 @@ public class StaticController {
 
     @GetMapping(value = "/get_language")
     public ResponseEntity getSubjects(){
-        return ResponseEntity.ok(service.getAllSubjects());
+        return ResponseEntity.ok(service.getAllLang());
     }
 
     @GetMapping(value = "/get_subjects")
     public ResponseEntity getLang(){
-        return ResponseEntity.ok(service.getAllLang());
+        return ResponseEntity.ok(service.getAllSubjects());
     }
 
     @GetMapping(value = "/get_main_images")

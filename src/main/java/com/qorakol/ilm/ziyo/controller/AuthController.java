@@ -74,7 +74,6 @@ public class AuthController {
         return ResponseEntity.ok("SUCCESS");
     }
 
-
     @GetMapping()
     public String addRole(){
         authService.addRole();

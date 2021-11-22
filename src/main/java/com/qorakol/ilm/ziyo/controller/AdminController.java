@@ -29,6 +29,12 @@ public class AdminController {
         this.adminService = adminService;
     }
 
+
+    @GetMapping(value = "/get_teachers_list")
+    public ResponseEntity getTeachers(){
+        return ResponseEntity.ok(adminService.getTeachers());
+    }
+
     @PostMapping(value = "/add_subject")
     public ResponseEntity addSubject(@RequestBody SubjectDto subjectDto){
         service.addSubject(subjectDto);
@@ -39,6 +45,7 @@ public class AdminController {
     public ResponseEntity putSubject(@PathVariable(name = "id") Long id, @RequestBody SubjectDto subjectDto){
         return ResponseEntity.ok(service.putSubject(id, subjectDto));
     }
+
     @DeleteMapping(value = "/delete_subject/{id}")
     public ResponseEntity deleteSubject(@PathVariable(name = "id") Long id){
         return ResponseEntity.ok(service.deleteSubject(id));
@@ -66,10 +73,12 @@ public class AdminController {
     public ResponseEntity putMainImage(@ModelAttribute MainImageDto mainImageDto){
         return ResponseEntity.ok(adminService.putImage(mainImageDto));
     }
-    @DeleteMapping(value = "/delete_image")
-    public ResponseEntity deleteImage(@RequestParam Long id){
-        return ResponseEntity.ok(adminService.deleteImage(id));
-    }
+
+
+//    @DeleteMapping(value = "/delete_image")
+//    public ResponseEntity deleteImage(@RequestParam Long id){
+//        return ResponseEntity.ok(adminService.deleteImage(id));
+//    }
 
     @PostMapping(value = "/payment")
     public ResponseEntity payment(@RequestBody PaymentDto paymentDto){

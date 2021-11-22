@@ -53,9 +53,15 @@ public class Teacher {
     @OneToMany(cascade = CascadeType.ALL)
     private List<Language> languages;
 
+    @ManyToMany()
+    private List<Subjects> subjects;
+
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "image_id", insertable = false, updatable = false)
     private Images images;
+
+    private boolean delete = false;
 
 
 
