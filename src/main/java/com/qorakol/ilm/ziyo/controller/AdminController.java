@@ -73,10 +73,12 @@ public class AdminController {
     public ResponseEntity putMainImage(@ModelAttribute MainImageDto mainImageDto){
         return ResponseEntity.ok(adminService.putImage(mainImageDto));
     }
-    @DeleteMapping(value = "/delete_image")
-    public ResponseEntity deleteImage(@RequestParam Long id){
-        return ResponseEntity.ok(adminService.deleteImage(id));
-    }
+
+
+//    @DeleteMapping(value = "/delete_image")
+//    public ResponseEntity deleteImage(@RequestParam Long id){
+//        return ResponseEntity.ok(adminService.deleteImage(id));
+//    }
 
     @PostMapping(value = "/payment")
     public ResponseEntity payment(@RequestBody PaymentDto paymentDto){

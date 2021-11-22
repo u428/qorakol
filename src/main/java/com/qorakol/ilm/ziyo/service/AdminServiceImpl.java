@@ -92,7 +92,7 @@ public class AdminServiceImpl implements AdminService {
         groups.setSubjectId(newGroup.getSubjectId());
         groups.setBegin(newGroup.getBegin());
         groups.setFinish(newGroup.getFinish());
-//        groups.setTeacherId(newGroup.getTeacherId());
+        groups.setTeacherId(newGroup.getTeacherId());
         groups.setPrice(newGroup.getPrice());
 
         try {
