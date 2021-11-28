@@ -37,7 +37,7 @@ public class AuthController {
             authService.createTeacher(regTeacherDto);
             return ResponseEntity.ok("SUCCESS");
         }catch (Exception e){
-            return ResponseEntity.ok(e.getMessage());
+            return ResponseEntity.ok("ERROR");
         }
     }
 
