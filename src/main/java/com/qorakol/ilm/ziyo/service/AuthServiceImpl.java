@@ -77,8 +77,6 @@ public class AuthServiceImpl implements AuthService {
         authEntity.setPassword(bCryptPasswordEncoder.encode(regTeacherDto.getPassword()));
         Roles role = roleRepository.findByName(RoleContants.TEACHER);
         authEntity.setRolesId(role.getId());
-        authRepository.save(authEntity);
-        teacher.setAuthEntity(authEntity);
         List<Subjects> subjectsList = subjectsRepository.findAllByIdIn(regTeacherDto.getSubjectIds());
         List<Language> languageList = languageRepository.findAllByIdIn(regTeacherDto.getLangIds());
         teacher.setLanguages(languageList);
@@ -96,12 +94,12 @@ public class AuthServiceImpl implements AuthService {
             System.out.println(fileStoragePath);
             Path filePath = Paths.get(fileStoragePath + "//" + fileName);
             images.setUploadPath(String.valueOf(filePath));
-            if(Files.exists(filePath)){
-                Files.delete(filePath);
-            }
+            Files.createDirectories(fileStoragePath);
             Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             imagesRepository.save(images);
             teacher.setImagesId(images.getId());
+            authRepository.save(authEntity);
+            teacher.setAuthEntity(authEntity);
             teacherRepository.save(teacher);
         } catch (Exception e) {
             System.out.println(e);
