@@ -38,11 +38,6 @@ public class AdminController {
         }
     }
 
-    @GetMapping(value = "/get_teachers_list")
-    public ResponseEntity getTeachers(){
-        return ResponseEntity.ok(adminService.getTeachers());
-    }
-
     @PostMapping(value = "/add_subject")
     public ResponseEntity addSubject(@RequestBody SubjectDto subjectDto){
         service.addSubject(subjectDto);

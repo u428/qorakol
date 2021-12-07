@@ -17,7 +17,5 @@ public interface AdminService {
 
     Object deleteImage(Long id);
 
-    Object getTeachers();
-
     void createTeacher(RegTeacherDto regTeacherDto);
 }

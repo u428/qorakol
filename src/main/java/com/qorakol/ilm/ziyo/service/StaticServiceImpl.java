@@ -137,4 +137,26 @@ public class StaticServiceImpl implements StaticService {
     }
 
 
+    @Override
+    public Object getTeachers(int limit, int page) {
+        if (page > 0) page--;
+        Pageable pageable = PageRequest.of(page, limit);
+        Page<Teacher> list = teacherRepository.findAll(pageable);
+        List<Map> returns = new ArrayList<>();
+        System.out.println(list.getTotalElements());
+        for (Teacher teacher: list.getContent()){
+            Map<String, Object> map = new HashMap<>();
+            List<Groups> groups = groupsRepository.findAllByTeacherIdAndDeleteIsFalse(teacher.getId());
+            map.put("groups", groups.size());
+            map.put("teachers", teacher);
+            returns.add(map);
+        }
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put("total_elements", list.getTotalElements());
+        map2.put("total_pages", list.getTotalPages());
+        map2.put("number_od_elements", list.getNumberOfElements());
+        returns.add(map2);
+        return returns;
+    }
+
 }

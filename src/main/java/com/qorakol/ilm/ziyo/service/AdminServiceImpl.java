@@ -10,6 +10,9 @@ import com.qorakol.ilm.ziyo.repository.*;
 import com.qorakol.ilm.ziyo.service.interfaces.AdminService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -248,19 +251,6 @@ public class AdminServiceImpl implements AdminService {
         return null;
     }
 
-    @Override
-    public Object getTeachers() {
-        List<Teacher> list = teacherRepository.findAll();
-        List<Map> returns = new ArrayList<>();
-        for (int i=0;i<list.size();i++){
-            Map<String, Object> map = new HashMap<>();
-            List<Groups> groups = groupsRepository.findAllByTeacherIdAndDeleteIsFalse(list.get(i).getId());
-            map.put("groups", groups.size());
-            map.put("teachers", list.get(i));
-            returns.add(map);
-        }
-        return returns;
-    }
 
     private void addImage(MultipartFile multipartFile, Long id) throws IOException {
         String AA=multipartFile.getOriginalFilename();
