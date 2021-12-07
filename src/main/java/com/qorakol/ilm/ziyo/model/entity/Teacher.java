@@ -42,12 +42,15 @@ public class Teacher {
 
     private String description;
 
-    @Column(name = "image_id")
-    private Long ImagesId;
+    @Column(name = "auth_id", unique = false)
+    private Long authId;
+
+    @Column(name = "image_id", unique = false)
+    private Long imagesId;
 
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "auth_id")
+    @JoinColumn(name = "auth_id", updatable = false, insertable = false)
     private AuthEntity authEntity;
 
     @OneToMany(cascade = CascadeType.ALL)

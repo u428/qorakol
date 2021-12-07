@@ -3,6 +3,7 @@ package com.qorakol.ilm.ziyo.service.interfaces;
 import com.qorakol.ilm.ziyo.model.dto.MainImageDto;
 import com.qorakol.ilm.ziyo.model.dto.NewGroup;
 import com.qorakol.ilm.ziyo.model.dto.PaymentDto;
+import com.qorakol.ilm.ziyo.model.dto.RegTeacherDto;
 
 public interface AdminService {
     Object addMainImage(MainImageDto mainImageDto);
@@ -17,4 +18,6 @@ public interface AdminService {
     Object deleteImage(Long id);
 
     Object getTeachers();
+
+    void createTeacher(RegTeacherDto regTeacherDto);
 }
