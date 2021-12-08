@@ -27,7 +27,7 @@ public class AdminController {
         this.adminService = adminService;
     }
 
-    @PostMapping(value = Registers.RegisterTeacher,
+    @PostMapping(value = "/teacher",
             consumes = {"multipart/form-data", "application/json"})
     public ResponseEntity<?> regTeacher(@Valid @ModelAttribute RegTeacherDto regTeacherDto){
         try {
