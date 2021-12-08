@@ -18,4 +18,6 @@ public interface AdminService {
     Object deleteImage(Long id);
 
     void createTeacher(RegTeacherDto regTeacherDto);
+
+    void changeGroup(NewGroup newGroup, Long id);
 }

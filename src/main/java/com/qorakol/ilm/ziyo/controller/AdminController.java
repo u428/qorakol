@@ -61,9 +61,10 @@ public class AdminController {
         return ResponseEntity.ok("SUCCESS");
     }
 
-    @PostMapping(value = "/set_photo")
-    public ResponseEntity setPhoto(MultipartFile multipartFile){
-
+    @PutMapping(value = "/put_group/{id}",
+            consumes = {"multipart/form-data", "application/json"})
+    public ResponseEntity putGroup(@Valid @ModelAttribute NewGroup newGroup, @PathVariable Long id){
+        adminService.changeGroup(newGroup, id);
         return ResponseEntity.ok("SUCCESS");
     }
 

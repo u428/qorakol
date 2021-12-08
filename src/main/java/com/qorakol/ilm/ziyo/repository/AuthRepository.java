@@ -12,4 +12,6 @@ public interface AuthRepository extends JpaRepository<AuthEntity, Long> {
 
     boolean existsByLogin(String login);
     boolean existsAllByLogin(String login);
+
+    AuthEntity findByLoginAndDeleteIsFalse(String login);
 }

@@ -86,9 +86,11 @@ public class AuthServiceImpl implements AuthService {
         Groups groups = groupsRepository.findById(sToGroup.getGroupId()).get();
         if (groups == null) throw new UsernameNotFoundException("id li group topilmadi");
         if (student.getGroupsSet() == null){
-
+            student.setGroupsSet(new HashSet<Groups>());
         }
-        student.setGroupsSet();
+        Set<Groups> set = student.getGroupsSet();
+        set.add(groups);
+        student.setGroupsSet(set);
         studentRepository.save(student);
     }
 

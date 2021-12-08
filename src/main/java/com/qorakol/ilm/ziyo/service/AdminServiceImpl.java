@@ -10,9 +10,6 @@ import com.qorakol.ilm.ziyo.repository.*;
 import com.qorakol.ilm.ziyo.service.interfaces.AdminService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -95,13 +92,41 @@ public class AdminServiceImpl implements AdminService {
             System.out.println(fileStoragePath);
             Path filePath = Paths.get(fileStoragePath + "//" + fileName);
             images.setUploadPath(String.valueOf(filePath));
-            Files.createDirectories(fileStoragePath);
-            Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+//            Files.createDirectories(fileStoragePath);
+//            Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             imagesRepository.save(images);
             teacher.setImagesId(images.getId());
             authRepository.save(authEntity);
             teacher.setAuthId(authEntity.getId());
             teacherRepository.save(teacher);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    @Override
+    public void changeGroup(NewGroup newGroup, Long id) {
+        Groups groups = groupsRepository.findById(id).get();
+        BeanUtils.copyProperties(newGroup, groups);
+        try {
+            MultipartFile multipartFile = newGroup.getFiles();
+            Images images = groups.getImages();
+            images.setContentType(multipartFile.getContentType());
+            images.setName(multipartFile.getOriginalFilename());
+            images.setFileSize(multipartFile.getSize());
+
+            String AA = multipartFile.getOriginalFilename();
+            String fileName = String.valueOf(images.getId()) + AA.substring(AA.length() - 4, AA.length());
+            images.setExtention(AA.substring(AA.length() - 4));
+
+            Path path=Paths.get(images.getUploadPath());
+            Files.deleteIfExists(path);
+
+            Path filePath = Paths.get(fileStoragePath + "//" + fileName);
+            images.setUploadPath(String.valueOf(filePath));
+            Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            imagesRepository.save(images);
+            groupsRepository.save(groups);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -260,6 +285,8 @@ public class AdminServiceImpl implements AdminService {
         image.setContentType(multipartFile.getContentType());
 
         Path path=Paths.get(image.getUploadPath());
+        Files.deleteIfExists(path);
+
         String fileName = String.valueOf(image.getId())+AA.substring(AA.length()-4, AA.length());
         Path filePath = Paths.get(fileStoragePath + "//" + fileName);
         System.out.println(filePath);
