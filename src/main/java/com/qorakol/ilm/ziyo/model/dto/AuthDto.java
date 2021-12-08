@@ -11,8 +11,6 @@ import javax.validation.constraints.NotEmpty;
 public class AuthDto {
 
     public String login;
-
-    @NotEmpty
     public String password;
 
     public String getLogin() {
