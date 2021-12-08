@@ -15,8 +15,6 @@ public interface AuthService extends UserDetailsService {
 
     boolean checkLogin(String login);
 
-    void createTeacher(RegTeacherDto regTeacherDto);
-
 
 
     Roles getRoles(String login);

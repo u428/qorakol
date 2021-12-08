@@ -1,13 +1,19 @@
 package com.qorakol.ilm.ziyo.service;
 
+import com.qorakol.ilm.ziyo.constant.RoleContants;
 import com.qorakol.ilm.ziyo.model.dto.MainImageDto;
 import com.qorakol.ilm.ziyo.model.dto.NewGroup;
 import com.qorakol.ilm.ziyo.model.dto.PaymentDto;
+import com.qorakol.ilm.ziyo.model.dto.RegTeacherDto;
 import com.qorakol.ilm.ziyo.model.entity.*;
 import com.qorakol.ilm.ziyo.repository.*;
 import com.qorakol.ilm.ziyo.service.interfaces.AdminService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,11 +36,15 @@ public class AdminServiceImpl implements AdminService {
     private final AttendanceRepository attendanceRepository;
     private final ActivationRepository activationRepository;
     private final TeacherRepository teacherRepository;
+    private final AuthRepository authRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final RoleRepository roleRepository;
+    private final SubjectsRepository subjectsRepository;
 
     private Path fileStoragePath;
 
     @Autowired
-    public AdminServiceImpl(GroupsRepository groupsRepository, LanguageRepository languageRepository, ImagesRepository imagesRepository, MainImagesRepository mainImagesRepository, PaymentRepository paymentRepository, AttendanceRepository attendanceRepository, ActivationRepository activationRepository, TeacherRepository teacherRepository) {
+    public AdminServiceImpl(GroupsRepository groupsRepository, LanguageRepository languageRepository, ImagesRepository imagesRepository, MainImagesRepository mainImagesRepository, PaymentRepository paymentRepository, AttendanceRepository attendanceRepository, ActivationRepository activationRepository, TeacherRepository teacherRepository, AuthRepository authRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository, SubjectsRepository subjectsRepository) {
         this.groupsRepository = groupsRepository;
         this.languageRepository = languageRepository;
         this.imagesRepository = imagesRepository;
@@ -43,7 +53,11 @@ public class AdminServiceImpl implements AdminService {
         this.attendanceRepository = attendanceRepository;
         this.activationRepository = activationRepository;
         this.teacherRepository = teacherRepository;
-        fileStoragePath = Paths.get("/app/java/java_code").toAbsolutePath().normalize();
+        this.authRepository = authRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.roleRepository = roleRepository;
+        this.subjectsRepository = subjectsRepository;
+        fileStoragePath = Paths.get("/home/robotus/app/java/java_code").toAbsolutePath().normalize();
         if (!Files.exists(fileStoragePath)){
             try {
                 Files.createDirectories(fileStoragePath);
@@ -52,6 +66,45 @@ public class AdminServiceImpl implements AdminService {
             }
         }
 
+    }
+
+
+    @Override
+    public void createTeacher(RegTeacherDto regTeacherDto) {
+        Teacher teacher = new Teacher();
+        BeanUtils.copyProperties(regTeacherDto, teacher);
+        AuthEntity authEntity=new AuthEntity();
+        authEntity.setLogin(regTeacherDto.getLogin());
+        authEntity.setPassword(bCryptPasswordEncoder.encode(regTeacherDto.getPassword()));
+        Roles role = roleRepository.findByName(RoleContants.TEACHER);
+        authEntity.setRolesId(role.getId());
+        List<Subjects> subjectsList = subjectsRepository.findAllByIdIn(regTeacherDto.getSubjectIds());
+        List<Language> languageList = languageRepository.findAllByIdIn(regTeacherDto.getLangIds());
+        teacher.setLanguages(languageList);
+        teacher.setSubjects(subjectsList);
+        try {
+            MultipartFile multipartFile = regTeacherDto.getFiles();
+            Images images = new Images();
+            images.setContentType(multipartFile.getContentType());
+            images.setName(multipartFile.getOriginalFilename());
+            images.setFileSize(multipartFile.getSize());
+            imagesRepository.save(images);
+            String AA = multipartFile.getOriginalFilename();
+            String fileName = String.valueOf(images.getId()) + AA.substring(AA.length() - 4, AA.length());
+            images.setExtention(AA.substring(AA.length() - 4));
+            System.out.println(fileStoragePath);
+            Path filePath = Paths.get(fileStoragePath + "//" + fileName);
+            images.setUploadPath(String.valueOf(filePath));
+            Files.createDirectories(fileStoragePath);
+            Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            imagesRepository.save(images);
+            teacher.setImagesId(images.getId());
+            authRepository.save(authEntity);
+            teacher.setAuthId(authEntity.getId());
+            teacherRepository.save(teacher);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     @Override
@@ -198,19 +251,6 @@ public class AdminServiceImpl implements AdminService {
         return null;
     }
 
-    @Override
-    public Object getTeachers() {
-        List<Teacher> list = teacherRepository.findAllByDeleteIsFalse();
-        List<Map> returns = new ArrayList<>();
-        for (int i=0;i<list.size();i++){
-            Map<String, Object> map = new HashMap<>();
-            List<Groups> groups = groupsRepository.findAllByTeacherIdAndDeleteIsFalse(list.get(i).getId());
-            map.put("groups", groups.size());
-            map.put("teachers", list.get(i));
-            returns.add(map);
-        }
-        return returns;
-    }
 
     private void addImage(MultipartFile multipartFile, Long id) throws IOException {
         String AA=multipartFile.getOriginalFilename();

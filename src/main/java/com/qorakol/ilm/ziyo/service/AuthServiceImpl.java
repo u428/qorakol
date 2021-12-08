@@ -4,7 +4,6 @@ import com.qorakol.ilm.ziyo.constant.RoleContants;
 import com.qorakol.ilm.ziyo.constant.StudentStatus;
 import com.qorakol.ilm.ziyo.model.dto.AdminDto;
 import com.qorakol.ilm.ziyo.model.dto.RegStudentDto;
-import com.qorakol.ilm.ziyo.model.dto.RegTeacherDto;
 import com.qorakol.ilm.ziyo.model.dto.SToGroup;
 import com.qorakol.ilm.ziyo.model.entity.*;
 import com.qorakol.ilm.ziyo.repository.*;
@@ -16,13 +15,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 @Service
@@ -38,9 +30,6 @@ public class AuthServiceImpl implements AuthService {
     private final LanguageRepository languageRepository;
     private final SubjectsRepository subjectsRepository;
 
-
-    private Path fileStoragePath;
-
     @Autowired
     public AuthServiceImpl(AuthRepository authRepository, ImagesRepository imagesRepository, RoleRepository roleRepository, TeacherRepository teacherRepository, StudentRepository studentRepository, GroupsRepository groupsRepository, BCryptPasswordEncoder bCryptPasswordEncoder, LanguageRepository languageRepository, SubjectsRepository subjectsRepository) {
         this.authRepository = authRepository;
@@ -52,15 +41,6 @@ public class AuthServiceImpl implements AuthService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.languageRepository = languageRepository;
         this.subjectsRepository = subjectsRepository;
-
-        fileStoragePath = Paths.get("/app/java/java_teacher").toAbsolutePath().normalize();
-        if (!Files.exists(fileStoragePath)){
-            try {
-                Files.createDirectories(fileStoragePath);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
@@ -68,46 +48,7 @@ public class AuthServiceImpl implements AuthService {
         return authRepository.existsAllByLogin(login);
     }
 
-    @Override
-    public void createTeacher(RegTeacherDto regTeacherDto) {
-        Teacher teacher = new Teacher();
-        BeanUtils.copyProperties(regTeacherDto, teacher);
-        AuthEntity authEntity=new AuthEntity();
-        authEntity.setLogin(regTeacherDto.getLogin());
-        authEntity.setPassword(bCryptPasswordEncoder.encode(regTeacherDto.getPassword()));
-        Roles role = roleRepository.findByName(RoleContants.TEACHER);
-        authEntity.setRolesId(role.getId());
-        authRepository.save(authEntity);
-        teacher.setAuthEntity(authEntity);
-        List<Subjects> subjectsList = subjectsRepository.findAllByIdIn(regTeacherDto.getSubjectIds());
-        List<Language> languageList = languageRepository.findAllByIdIn(regTeacherDto.getLangIds());
-        teacher.setLanguages(languageList);
-        teacher.setSubjects(subjectsList);
-        try {
-            MultipartFile multipartFile = regTeacherDto.getFiles();
-            Images images = new Images();
-            images.setContentType(multipartFile.getContentType());
-            images.setName(multipartFile.getOriginalFilename());
-            images.setFileSize(multipartFile.getSize());
-            imagesRepository.save(images);
-            String AA = multipartFile.getOriginalFilename();
-            String fileName = String.valueOf(images.getId()) + AA.substring(AA.length() - 4, AA.length());
-            images.setExtention(AA.substring(AA.length() - 4));
-            System.out.println(fileStoragePath);
-            Path filePath = Paths.get(fileStoragePath + "//" + fileName);
-            images.setUploadPath(String.valueOf(filePath));
-            if(Files.exists(filePath)){
-                Files.delete(filePath);
-            }
-            Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-            imagesRepository.save(images);
-            teacher.setImagesId(images.getId());
-            teacherRepository.save(teacher);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
 
-    }
 
     @Override
     public Long createStudent(RegStudentDto regStudentDto) {

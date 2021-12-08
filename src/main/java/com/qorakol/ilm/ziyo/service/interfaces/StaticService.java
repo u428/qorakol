@@ -23,5 +23,7 @@ public interface StaticService {
 
     Object getGroup();
 
+    Object getTeachers(int limit, int page);
+
     Object getStudent(Long id);
 }

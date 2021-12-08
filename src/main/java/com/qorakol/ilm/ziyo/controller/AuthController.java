@@ -30,17 +30,6 @@ public class AuthController {
         return ResponseEntity.ok(authService.checkLogin(login));
     }
 
-    @PostMapping(value = Registers.RegisterTeacher,
-            consumes = {"multipart/form-data", "application/json"})
-    public ResponseEntity<?> regTeacher(@Valid @ModelAttribute RegTeacherDto regTeacherDto){
-        try {
-            authService.createTeacher(regTeacherDto);
-            return ResponseEntity.ok("SUCCESS");
-        }catch (Exception e){
-            return ResponseEntity.ok(e.getMessage());
-        }
-    }
-
     @PostMapping(value = "/student_group")
     public ResponseEntity studentGroup(@Valid @RequestBody SToGroup sToGroup){
         authService.studentAddGroup(sToGroup);

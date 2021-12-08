@@ -22,6 +22,12 @@ public class StaticController {
         this.service = service;
     }
 
+
+    @GetMapping(value = "/get_teachers_list")
+    public ResponseEntity getTeachers(@RequestParam(name = "limit") int limit, @RequestParam(name = "page") int page){
+        return ResponseEntity.ok(service.getTeachers(limit, page));
+    }
+
     @GetMapping(value = "/images")
     public ResponseEntity images(@RequestParam Long id) throws MalformedURLException {
         return service.images(id);

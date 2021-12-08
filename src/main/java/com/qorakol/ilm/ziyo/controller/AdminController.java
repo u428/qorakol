@@ -1,9 +1,7 @@
 package com.qorakol.ilm.ziyo.controller;
 
-import com.qorakol.ilm.ziyo.model.dto.MainImageDto;
-import com.qorakol.ilm.ziyo.model.dto.NewGroup;
-import com.qorakol.ilm.ziyo.model.dto.PaymentDto;
-import com.qorakol.ilm.ziyo.model.dto.SubjectDto;
+import com.qorakol.ilm.ziyo.constant.reg.Registers;
+import com.qorakol.ilm.ziyo.model.dto.*;
 import com.qorakol.ilm.ziyo.service.interfaces.AdminService;
 import com.qorakol.ilm.ziyo.service.interfaces.GroupService;
 import com.qorakol.ilm.ziyo.service.interfaces.StaticService;
@@ -29,10 +27,15 @@ public class AdminController {
         this.adminService = adminService;
     }
 
-
-    @GetMapping(value = "/get_teachers_list")
-    public ResponseEntity getTeachers(){
-        return ResponseEntity.ok(adminService.getTeachers());
+    @PostMapping(value = Registers.RegisterTeacher,
+            consumes = {"multipart/form-data", "application/json"})
+    public ResponseEntity<?> regTeacher(@Valid @ModelAttribute RegTeacherDto regTeacherDto){
+        try {
+            adminService.createTeacher(regTeacherDto);
+            return ResponseEntity.ok("SUCCESS");
+        }catch (Exception e){
+            return ResponseEntity.ok("ERROR");
+        }
     }
 
     @PostMapping(value = "/add_subject")
