@@ -1,9 +1,6 @@
 package com.qorakol.ilm.ziyo.service.interfaces;
 
-import com.qorakol.ilm.ziyo.model.dto.AdminDto;
-import com.qorakol.ilm.ziyo.model.dto.RegStudentDto;
-import com.qorakol.ilm.ziyo.model.dto.RegTeacherDto;
-import com.qorakol.ilm.ziyo.model.dto.SToGroup;
+import com.qorakol.ilm.ziyo.model.dto.*;
 import com.qorakol.ilm.ziyo.model.entity.Roles;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -30,4 +27,6 @@ public interface AuthService extends UserDetailsService {
     void addRole();
 
     Object getAdmins();
+
+    Object addStudentLogin(StudentLogin studentLogin);
 }

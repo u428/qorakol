@@ -116,6 +116,21 @@ public class StaticServiceImpl implements StaticService {
         return map;
     }
 
+    @Override
+    public Object getStudentNew() {
+        return null;
+    }
+
+    @Override
+    public Object getStudentPayed() {
+        return null;
+    }
+
+    @Override
+    public Object getStudentNotPayed() {
+        return null;
+    }
+
 
     @Override
     public ResponseEntity images(Long id) throws MalformedURLException {

@@ -5,6 +5,7 @@ import com.qorakol.ilm.ziyo.constant.StudentStatus;
 import com.qorakol.ilm.ziyo.model.dto.AdminDto;
 import com.qorakol.ilm.ziyo.model.dto.RegStudentDto;
 import com.qorakol.ilm.ziyo.model.dto.SToGroup;
+import com.qorakol.ilm.ziyo.model.dto.StudentLogin;
 import com.qorakol.ilm.ziyo.model.entity.*;
 import com.qorakol.ilm.ziyo.repository.*;
 import com.qorakol.ilm.ziyo.service.interfaces.AuthService;
@@ -80,15 +81,14 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void studentAddGroup(SToGroup sToGroup) {
-        AuthEntity authEntity = new AuthEntity();
-        authEntity.setLogin(sToGroup.getLogin());
-        authEntity.setPassword(bCryptPasswordEncoder.encode(sToGroup.getPassword()));
-        Roles roles = roleRepository.findByName(RoleContants.STUDENT);
-        authEntity.setRoles(roles);
-        authRepository.save(authEntity);
         Student student = studentRepository.findById(sToGroup.getStudentId()).get();
+        if (student.getAuthId() == null) throw new UsernameNotFoundException("oldin login parol bering");
         Groups groups = groupsRepository.findById(sToGroup.getGroupId()).get();
-        student.setAuthEntity(authEntity);
+        if (groups == null) throw new UsernameNotFoundException("id li group topilmadi");
+        if (student.getGroupsSet() == null){
+
+        }
+        student.setGroupsSet();
         studentRepository.save(student);
     }
 
@@ -163,5 +163,22 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public Object getAdmins() {
         return null;
+    }
+
+    @Override
+    public Object addStudentLogin(StudentLogin studentLogin) {
+        AuthEntity authEntity = authRepository.findByLogin(studentLogin.getLogin());
+        if (authEntity !=null) throw new UsernameNotFoundException("login found in database");
+        authEntity = new AuthEntity();
+        authEntity.setLogin(studentLogin.getLogin());
+        authEntity.setPassword(bCryptPasswordEncoder.encode(studentLogin.getPassword()));
+        Roles roles = roleRepository.findByName(RoleContants.STUDENT);
+        authEntity.setRoles(roles);
+        Student student = studentRepository.findById(studentLogin.getStudentId()).get();
+        if (student == null)throw new UsernameNotFoundException("student not found");
+        authRepository.save(authEntity);
+        student.setAuthId(authEntity.getId());
+        studentRepository.save(student);
+        return "SUCCESS";
     }
 }

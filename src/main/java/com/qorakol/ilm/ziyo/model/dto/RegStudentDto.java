@@ -15,9 +15,9 @@ public class RegStudentDto {
     @NotEmpty
     public String lastName;
     @NotEmpty
-    public String telNomer;
+    public String telNumber;
     @NotEmpty
-    public String qTelNomer;
+    public String qTelNumber;
     @NotEmpty
     public String description;
 

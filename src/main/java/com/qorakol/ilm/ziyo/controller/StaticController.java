@@ -1,6 +1,5 @@
 package com.qorakol.ilm.ziyo.controller;
 
-import com.qorakol.ilm.ziyo.repository.MainImagesRepository;
 import com.qorakol.ilm.ziyo.service.interfaces.StaticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,17 +22,37 @@ public class StaticController {
     }
 
 
-    @GetMapping(value = "/get_teachers_list")
+    @GetMapping(path = "/get_teachers_list")
     public ResponseEntity getTeachers(@RequestParam(name = "limit") int limit, @RequestParam(name = "page") int page){
         return ResponseEntity.ok(service.getTeachers(limit, page));
     }
 
-    @GetMapping(value = "/images")
+    @GetMapping(value = "/get_student")
+    public ResponseEntity getStudent(@RequestParam(name = "id") Long id){
+        return ResponseEntity.ok(service.getStudent(id));
+    }
+
+    @GetMapping(path = "/get_students_new")
+    public ResponseEntity getStudentsNew(){
+        return ResponseEntity.ok(service.getStudentNew());
+    }
+
+    @GetMapping(path = "/get_students_payed")
+    public ResponseEntity getStudentsPayed(){
+        return ResponseEntity.ok(service.getStudentPayed());
+    }
+
+    @GetMapping(path = "/get_students_not_payed")
+    public ResponseEntity getStudentsNotPayed(){
+        return ResponseEntity.ok(service.getStudentNotPayed());
+    }
+
+    @GetMapping(path = "/images")
     public ResponseEntity images(@RequestParam Long id) throws MalformedURLException {
         return service.images(id);
     }
 
-    @GetMapping(value = "/get_language")
+    @GetMapping(path = "/get_language")
     public ResponseEntity getSubjects(){
         return ResponseEntity.ok(service.getAllLang());
     }
@@ -53,9 +72,6 @@ public class StaticController {
         return ResponseEntity.ok(service.getGroup());
     }
 
-    @GetMapping(value = "/get_student")
-    public ResponseEntity getStudent(@RequestParam(name = "id") Long id){
-        return ResponseEntity.ok(service.getStudent(id));
-    }
+
 
 }

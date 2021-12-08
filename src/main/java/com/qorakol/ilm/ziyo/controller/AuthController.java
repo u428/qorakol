@@ -1,10 +1,7 @@
 package com.qorakol.ilm.ziyo.controller;
 
 import com.qorakol.ilm.ziyo.constant.reg.Registers;
-import com.qorakol.ilm.ziyo.model.dto.AdminDto;
-import com.qorakol.ilm.ziyo.model.dto.RegStudentDto;
-import com.qorakol.ilm.ziyo.model.dto.RegTeacherDto;
-import com.qorakol.ilm.ziyo.model.dto.SToGroup;
+import com.qorakol.ilm.ziyo.model.dto.*;
 import com.qorakol.ilm.ziyo.security.CurrentUser;
 import com.qorakol.ilm.ziyo.service.interfaces.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +25,11 @@ public class AuthController {
     @GetMapping(value = "/check_login")
     public ResponseEntity<?> checkLogin(@RequestParam(name = "login") String login){
         return ResponseEntity.ok(authService.checkLogin(login));
+    }
+
+    @PostMapping(path = "/add_student_login")
+    public ResponseEntity addStudentLogin(@Valid @RequestBody StudentLogin studentLogin){
+        return ResponseEntity.ok(authService.addStudentLogin(studentLogin));
     }
 
     @PostMapping(value = "/student_group")

@@ -26,4 +26,10 @@ public interface StaticService {
     Object getTeachers(int limit, int page);
 
     Object getStudent(Long id);
+
+    Object getStudentNew();
+
+    Object getStudentPayed();
+
+    Object getStudentNotPayed();
 }

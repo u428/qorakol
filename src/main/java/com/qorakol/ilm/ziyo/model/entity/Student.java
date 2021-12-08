@@ -45,13 +45,13 @@ public class Student {
     @Enumerated(EnumType.STRING)
     private StudentStatus status;
 
-//    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-//    @JoinTable(
-//            name = "student_group_join",
-//            joinColumns = @JoinColumn(name = "student_id"),
-//            inverseJoinColumns = @JoinColumn(name = "group_id")
-//    )
-//    private Set<Groups> groupsSet;
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "student_group_join",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id")
+    )
+    private Set<Groups> groupsSet;
 
 
 }

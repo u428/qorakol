@@ -12,10 +12,6 @@ public class SToGroup {
 
     public Long groupId;
 
-    public String login;
-
-    public String password;
-
 }
 
 
