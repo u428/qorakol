@@ -71,6 +71,7 @@ public class AuthServiceImpl implements AuthService {
             student.setAuthEntity(null);
             student.setId(null);
             student.setAuthId(null);
+            student.setGroupsSet(null);
             result.put("user", student);
         }else{
             result.put("user", teacher);

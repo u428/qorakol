@@ -45,7 +45,7 @@ public class Student {
     @Enumerated(EnumType.STRING)
     private StudentStatus status;
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "student_group_join",
             joinColumns = @JoinColumn(name = "student_id"),
