@@ -5,6 +5,7 @@ import com.qorakol.ilm.ziyo.model.dto.*;
 import com.qorakol.ilm.ziyo.security.CurrentUser;
 import com.qorakol.ilm.ziyo.service.interfaces.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,21 +30,30 @@ public class AuthController {
 
     @PostMapping(path = "/add_student_login")
     public ResponseEntity addStudentLogin(@Valid @RequestBody StudentLogin studentLogin){
-        return ResponseEntity.ok(authService.addStudentLogin(studentLogin));
+        try {
+            authService.addStudentLogin(studentLogin);
+            return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
     }
 
     @PostMapping(value = "/student_group")
     public ResponseEntity studentGroup(@Valid @RequestBody SToGroup sToGroup){
-        authService.studentAddGroup(sToGroup);
-        return ResponseEntity.ok("SUCCESS");
+        try {
+            authService.studentAddGroup(sToGroup);
+            return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
     }
 
     @PostMapping(value = Registers.RegisterStudent)
     public ResponseEntity<?> regStudent(@Valid @RequestBody RegStudentDto regStudentDto){
         try {
-            return ResponseEntity.ok(authService.createStudent(regStudentDto));
+            return ResponseEntity.status(HttpStatus.OK).body(authService.createStudent(regStudentDto));
         }catch (Exception e){
-            return ResponseEntity.ok("-1");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }
     }
 
@@ -51,18 +61,30 @@ public class AuthController {
 
     @GetMapping(value = "/get_role")
     public ResponseEntity getRole(@CurrentUser String login){
-        return ResponseEntity.ok(authService.getRoles(login));
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(authService.getRoles(login));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
     }
 
     @GetMapping(value = "/get_current_user")
     public ResponseEntity getCurrentUser(@CurrentUser String login){
-        return ResponseEntity.ok(authService.getCurrentUser(login));
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(authService.getCurrentUser(login));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
     }
 
     @PostMapping(value = "/add_admin")
     public ResponseEntity addAdmin(@RequestBody AdminDto adminDto){
-        authService.addAdmin(adminDto);
-        return ResponseEntity.ok("SUCCESS");
+        try {
+            authService.addAdmin(adminDto);
+            return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
     }
 
     @GetMapping()

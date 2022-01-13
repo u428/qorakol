@@ -22,6 +22,8 @@ import java.util.*;
 public class AuthServiceImpl implements AuthService {
 
     private final AuthRepository authRepository;
+    private final ActivationRepository activationRepository;
+    private final ActivationDetailsRepository activationDetailsRepository;
     private final ImagesRepository imagesRepository;
     private final RoleRepository roleRepository;
     private final TeacherRepository teacherRepository;
@@ -32,8 +34,10 @@ public class AuthServiceImpl implements AuthService {
     private final SubjectsRepository subjectsRepository;
 
     @Autowired
-    public AuthServiceImpl(AuthRepository authRepository, ImagesRepository imagesRepository, RoleRepository roleRepository, TeacherRepository teacherRepository, StudentRepository studentRepository, GroupsRepository groupsRepository, BCryptPasswordEncoder bCryptPasswordEncoder, LanguageRepository languageRepository, SubjectsRepository subjectsRepository) {
+    public AuthServiceImpl(AuthRepository authRepository, ActivationRepository activationRepository, ActivationDetailsRepository activationDetailsRepository, ImagesRepository imagesRepository, RoleRepository roleRepository, TeacherRepository teacherRepository, StudentRepository studentRepository, GroupsRepository groupsRepository, BCryptPasswordEncoder bCryptPasswordEncoder, LanguageRepository languageRepository, SubjectsRepository subjectsRepository) {
         this.authRepository = authRepository;
+        this.activationRepository = activationRepository;
+        this.activationDetailsRepository = activationDetailsRepository;
         this.imagesRepository = imagesRepository;
         this.roleRepository = roleRepository;
         this.teacherRepository = teacherRepository;
@@ -61,7 +65,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Map<String, Object> getCurrentUser(String login) {
+    public Map<String, Object> getCurrentUser(String login){
         AuthEntity authEntity = authRepository.findByLogin(login);
         Teacher teacher = teacherRepository.findByAuthEntity(authEntity);
         Student student = null;
@@ -71,7 +75,7 @@ public class AuthServiceImpl implements AuthService {
             student.setAuthEntity(null);
             student.setId(null);
             student.setAuthId(null);
-            student.setGroupsSet(null);
+            student.setActivation(null);
             result.put("user", student);
         }else{
             result.put("user", teacher);
@@ -81,22 +85,34 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void studentAddGroup(SToGroup sToGroup) {
+    public void studentAddGroup(SToGroup sToGroup) throws Exception {
         Student student = studentRepository.findById(sToGroup.getStudentId()).get();
         if (student.getAuthId() == null) throw new UsernameNotFoundException("oldin login parol bering");
         Groups groups = groupsRepository.findById(sToGroup.getGroupId()).get();
         if (groups == null) throw new UsernameNotFoundException("id li group topilmadi");
-        if (student.getGroupsSet() == null){
-            student.setGroupsSet(new HashSet<Groups>());
+        Activation activation = new Activation();
+        activation.setActive(true);
+        activation.setGroupId(sToGroup.getGroupId());
+        activation.setStudentId(sToGroup.getStudentId());
+
+        ActivationDetails activationDetails =  new ActivationDetails();
+        activationDetails.setLessonPayed(0);
+        activationDetails.setStatus(true);
+
+        activation.setActivationDetails(activationDetails);
+        activationRepository.save(activation);
+
+        if (student.getActivation() == null){
+            student.setActivation(new ArrayList<Activation>());
         }
-        Set<Groups> set = student.getGroupsSet();
-        set.add(groups);
-        student.setGroupsSet(set);
+        List<Activation> list = student.getActivation();
+        list.add(activation);
+        student.setActivation(list);
         studentRepository.save(student);
     }
 
     @Override
-    public void addAdmin(AdminDto adminDto) {
+    public void addAdmin(AdminDto adminDto) throws Exception {
         Student student = new Student();
         student.setStatus(StudentStatus.YANGI);
         student.setFirstName(adminDto.getFirstName());
@@ -115,7 +131,7 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public Roles getRoles(String login) {
+    public Roles getRoles(String login) throws Exception {
         return authRepository.findByLogin(login).getRoles();
     }
 
@@ -169,7 +185,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Object addStudentLogin(StudentLogin studentLogin) {
+    public void addStudentLogin(StudentLogin studentLogin) throws Exception {
         AuthEntity authEntity = authRepository.findByLogin(studentLogin.getLogin());
         if (authEntity !=null) throw new UsernameNotFoundException("login found in database");
         authEntity = new AuthEntity();
@@ -182,6 +198,5 @@ public class AuthServiceImpl implements AuthService {
         authRepository.save(authEntity);
         student.setAuthId(authEntity.getId());
         studentRepository.save(student);
-        return "SUCCESS";
     }
 }

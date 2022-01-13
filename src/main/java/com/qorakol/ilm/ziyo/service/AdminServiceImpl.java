@@ -67,7 +67,7 @@ public class AdminServiceImpl implements AdminService {
 
 
     @Override
-    public void createTeacher(RegTeacherDto regTeacherDto) {
+    public void createTeacher(RegTeacherDto regTeacherDto) throws IOException {
         Teacher teacher = new Teacher();
         BeanUtils.copyProperties(regTeacherDto, teacher);
         AuthEntity authEntity=new AuthEntity();
@@ -79,7 +79,6 @@ public class AdminServiceImpl implements AdminService {
         List<Language> languageList = languageRepository.findAllByIdIn(regTeacherDto.getLangIds());
         teacher.setLanguages(languageList);
         teacher.setSubjects(subjectsList);
-        try {
             MultipartFile multipartFile = regTeacherDto.getFiles();
             Images images = new Images();
             images.setContentType(multipartFile.getContentType());
@@ -87,28 +86,24 @@ public class AdminServiceImpl implements AdminService {
             images.setFileSize(multipartFile.getSize());
             imagesRepository.save(images);
             String AA = multipartFile.getOriginalFilename();
-            String fileName = String.valueOf(images.getId()) + AA.substring(AA.length() - 4, AA.length());
+            String fileName = String.valueOf(images.getId()) + AA.substring(AA.length() - 4);
             images.setExtention(AA.substring(AA.length() - 4));
             System.out.println(fileStoragePath);
             Path filePath = Paths.get(fileStoragePath + "//" + fileName);
             images.setUploadPath(String.valueOf(filePath));
-//            Files.createDirectories(fileStoragePath);
-//            Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            Files.createDirectories(fileStoragePath);
+            Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             imagesRepository.save(images);
             teacher.setImagesId(images.getId());
             authRepository.save(authEntity);
             teacher.setAuthId(authEntity.getId());
             teacherRepository.save(teacher);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
     }
 
     @Override
-    public void changeGroup(NewGroup newGroup, Long id) {
+    public void changeGroup(NewGroup newGroup, Long id) throws IOException {
         Groups groups = groupsRepository.findById(id).get();
         BeanUtils.copyProperties(newGroup, groups);
-        try {
             MultipartFile multipartFile = newGroup.getFiles();
             Images images = groups.getImages();
             images.setContentType(multipartFile.getContentType());
@@ -127,17 +122,14 @@ public class AdminServiceImpl implements AdminService {
             Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             imagesRepository.save(images);
             groupsRepository.save(groups);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+
     }
 
     @Override
-    public Object addMainImage(MainImageDto mainImageDto) {
+    public void addMainImage(MainImageDto mainImageDto) throws IOException {
         MainImage mainImage = new MainImage();
         mainImage.setDescryption(mainImageDto.getDescryption());
         mainImage.setName(mainImageDto.getName());
-        try {
             MultipartFile multipartFile = mainImageDto.getFiles();
             Images images = new Images();
             images.setContentType(multipartFile.getContentType());
@@ -155,14 +147,11 @@ public class AdminServiceImpl implements AdminService {
             imagesRepository.save(images);
             mainImage.setImagesId(images.getId());
             mainImagesRepository.save(mainImage);
-            return "SUCCESS";
-        }catch (Exception e) {
-            return e.getMessage();
-        }
+
     }
 
     @Override
-    public void save(NewGroup newGroup) {
+    public void save(NewGroup newGroup) throws IOException {
         Groups groups = new Groups();
         BeanUtils.copyProperties(newGroup, groups);
         groups.setName(newGroup.getName());
@@ -172,8 +161,6 @@ public class AdminServiceImpl implements AdminService {
         groups.setFinish(newGroup.getFinish());
         groups.setTeacherId(newGroup.getTeacherId());
         groups.setPrice(newGroup.getPrice());
-
-        try {
             MultipartFile multipartFile = newGroup.getFiles();
             Images images = new Images();
             images.setContentType(multipartFile.getContentType());
@@ -190,32 +177,27 @@ public class AdminServiceImpl implements AdminService {
             imagesRepository.save(images);
             groups.setImagesId(images.getId());
             groupsRepository.save(groups);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
     }
 
     @Override
-    public Object putImage(MainImageDto mainImageDto) {
+    public void putImage(MainImageDto mainImageDto) throws IOException {
         if (mainImageDto.getId()!= null){
             MainImage mainImage = mainImagesRepository.findById(mainImageDto.getId()).get();
             BeanUtils.copyProperties(mainImageDto, mainImage);
             if (mainImageDto.getFiles()!=null){
-                try {
                     addImage(mainImageDto.getFiles(), mainImage.getImagesId());
-
-                }catch (Exception e){
-                    return e.getMessage();
-                }
             }
             mainImagesRepository.save(mainImage);
-            return "SUCCESS";
+        }else{
+            throw new IOException();
         }
-        return "ERROR";
     }
 
     @Override
-    public Object paying(PaymentDto paymentDto) {
+    public void paying(PaymentDto paymentDto) throws Exception {
+
+
+
         Activation activation = activationRepository.findByStudentIdAndDeleteIsFalse(paymentDto.getStudentId());
         Payments payments = new Payments();
         Groups groups = groupsRepository.findById(paymentDto.getGroupId()).get();
@@ -242,11 +224,10 @@ public class AdminServiceImpl implements AdminService {
         activationRepository.save(activation);
         payments.setQolganDarsi(a);
         paymentRepository.save(payments);
-        return "SUCCESS";
     }
 
     @Override
-    public Object changePayment(PaymentDto paymentDto) {
+    public void changePayment(PaymentDto paymentDto) throws Exception {
         Activation activation = activationRepository.findByStudentIdAndDeleteIsFalse(paymentDto.getStudentId());
         Payments payments = paymentRepository.findById(paymentDto.getId()).get();
         Groups groups = groupsRepository.findById(paymentDto.getGroupId()).get();
@@ -266,13 +247,12 @@ public class AdminServiceImpl implements AdminService {
         }else{
 
         }
-
-        return null;
     }
 
     @Override
     public Object deleteImage(Long id) {
-        Images images = imagesRepository.findById(id).get();
+        Images images = imagesRepository.findById(id).orElse(null);
+
         return null;
     }
 
@@ -293,8 +273,6 @@ public class AdminServiceImpl implements AdminService {
         image.setUploadPath(String.valueOf(filePath));
         image.setExtention(AA.substring(AA.length()-4));
         imagesRepository.save(image);
-
-        try {
             System.out.println(filePath);
             System.out.println(path);
 
@@ -303,8 +281,5 @@ public class AdminServiceImpl implements AdminService {
             }
             Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 //            Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.ATOMIC_MOVE);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

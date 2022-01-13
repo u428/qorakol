@@ -18,10 +18,7 @@ import org.springframework.stereotype.Service;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Service
@@ -50,42 +47,42 @@ public class StaticServiceImpl implements StaticService {
     }
 
     @Override
-    public Object getAllLang() {
+    public Object getAllLang() throws Exception{
         return languageRepository.findAll();
     }
 
     @Override
-    public Object getAllSubjects() {
+    public Object getAllSubjects() throws Exception {
         return subjectsRepository.findAllByDeleteIsFalse();
     }
 
     @Override
-    public void addSubject(SubjectDto subjectDto) {
+    public void addSubject(SubjectDto subjectDto) throws Exception {
         Subjects subjects = new Subjects();
         BeanUtils.copyProperties(subjectDto, subjects);
         subjectsRepository.save(subjects);
     }
 
     @Override
-    public Object putSubject(Long id, SubjectDto subjectDto) {
+    public void putSubject(Long id, SubjectDto subjectDto)throws Exception {
         Subjects subject = subjectsRepository.findByIdAndDeleteIsFalse(id);
         if (subject !=null) {
             BeanUtils.copyProperties(subjectDto, subjectDto);
             subjectsRepository.save(subject);
-            return "SUCCESS";
-        }else return "ERROR";
+        }else{
+            throw new Exception();
+        }
     }
 
     @Override
-    public Object deleteSubject(Long id) {
+    public void deleteSubject(Long id) throws Exception {
         Subjects subjects = subjectsRepository.findByIdAndDeleteIsFalse(id);
         subjects.setDelete(true);
         subjectsRepository.save(subjects);
-        return true;
     }
 
     @Override
-    public Object getGroup() {
+    public Object getGroup() throws Exception {
 
         List<Object> list = new ArrayList<>();
         List<Groups> groupsList = groupsRepository.findAllByDeleteIsFalse();
@@ -103,7 +100,7 @@ public class StaticServiceImpl implements StaticService {
     }
 
     @Override
-    public Object getStudent(Long id) {
+    public Map<String, Object> getStudent(Long id) throws Exception {
         Student student = studentRepository.findById(id).get();
         Activation activation = activationRepository.findByStudentIdAndDeleteIsFalse(id);
         Groups groups = groupsRepository.findById(activation.getGroupId()).get();
@@ -123,6 +120,7 @@ public class StaticServiceImpl implements StaticService {
 
     @Override
     public Object getStudentPayed() {
+
         return null;
     }
 
@@ -145,7 +143,7 @@ public class StaticServiceImpl implements StaticService {
 
 
     @Override
-    public Object getMainImages() {
+    public Object getMainImages() throws Exception {
         Pageable pageable= PageRequest.of(0, 3);
         Page<MainImage> imagePage = mainImagesRepository.findAllByDeleteIsFalse(pageable);
         return imagePage.getContent();
@@ -153,7 +151,7 @@ public class StaticServiceImpl implements StaticService {
 
 
     @Override
-    public Object getTeachers(int limit, int page) {
+    public List<Map> getTeachers(int limit, int page) throws Exception {
         if (page > 0) page--;
         Pageable pageable = PageRequest.of(page, limit);
         Page<Teacher> list = teacherRepository.findAll(pageable);

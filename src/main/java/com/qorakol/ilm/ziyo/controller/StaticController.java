@@ -2,6 +2,7 @@ package com.qorakol.ilm.ziyo.controller;
 
 import com.qorakol.ilm.ziyo.service.interfaces.StaticService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,52 +25,92 @@ public class StaticController {
 
     @GetMapping(path = "/get_teachers_list")
     public ResponseEntity getTeachers(@RequestParam(name = "limit") int limit, @RequestParam(name = "page") int page){
-        return ResponseEntity.ok(service.getTeachers(limit, page));
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getTeachers(limit, page));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
     }
 
     @GetMapping(value = "/get_student")
     public ResponseEntity getStudent(@RequestParam(name = "id") Long id){
-        return ResponseEntity.ok(service.getStudent(id));
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getStudent(id));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
     }
 
     @GetMapping(path = "/get_students_new")
     public ResponseEntity getStudentsNew(){
-        return ResponseEntity.ok(service.getStudentNew());
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getStudentNew());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
     }
 
     @GetMapping(path = "/get_students_payed")
     public ResponseEntity getStudentsPayed(){
-        return ResponseEntity.ok(service.getStudentPayed());
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getStudentPayed());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
     }
 
     @GetMapping(path = "/get_students_not_payed")
     public ResponseEntity getStudentsNotPayed(){
-        return ResponseEntity.ok(service.getStudentNotPayed());
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getStudentNotPayed());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
     }
 
     @GetMapping(path = "/images")
     public ResponseEntity images(@RequestParam Long id) throws MalformedURLException {
-        return service.images(id);
+        try {
+            return service.images(id);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
     }
 
     @GetMapping(path = "/get_language")
     public ResponseEntity getSubjects(){
-        return ResponseEntity.ok(service.getAllLang());
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getAllLang());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
     }
 
     @GetMapping(value = "/get_subjects")
     public ResponseEntity getLang(){
-        return ResponseEntity.ok(service.getAllSubjects());
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getAllSubjects());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
     }
 
     @GetMapping(value = "/get_main_images")
     public ResponseEntity getMainImages(){
-        return ResponseEntity.ok(service.getMainImages());
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getMainImages());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
     }
 
     @GetMapping(value = "/get_group")
     public ResponseEntity getGroup(){
-        return ResponseEntity.ok(service.getGroup());
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getGroup());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
     }
 
 

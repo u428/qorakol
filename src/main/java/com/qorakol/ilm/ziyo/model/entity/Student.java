@@ -5,6 +5,7 @@ import com.qorakol.ilm.ziyo.constant.StudentStatus;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -45,13 +46,11 @@ public class Student {
     @Enumerated(EnumType.STRING)
     private StudentStatus status;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "student_group_join",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "group_id")
-    )
-    private Set<Groups> groupsSet;
+    @OneToMany()
+    private List<Activation> activation;
+
+
+
 
 
 }

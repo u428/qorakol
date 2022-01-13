@@ -3,6 +3,7 @@ package com.qorakol.ilm.ziyo.controller;
 import com.qorakol.ilm.ziyo.model.dto.CheckStudents;
 import com.qorakol.ilm.ziyo.security.CurrentUser;
 import com.qorakol.ilm.ziyo.service.interfaces.TeacherService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,18 +22,30 @@ public class TeacherController {
 
     @PostMapping(value = "/student_check")
     public ResponseEntity studentCheck(@CurrentUser String login, @RequestBody CheckStudents checkStudents){
-        return ResponseEntity.ok(teacherService.checkStudent(login, checkStudents));
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(teacherService.checkStudent(login, checkStudents));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
     }
 
 
     @GetMapping(value = "/groups")
     public ResponseEntity getRoles(@CurrentUser String login){
 //        return ResponseEntity.ok(teacherService.getGroups(login));
-        return null;
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body("SUCESS");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
     }
 
     @GetMapping(value ="group_students")
     public ResponseEntity getGroupStudents(@CurrentUser String login, @RequestParam(value = "id") Long id){
-        return ResponseEntity.ok(teacherService.getGroupStudents(login, id));
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(teacherService.getGroupStudents(login, id));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
     }
 }

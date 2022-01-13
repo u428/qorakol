@@ -14,13 +14,13 @@ public class Subjects {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name_uz")
+    @Column(name = "name_uz", nullable = false)
     private String nameUz;
 
-    @Column(name = "name_ru")
+    @Column(name = "name_ru", nullable = false)
     private String nameRu;
 
-    @Column(name = "name_en")
+    @Column(name = "name_en", nullable = false)
     private String nameEn;
 
     private String description;

@@ -32,7 +32,6 @@ public class Groups {
 
     private String description;
 
-
     private boolean delete = false;
 
     @Column(name = "subject_id")
@@ -65,5 +64,8 @@ public class Groups {
     @OneToOne
     @JoinColumn(name = "image_id", insertable = false, updatable = false)
     private Images images;
+
+    @OneToOne(mappedBy = "groups")
+    private Activation activation;
 
 }

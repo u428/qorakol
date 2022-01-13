@@ -5,27 +5,29 @@ import com.qorakol.ilm.ziyo.model.dto.SubjectDto;
 import org.springframework.http.ResponseEntity;
 
 import java.net.MalformedURLException;
+import java.util.List;
+import java.util.Map;
 
 public interface StaticService {
-    Object getAllLang();
+    Object getAllLang() throws Exception;
 
-    void addSubject(SubjectDto subjectDto);
+    void addSubject(SubjectDto subjectDto) throws Exception;
 
-    Object getMainImages();
+    Object getMainImages() throws Exception;
 
-    Object getAllSubjects();
+    Object getAllSubjects() throws Exception;
 
     ResponseEntity images(Long id) throws MalformedURLException;
 
-    Object putSubject(Long id, SubjectDto subjectDto);
+    void putSubject(Long id, SubjectDto subjectDto) throws Exception;
 
-    Object deleteSubject(Long id);
+    void deleteSubject(Long id) throws Exception;
 
-    Object getGroup();
+    Object getGroup() throws Exception;
 
-    Object getTeachers(int limit, int page);
+    List<Map> getTeachers(int limit, int page) throws Exception;
 
-    Object getStudent(Long id);
+    Map<String, Object> getStudent(Long id) throws Exception;
 
     Object getStudentNew();
 

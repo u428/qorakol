@@ -2,10 +2,8 @@ package com.qorakol.ilm.ziyo.service.interfaces;
 
 import com.qorakol.ilm.ziyo.model.dto.*;
 import com.qorakol.ilm.ziyo.model.entity.Roles;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import java.net.MalformedURLException;
 import java.util.Map;
 
 public interface AuthService extends UserDetailsService {
@@ -14,19 +12,19 @@ public interface AuthService extends UserDetailsService {
 
 
 
-    Roles getRoles(String login);
+    Roles getRoles(String login) throws Exception;
 
     Long createStudent(RegStudentDto regStudentDto);
 
     Map<String, Object> getCurrentUser(String login);
 
-    void studentAddGroup(SToGroup sToGroup);
+    void studentAddGroup(SToGroup sToGroup) throws Exception;
 
-    void addAdmin(AdminDto adminDto);
+    void addAdmin(AdminDto adminDto) throws Exception;
 
     void addRole();
 
     Object getAdmins();
 
-    Object addStudentLogin(StudentLogin studentLogin);
+    void addStudentLogin(StudentLogin studentLogin) throws Exception;
 }

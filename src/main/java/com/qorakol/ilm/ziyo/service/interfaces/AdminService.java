@@ -5,19 +5,21 @@ import com.qorakol.ilm.ziyo.model.dto.NewGroup;
 import com.qorakol.ilm.ziyo.model.dto.PaymentDto;
 import com.qorakol.ilm.ziyo.model.dto.RegTeacherDto;
 
+import java.io.IOException;
+
 public interface AdminService {
-    Object addMainImage(MainImageDto mainImageDto);
-    void save(NewGroup newGroup);
+    void addMainImage(MainImageDto mainImageDto) throws IOException;
+    void save(NewGroup newGroup) throws IOException;
 
-    Object putImage(MainImageDto mainImageDto);
+    void putImage(MainImageDto mainImageDto) throws IOException;
 
-    Object paying(PaymentDto paymentDto);
+    void paying(PaymentDto paymentDto) throws Exception;
 
-    Object changePayment(PaymentDto paymentDto);
+    void changePayment(PaymentDto paymentDto) throws Exception;
 
     Object deleteImage(Long id);
 
-    void createTeacher(RegTeacherDto regTeacherDto);
+    void createTeacher(RegTeacherDto regTeacherDto) throws IOException;
 
-    void changeGroup(NewGroup newGroup, Long id);
+    void changeGroup(NewGroup newGroup, Long id) throws IOException;
 }

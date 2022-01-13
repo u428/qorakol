@@ -26,11 +26,16 @@ public class Activation {
     @Column(name = "group_id")
     private Long groupId;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "student_id", insertable = false, updatable = false)
     private Student student;
 
-    @ManyToOne
+    @OneToOne()
     @JoinColumn(name = "group_id", insertable = false, updatable = false)
     private Groups groups;
+
+    @OneToOne()
+    @JoinColumn(name = "detail_id")
+    private ActivationDetails activationDetails;
 }
+

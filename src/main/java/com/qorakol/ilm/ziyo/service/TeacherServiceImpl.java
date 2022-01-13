@@ -43,7 +43,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public Object checkStudent(String login, CheckStudents checkStudents) {
+    public Object checkStudent(String login, CheckStudents checkStudents) throws Exception {
 //        AuthEntity authEntity = authRepository.findByLoginAndDeleteIsFalse(login);
 //        Teacher teacher = teacherRepository.findByAuthEntity(authEntity);
         Groups groups = groupsRepository.findById(checkStudents.getGroupId()).get();
