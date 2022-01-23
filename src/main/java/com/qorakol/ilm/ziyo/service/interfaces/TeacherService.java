@@ -7,5 +7,5 @@ public interface TeacherService {
 
     Object getGroupStudents(String login, Long id);
 
-    Object checkStudent(String login, CheckStudents checkStudents) throws Exception;
+    void checkStudent(String login, CheckStudents checkStudents) throws Exception;
 }

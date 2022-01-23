@@ -20,7 +20,7 @@ public class Images {
     private String name;
 
     @Column
-    private String extention;
+    private String extension;
 
     @Column
     private Long fileSize;

@@ -28,7 +28,7 @@ public class AdminController {
         this.adminService = adminService;
     }
 
-    @PostMapping(value = "/teacher",
+    @PostMapping(value = "/add_teacher",
             consumes = {"multipart/form-data", "application/json"})
     public ResponseEntity<?> regTeacher(@Valid @ModelAttribute RegTeacherDto regTeacherDto){
         try {
@@ -40,6 +40,15 @@ public class AdminController {
     }
 
 
+    @GetMapping(path = "/remove_student_group")
+    public ResponseEntity removeStudent(@RequestParam Long studentId, @RequestParam Long groupId){
+        try {
+            adminService.removeStudentFromGroup(studentId,groupId);
+            return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
 
     @PostMapping(value = "/add_group",
             consumes = {"multipart/form-data", "application/json"})
@@ -152,6 +161,38 @@ public class AdminController {
     public ResponseEntity deleteSubject(@PathVariable(name = "id") Long id){
         try{
             service.deleteSubject(id);
+            return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
+//    Events CRUD
+
+    @PostMapping(path = "/add_event")
+    public ResponseEntity addEvent(@Valid @RequestBody EventDto eventDto){
+        try{
+            adminService.addEvent(eventDto);
+            return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
+    @PutMapping(path = "/put_event/{id}")
+    public ResponseEntity changeEvent(@PathVariable long id, @RequestBody EventDto eventDto){
+        try{
+            adminService.changeEvent(eventDto, id);
+            return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
+    @DeleteMapping(path = "/delete_event/{id}")
+    public ResponseEntity deleteEvent(@PathVariable long id){
+        try{
+            adminService.deleteEvent(id);
             return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");

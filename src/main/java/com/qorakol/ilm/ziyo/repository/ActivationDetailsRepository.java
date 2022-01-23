@@ -6,4 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ActivationDetailsRepository extends JpaRepository<ActivationDetails, Long> {
+
+    ActivationDetails findByActivationIdAndDeleteIsFalse(Long id);
+
+    long countByStatusAndDeleteIsFalse(boolean status);
 }

@@ -2,6 +2,8 @@ package com.qorakol.ilm.ziyo.service.interfaces;
 
 
 import com.qorakol.ilm.ziyo.model.dto.SubjectDto;
+import com.qorakol.ilm.ziyo.model.entity.Student;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
 import java.net.MalformedURLException;
@@ -23,15 +25,23 @@ public interface StaticService {
 
     void deleteSubject(Long id) throws Exception;
 
-    Object getGroup() throws Exception;
+    Object getGroup(int limit, int page) throws Exception;
 
     List<Map> getTeachers(int limit, int page) throws Exception;
 
     Map<String, Object> getStudent(Long id) throws Exception;
 
-    Object getStudentNew();
+    Page<Student> getStudentNew(int limit, int page);
 
-    Object getStudentPayed();
+    Object getStudentPayed(int limit, int page);
 
     Object getStudentNotPayed();
+
+    Map<String, Integer> getDashboard();
+
+    Object lineGraph();
+
+    Object landingTeacher();
+
+    Object landingGroups();
 }

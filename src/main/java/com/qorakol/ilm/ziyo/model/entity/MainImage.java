@@ -18,7 +18,7 @@ public class MainImage {
 
     private String name;
 
-    private String descryption;
+    private String description;
 
     private boolean delete = false;
 

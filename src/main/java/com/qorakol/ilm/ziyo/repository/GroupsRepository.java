@@ -1,6 +1,8 @@
 package com.qorakol.ilm.ziyo.repository;
 
 import com.qorakol.ilm.ziyo.model.entity.Groups;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +12,6 @@ import java.util.List;
 public interface GroupsRepository extends JpaRepository<Groups, Long> {
 
     List<Groups> findAllByTeacherIdAndDeleteIsFalse(Long id);
-    List<Groups> findAllByDeleteIsFalse();
+    Page<Groups> findAllByDeleteIsFalse(Pageable pageable);
 
 }

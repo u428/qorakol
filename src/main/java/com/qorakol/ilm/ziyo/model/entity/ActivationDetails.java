@@ -1,6 +1,7 @@
 package com.qorakol.ilm.ziyo.model.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.CollectionId;
 
 import javax.persistence.*;
 
@@ -20,6 +21,15 @@ public class ActivationDetails {
 
     private int lessonPayed;
 
-    @OneToOne(mappedBy = "activationDetails")
+    @Column(name = "activation_id")
+    private Long activationId;
+
+    @OneToOne()
+    @JoinColumn(name = "activation_id", insertable = false, updatable = false)
     private Activation activation;
+
+    public void lessonPayedDecrease(){
+        this.lessonPayed--;
+    }
+
 }

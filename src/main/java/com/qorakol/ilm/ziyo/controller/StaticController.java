@@ -42,18 +42,18 @@ public class StaticController {
     }
 
     @GetMapping(path = "/get_students_new")
-    public ResponseEntity getStudentsNew(){
+    public ResponseEntity getStudentsNew(@RequestParam(name = "limit") int limit, @RequestParam(name = "page") int page){
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(service.getStudentNew());
+            return ResponseEntity.status(HttpStatus.OK).body(service.getStudentNew(limit, page));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }
     }
 
     @GetMapping(path = "/get_students_payed")
-    public ResponseEntity getStudentsPayed(){
+    public ResponseEntity getStudentsPayed(@RequestParam(name = "limit") int limit, @RequestParam(name = "page") int page){
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(service.getStudentPayed());
+            return ResponseEntity.status(HttpStatus.OK).body(service.getStudentPayed(limit, page));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }
@@ -105,14 +105,60 @@ public class StaticController {
     }
 
     @GetMapping(value = "/get_group")
-    public ResponseEntity getGroup(){
+    public ResponseEntity getGroup(@RequestParam(name = "limit") int limit, @RequestParam(name = "page") int page){
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(service.getGroup());
+            return ResponseEntity.status(HttpStatus.OK).body(service.getGroup(limit, page));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }
     }
 
+    @GetMapping(path ="/get_dashboard")
+    public ResponseEntity getDashboard(){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getDashboard());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
+    @GetMapping(path ="/line_graph")
+    public ResponseEntity lineGraph(){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.lineGraph());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
+//    landing page
+
+    @GetMapping(path = "/landing_teacher")
+    public ResponseEntity landingTeacher(){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.landingTeacher());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
+    @GetMapping(path = "/landing_groups")
+    public ResponseEntity landingGroups(){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.landingGroups());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
+    @GetMapping(path = "/landing_event")
+    public ResponseEntity landingEvent(){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.landingEvent());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
 
 
 }

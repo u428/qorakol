@@ -1,13 +1,12 @@
 package com.qorakol.ilm.ziyo.service;
 
+import com.qorakol.ilm.ziyo.constant.PaymentStatus;
 import com.qorakol.ilm.ziyo.constant.RoleContants;
-import com.qorakol.ilm.ziyo.model.dto.MainImageDto;
-import com.qorakol.ilm.ziyo.model.dto.NewGroup;
-import com.qorakol.ilm.ziyo.model.dto.PaymentDto;
-import com.qorakol.ilm.ziyo.model.dto.RegTeacherDto;
+import com.qorakol.ilm.ziyo.model.dto.*;
 import com.qorakol.ilm.ziyo.model.entity.*;
 import com.qorakol.ilm.ziyo.repository.*;
 import com.qorakol.ilm.ziyo.service.interfaces.AdminService;
+import com.sun.xml.internal.ws.message.PayloadElementSniffer;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -32,6 +31,7 @@ public class AdminServiceImpl implements AdminService {
     private final PaymentRepository paymentRepository;
     private final AttendanceRepository attendanceRepository;
     private final ActivationRepository activationRepository;
+    private final ActivationDetailsRepository activationDetailsRepository;
     private final TeacherRepository teacherRepository;
     private final AuthRepository authRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -41,7 +41,7 @@ public class AdminServiceImpl implements AdminService {
     private Path fileStoragePath;
 
     @Autowired
-    public AdminServiceImpl(GroupsRepository groupsRepository, LanguageRepository languageRepository, ImagesRepository imagesRepository, MainImagesRepository mainImagesRepository, PaymentRepository paymentRepository, AttendanceRepository attendanceRepository, ActivationRepository activationRepository, TeacherRepository teacherRepository, AuthRepository authRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository, SubjectsRepository subjectsRepository) {
+    public AdminServiceImpl(GroupsRepository groupsRepository, LanguageRepository languageRepository, ImagesRepository imagesRepository, MainImagesRepository mainImagesRepository, PaymentRepository paymentRepository, AttendanceRepository attendanceRepository, ActivationRepository activationRepository, ActivationDetailsRepository activationDetailsRepository, TeacherRepository teacherRepository, AuthRepository authRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository, SubjectsRepository subjectsRepository) {
         this.groupsRepository = groupsRepository;
         this.languageRepository = languageRepository;
         this.imagesRepository = imagesRepository;
@@ -49,6 +49,7 @@ public class AdminServiceImpl implements AdminService {
         this.paymentRepository = paymentRepository;
         this.attendanceRepository = attendanceRepository;
         this.activationRepository = activationRepository;
+        this.activationDetailsRepository = activationDetailsRepository;
         this.teacherRepository = teacherRepository;
         this.authRepository = authRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -87,7 +88,7 @@ public class AdminServiceImpl implements AdminService {
             imagesRepository.save(images);
             String AA = multipartFile.getOriginalFilename();
             String fileName = String.valueOf(images.getId()) + AA.substring(AA.length() - 4);
-            images.setExtention(AA.substring(AA.length() - 4));
+            images.setExtension(AA.substring(AA.length() - 4));
             System.out.println(fileStoragePath);
             Path filePath = Paths.get(fileStoragePath + "//" + fileName);
             images.setUploadPath(String.valueOf(filePath));
@@ -112,7 +113,7 @@ public class AdminServiceImpl implements AdminService {
 
             String AA = multipartFile.getOriginalFilename();
             String fileName = String.valueOf(images.getId()) + AA.substring(AA.length() - 4, AA.length());
-            images.setExtention(AA.substring(AA.length() - 4));
+            images.setExtension(AA.substring(AA.length() - 4));
 
             Path path=Paths.get(images.getUploadPath());
             Files.deleteIfExists(path);
@@ -126,9 +127,35 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public void removeStudentFromGroup(Long studentId, Long groupId) throws Exception {
+        Activation activation = activationRepository.findByStudentIdAndGroupIdAndDeleteIsFalse(studentId, groupId);
+        if (activation == null) throw new Exception();
+        ActivationDetails activationDetails = activationDetailsRepository.findByActivationIdAndDeleteIsFalse(activation.getId());
+        activation.setActive(false);
+        activationDetails.setStatus(false);
+        activationDetailsRepository.save(activationDetails);
+        activationRepository.save(activation);
+    }
+
+    @Override
+    public void addEvent(EventDto eventDto) throws Exception {
+
+    }
+
+    @Override
+    public void changeEvent(EventDto eventDto, long id) throws Exception {
+
+    }
+
+    @Override
+    public void deleteEvent(long id) throws Exception {
+
+    }
+
+    @Override
     public void addMainImage(MainImageDto mainImageDto) throws IOException {
         MainImage mainImage = new MainImage();
-        mainImage.setDescryption(mainImageDto.getDescryption());
+        mainImage.setDescription(mainImageDto.getDescryption());
         mainImage.setName(mainImageDto.getName());
             MultipartFile multipartFile = mainImageDto.getFiles();
             Images images = new Images();
@@ -138,7 +165,7 @@ public class AdminServiceImpl implements AdminService {
             imagesRepository.save(images);
             String AA = multipartFile.getOriginalFilename();
             String fileName = String.valueOf(images.getId()) + AA.substring(AA.length() - 4, AA.length());
-            images.setExtention(AA.substring(AA.length() - 4));
+            images.setExtension(AA.substring(AA.length() - 4));
             System.out.println(fileStoragePath);
             Path filePath = Paths.get(fileStoragePath + "//" + fileName);
             images.setUploadPath(String.valueOf(filePath));
@@ -147,7 +174,6 @@ public class AdminServiceImpl implements AdminService {
             imagesRepository.save(images);
             mainImage.setImagesId(images.getId());
             mainImagesRepository.save(mainImage);
-
     }
 
     @Override
@@ -169,7 +195,7 @@ public class AdminServiceImpl implements AdminService {
             imagesRepository.save(images);
             String AA = multipartFile.getOriginalFilename();
             String fileName = String.valueOf(images.getId()) + AA.substring(AA.length() - 4, AA.length());
-            images.setExtention(AA.substring(AA.length() - 4));
+            images.setExtension(AA.substring(AA.length() - 4));
             System.out.println(fileStoragePath);
             Path filePath = Paths.get(fileStoragePath + "//" + fileName);
             images.setUploadPath(String.valueOf(filePath));
@@ -195,58 +221,65 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void paying(PaymentDto paymentDto) throws Exception {
+        Payments payments=new Payments();
+        Activation activation = activationRepository.findByStudentIdAndGroupIdAndDeleteIsFalse(paymentDto.getStudentId(), paymentDto.getGroupId());
+        Groups group = groupsRepository.findById(paymentDto.getGroupId()).orElse(null);
 
+        if (group == null) throw new Exception();
+        double summ = paymentDto.getSumma()/group.getPrice();
+        ActivationDetails activationDetails =  new ActivationDetails();
+        int peyd = activationDetails.getLessonPayed();
+        peyd += summ;
 
-
-        Activation activation = activationRepository.findByStudentIdAndDeleteIsFalse(paymentDto.getStudentId());
-        Payments payments = new Payments();
-        Groups groups = groupsRepository.findById(paymentDto.getGroupId()).get();
-        payments.setSumma(paymentDto.getSumma());
-        payments.setDarsSoati(groups.getPrice()/paymentDto.getSumma());
-        payments.setGroupId(paymentDto.getGroupId());
-        payments.setStudentId(paymentDto.getStudentId());
-        payments.setTime(new Date());
-        paymentRepository.save(payments);
-
-        double a = paymentRepository.findByIdAndOrderByDate(payments.getId()-1).getQolganDarsi();
-        a+=payments.getDarsSoati();
-        List<Attendances> attendancesLIst = attendanceRepository.findAllByCountedIsFalseOrderById();
-        for (Attendances attendances: attendancesLIst){
-            if (a==0){
-                activation.setActive(false);
-                break;
-            }
-            attendances.setCounted(true);
-            a--;
-            attendanceRepository.save(attendances);
-            activation.setActive(false);
+        if (peyd < 0) {
+            activationDetails.setStatus(false);
+        }else{
+            activationDetails.setStatus(true);
         }
-        activationRepository.save(activation);
-        payments.setQolganDarsi(a);
+        activationDetails.setLessonPayed(peyd);
+        activationDetailsRepository.save(activationDetails);
+        payments.setDarsSoati(summ);
+        payments.setQolganDarsi(peyd);
+        payments.setStudentId(paymentDto.getStudentId());
+        payments.setGroupId(paymentDto.getGroupId());
+        payments.setTime(new Date());
+        payments.setSumma(paymentDto.getSumma());
+        payments.setPaymentStatus(PaymentStatus.ALLOWED);
+        payments.setActivationDetailsId(activationDetails.getId());
         paymentRepository.save(payments);
     }
 
     @Override
     public void changePayment(PaymentDto paymentDto) throws Exception {
-        Activation activation = activationRepository.findByStudentIdAndDeleteIsFalse(paymentDto.getStudentId());
-        Payments payments = paymentRepository.findById(paymentDto.getId()).get();
-        Groups groups = groupsRepository.findById(paymentDto.getGroupId()).get();
+
+        Payments payment =  paymentRepository.findById(paymentDto.getId()).orElse(null);
+        if (payment == null) throw new Exception();
+        payment.setPaymentStatus(PaymentStatus.CHANGED);
+        Payments payments = new Payments();
+        ActivationDetails activationDetails = activationDetailsRepository.findById(payment.getActivationDetailsId()).orElse(null);
+        if (activationDetails == null) throw new Exception();
+        Groups groups = groupsRepository.findById(payment.getGroupId()).orElse(null);
+        Groups groups1 = groupsRepository.findById(paymentDto.getGroupId()).orElse(null);
+        double summ = payment.getSumma() / groups.getPrice();
+        double sum = paymentDto.getSumma() / groups1.getPrice();
+
+        double lessonPayed = activationDetails.getLessonPayed();
+        lessonPayed -= summ;
+        lessonPayed +=sum;
+        activationDetails.setLessonPayed((int) lessonPayed);
+        if (lessonPayed < 0){
+            activationDetails.setStatus(false);
+        }else activationDetails.setStatus(true);
+        payments.setPaymentStatus(PaymentStatus.ALLOWED);
+        payments.setStudentId(payment.getStudentId());
+        payments.setTime(new Date());
         payments.setSumma(paymentDto.getSumma());
         payments.setGroupId(paymentDto.getGroupId());
-        payments.setStudentId(paymentDto.getStudentId());
-        payments.setTime(new Date());
+        payments.setQolganDarsi(lessonPayed);
+        payments.setDarsSoati(sum);
         paymentRepository.save(payments);
-        double b = paymentDto.getSumma()/groups.getPrice();
-        double a = paymentRepository.findById(payments.getId()-1).get().getQolganDarsi();
-        double r = a+payments.getDarsSoati();
-        r-=payments.getQolganDarsi();
-        a+=b;
-        r=a-r;
-        if (r>0){
-
-        }else{
-
-        }
+        paymentRepository.save(payment);
+        activationDetailsRepository.save(activationDetails);
     }
 
     @Override
@@ -271,7 +304,7 @@ public class AdminServiceImpl implements AdminService {
         Path filePath = Paths.get(fileStoragePath + "//" + fileName);
         System.out.println(filePath);
         image.setUploadPath(String.valueOf(filePath));
-        image.setExtention(AA.substring(AA.length()-4));
+        image.setExtension(AA.substring(AA.length()-4));
         imagesRepository.save(image);
             System.out.println(filePath);
             System.out.println(path);

@@ -1,9 +1,6 @@
 package com.qorakol.ilm.ziyo.service.interfaces;
 
-import com.qorakol.ilm.ziyo.model.dto.MainImageDto;
-import com.qorakol.ilm.ziyo.model.dto.NewGroup;
-import com.qorakol.ilm.ziyo.model.dto.PaymentDto;
-import com.qorakol.ilm.ziyo.model.dto.RegTeacherDto;
+import com.qorakol.ilm.ziyo.model.dto.*;
 
 import java.io.IOException;
 
@@ -22,4 +19,12 @@ public interface AdminService {
     void createTeacher(RegTeacherDto regTeacherDto) throws IOException;
 
     void changeGroup(NewGroup newGroup, Long id) throws IOException;
+
+    void removeStudentFromGroup(Long studentId, Long groupId) throws Exception;
+
+    void addEvent(EventDto eventDto) throws Exception;
+
+    void changeEvent(EventDto eventDto, long id) throws Exception;
+
+    void deleteEvent(long id) throws Exception;
 }

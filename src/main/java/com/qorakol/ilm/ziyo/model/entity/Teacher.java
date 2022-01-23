@@ -42,6 +42,7 @@ public class Teacher {
 
     private String description;
 
+    @JsonIgnore
     @Column(name = "auth_id", unique = false)
     private Long authId;
 
@@ -53,7 +54,7 @@ public class Teacher {
     @JoinColumn(name = "auth_id", updatable = false, insertable = false)
     private AuthEntity authEntity;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Language> languages;
 
     @ManyToMany()
@@ -64,6 +65,7 @@ public class Teacher {
     @JoinColumn(name = "image_id", insertable = false, updatable = false)
     private Images images;
 
+    @JsonIgnore
     private boolean delete = false;
 
 

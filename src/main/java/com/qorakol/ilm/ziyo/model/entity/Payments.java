@@ -2,6 +2,7 @@ package com.qorakol.ilm.ziyo.model.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.qorakol.ilm.ziyo.constant.PaymentStatus;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -31,19 +32,26 @@ public class Payments {
     @Column(name = "dars_soati")
     private double darsSoati;
 
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
+
     @Column(name = "student_id")
     private Long studentId;
 
     @Column(name = "group_id")
     private Long groupId;
 
+    @Column(name = "activation_detail_id")
+    private Long activationDetailsId;
+
     @OneToOne
     @JoinColumn(name = "student_id", insertable = false, updatable = false)
     private Student student;
 
-    @OneToOne
-    @JoinColumn(name = "group_id", insertable = false, updatable = false)
-    private Groups groups;
+    @ManyToOne()
+    @JoinColumn(name = "activation_detail_id", insertable = false, updatable = false)
+    private ActivationDetails activationDetails;
 
 
 

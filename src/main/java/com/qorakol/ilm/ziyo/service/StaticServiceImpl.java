@@ -1,5 +1,6 @@
 package com.qorakol.ilm.ziyo.service;
 
+import com.qorakol.ilm.ziyo.constant.StudentStatus;
 import com.qorakol.ilm.ziyo.model.dto.SubjectDto;
 import com.qorakol.ilm.ziyo.model.entity.*;
 import com.qorakol.ilm.ziyo.repository.*;
@@ -29,18 +30,20 @@ public class StaticServiceImpl implements StaticService {
     private final ImagesRepository imagesRepository;
     private final GroupsRepository groupsRepository;
     private final ActivationRepository activationRepository;
+    private final ActivationDetailsRepository activationDetailsRepository;
     private final AttendanceRepository attendanceRepository;
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
 
 
-    public StaticServiceImpl(LanguageRepository languageRepository, SubjectsRepository subjectsRepository, MainImagesRepository mainImagesRepository, ImagesRepository imagesRepository, GroupsRepository groupsRepository, ActivationRepository activationRepository, AttendanceRepository attendanceRepository, TeacherRepository teacherRepository, StudentRepository studentRepository) {
+    public StaticServiceImpl(LanguageRepository languageRepository, SubjectsRepository subjectsRepository, MainImagesRepository mainImagesRepository, ImagesRepository imagesRepository, GroupsRepository groupsRepository, ActivationRepository activationRepository, ActivationDetailsRepository activationDetailsRepository, AttendanceRepository attendanceRepository, TeacherRepository teacherRepository, StudentRepository studentRepository) {
         this.languageRepository = languageRepository;
         this.subjectsRepository = subjectsRepository;
         this.mainImagesRepository = mainImagesRepository;
         this.imagesRepository = imagesRepository;
         this.groupsRepository = groupsRepository;
         this.activationRepository = activationRepository;
+        this.activationDetailsRepository = activationDetailsRepository;
         this.attendanceRepository = attendanceRepository;
         this.teacherRepository = teacherRepository;
         this.studentRepository = studentRepository;
@@ -82,11 +85,12 @@ public class StaticServiceImpl implements StaticService {
     }
 
     @Override
-    public Object getGroup() throws Exception {
-
-        List<Object> list = new ArrayList<>();
-        List<Groups> groupsList = groupsRepository.findAllByDeleteIsFalse();
-        for(Groups groups: groupsList){
+    public Object getGroup(int limit, int page) throws Exception {
+        if (page > 0) page--;
+        Pageable pageable = PageRequest.of(page, limit);
+        List<Map<String, Object>> list = new ArrayList<>();
+        Page<Groups> groupsList = groupsRepository.findAllByDeleteIsFalse(pageable);
+        for(Groups groups: groupsList.getContent()){
             Map<String, Object> map = new HashMap<>();
             map.put("group", groups);
             map.put("soni", activationRepository.findAllByGroupIdAndDeleteIsFalse(groups.getId()).size());
@@ -95,6 +99,9 @@ public class StaticServiceImpl implements StaticService {
             map.put("teacher", teacherRepository.findById(groups.getTeacherId()).get());
             list.add(map);
         }
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put("total_pages", groupsList.getTotalPages());
+        map2.put("total_elements", groupsList.getTotalElements());
 
         return "sdadawd";
     }
@@ -114,13 +121,19 @@ public class StaticServiceImpl implements StaticService {
     }
 
     @Override
-    public Object getStudentNew() {
-        return null;
+    public Page<Student> getStudentNew(int limit, int page) {
+        if (page > 0) page--;
+        Pageable pageable = PageRequest.of(page, limit);
+        Page<Student> studentList = studentRepository.findByStatusAndDeleteIsFalse(StudentStatus.YANGI, pageable);
+        return studentList;
     }
 
     @Override
-    public Object getStudentPayed() {
+    public Object getStudentPayed(int limit, int page) {
+        if (page > 0) page--;
+        Pageable pageable = PageRequest.of(page, limit);
 
+        activationDetailsRepository.countByStatusAndDeleteIsFalse(true);
         return null;
     }
 
@@ -128,6 +141,23 @@ public class StaticServiceImpl implements StaticService {
     public Object getStudentNotPayed() {
         return null;
     }
+
+    @Override
+    public Map<String, Integer> getDashboard() {
+        Map<String, Integer> returnObject = new HashMap<>();
+        returnObject.put("new", Math.toIntExact(studentRepository.countByStatusAndDeleteIsFalse(StudentStatus.YANGI)));
+        returnObject.put("all", Math.toIntExact(studentRepository.countByDeleteIsFalse()));
+        returnObject.put("payed", Math.toIntExact(activationDetailsRepository.countByStatusAndDeleteIsFalse(true)));
+        returnObject.put("not_payed", Math.toIntExact(activationDetailsRepository.countByStatusAndDeleteIsFalse(false)));
+        return returnObject;
+    }
+
+    @Override
+    public Object lineGraph() {
+        return null;
+    }
+
+
 
 
     @Override
@@ -144,7 +174,7 @@ public class StaticServiceImpl implements StaticService {
 
     @Override
     public Object getMainImages() throws Exception {
-        Pageable pageable= PageRequest.of(0, 3);
+        Pageable pageable= PageRequest.of(0, 2);
         Page<MainImage> imagePage = mainImagesRepository.findAllByDeleteIsFalse(pageable);
         return imagePage.getContent();
     }
@@ -170,6 +200,25 @@ public class StaticServiceImpl implements StaticService {
         map2.put("number_od_elements", list.getNumberOfElements());
         returns.add(map2);
         return returns;
+    }
+
+    @Override
+    public Object landingTeacher() {
+        List<Teacher> teacherList = teacherRepository.findAllByDeleteIsFalse();
+        return teacherList;
+    }
+
+    @Override
+    public Object landingGroups() {
+        Page<Groups> groupsList;
+        for (;;) {
+            Pageable pageable = PageRequest.of(new Random(3).nextInt(), 4);
+            groupsList = groupsRepository.findAllByDeleteIsFalse(pageable);
+            if (groupsList.getContent().size() != 0){
+                break;
+            }
+        }
+        return groupsList;
     }
 
 }

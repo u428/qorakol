@@ -13,4 +13,5 @@ public class CheckStudents {
     public List<Long> ids;
 
     public Long groupId;
+
 }

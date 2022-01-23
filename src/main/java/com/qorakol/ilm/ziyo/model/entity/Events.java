@@ -19,7 +19,7 @@ public class Events {
 
     private String title;
 
-    private String descryption;
+    private String description;
 
     @Temporal(TemporalType.DATE)
     @Column

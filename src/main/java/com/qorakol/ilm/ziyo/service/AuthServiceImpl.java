@@ -98,12 +98,11 @@ public class AuthServiceImpl implements AuthService {
         ActivationDetails activationDetails =  new ActivationDetails();
         activationDetails.setLessonPayed(0);
         activationDetails.setStatus(true);
-
-        activation.setActivationDetails(activationDetails);
         activationRepository.save(activation);
-
+        activationDetails.setActivationId(activation.getId());
+        activationDetailsRepository.save(activationDetails);
         if (student.getActivation() == null){
-            student.setActivation(new ArrayList<Activation>());
+            student.setActivation(new ArrayList<>());
         }
         List<Activation> list = student.getActivation();
         list.add(activation);
