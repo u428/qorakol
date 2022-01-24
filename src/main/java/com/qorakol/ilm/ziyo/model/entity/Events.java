@@ -14,6 +14,7 @@ import java.util.Date;
 public class Events {
 
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -31,6 +32,7 @@ public class Events {
     @JsonIgnore
     private Date date;
 
+    @JsonIgnore
     private boolean delete = false;
 
     @Column(name = "image_id")

@@ -2,6 +2,7 @@ package com.qorakol.ilm.ziyo.service.interfaces;
 
 
 import com.qorakol.ilm.ziyo.model.dto.SubjectDto;
+import com.qorakol.ilm.ziyo.model.entity.Events;
 import com.qorakol.ilm.ziyo.model.entity.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -44,4 +45,6 @@ public interface StaticService {
     Object landingTeacher();
 
     Object landingGroups();
+
+    List<Events> landingEvent();
 }

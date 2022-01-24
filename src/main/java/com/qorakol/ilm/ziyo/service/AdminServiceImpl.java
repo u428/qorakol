@@ -6,7 +6,6 @@ import com.qorakol.ilm.ziyo.model.dto.*;
 import com.qorakol.ilm.ziyo.model.entity.*;
 import com.qorakol.ilm.ziyo.repository.*;
 import com.qorakol.ilm.ziyo.service.interfaces.AdminService;
-import com.sun.xml.internal.ws.message.PayloadElementSniffer;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -55,7 +54,7 @@ public class AdminServiceImpl implements AdminService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.roleRepository = roleRepository;
         this.subjectsRepository = subjectsRepository;
-        fileStoragePath = Paths.get("/home/robotus/app/java/java_code").toAbsolutePath().normalize();
+        fileStoragePath = Paths.get("/domains/qorakol-ilm-ziyo.uz/public_html/java/java_img").toAbsolutePath().normalize();
         if (!Files.exists(fileStoragePath)){
             try {
                 Files.createDirectories(fileStoragePath);

@@ -6,6 +6,7 @@ import com.qorakol.ilm.ziyo.model.entity.*;
 import com.qorakol.ilm.ziyo.repository.*;
 import com.qorakol.ilm.ziyo.service.interfaces.StaticService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
@@ -34,9 +35,11 @@ public class StaticServiceImpl implements StaticService {
     private final AttendanceRepository attendanceRepository;
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
+    private final EventRepository eventRepository;
 
 
-    public StaticServiceImpl(LanguageRepository languageRepository, SubjectsRepository subjectsRepository, MainImagesRepository mainImagesRepository, ImagesRepository imagesRepository, GroupsRepository groupsRepository, ActivationRepository activationRepository, ActivationDetailsRepository activationDetailsRepository, AttendanceRepository attendanceRepository, TeacherRepository teacherRepository, StudentRepository studentRepository) {
+    @Autowired
+    public StaticServiceImpl(LanguageRepository languageRepository, SubjectsRepository subjectsRepository, MainImagesRepository mainImagesRepository, ImagesRepository imagesRepository, GroupsRepository groupsRepository, ActivationRepository activationRepository, ActivationDetailsRepository activationDetailsRepository, AttendanceRepository attendanceRepository, TeacherRepository teacherRepository, StudentRepository studentRepository, EventRepository eventRepository) {
         this.languageRepository = languageRepository;
         this.subjectsRepository = subjectsRepository;
         this.mainImagesRepository = mainImagesRepository;
@@ -47,6 +50,7 @@ public class StaticServiceImpl implements StaticService {
         this.attendanceRepository = attendanceRepository;
         this.teacherRepository = teacherRepository;
         this.studentRepository = studentRepository;
+        this.eventRepository = eventRepository;
     }
 
     @Override
@@ -219,6 +223,12 @@ public class StaticServiceImpl implements StaticService {
             }
         }
         return groupsList;
+    }
+
+    @Override
+    public List<Events> landingEvent() {
+        List<Events> eventsList = eventRepository.findAllByDeleteIsFalse();
+        return eventsList;
     }
 
 }
