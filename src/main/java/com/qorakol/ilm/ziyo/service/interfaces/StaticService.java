@@ -28,7 +28,7 @@ public interface StaticService {
 
     Object getGroup(int limit, int page) throws Exception;
 
-    List<Map> getTeachers(int limit, int page) throws Exception;
+    Map<String, Object> getTeachers(int limit, int page) throws Exception;
 
     Map<String, Object> getStudent(Long id) throws Exception;
 
@@ -47,4 +47,6 @@ public interface StaticService {
     Object landingGroups();
 
     List<Events> landingEvent();
+
+    Object getSingleTeacher(Long id) throws Exception;
 }

@@ -13,9 +13,9 @@ public class NewGroup {
 
     public String name;
 
-    public Date begin;
+    public String begin;
 
-    public Date finish;
+    public String finish;
 
     public Long teacherId;
 

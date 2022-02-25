@@ -48,7 +48,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping(value = Registers.RegisterStudent)
+    @PostMapping(value = "/add_student")
     public ResponseEntity<?> regStudent(@Valid @RequestBody RegStudentDto regStudentDto){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(authService.createStudent(regStudentDto));
@@ -93,8 +93,18 @@ public class AuthController {
         return "sda";
     }
 
+
+    @GetMapping(path = "/me")
+    public ResponseEntity authMe(@CurrentUser String login){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(authService.getCurrentUser(login));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
     @GetMapping(value = "/get_admin")
-    public ResponseEntity getADmins(){
+    public ResponseEntity getAdmins(){
         return ResponseEntity.ok(authService.getAdmins());
     }
 }

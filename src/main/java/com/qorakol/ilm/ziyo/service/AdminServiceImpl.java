@@ -1,11 +1,13 @@
 package com.qorakol.ilm.ziyo.service;
 
+import com.qorakol.ilm.ziyo.constant.Common;
 import com.qorakol.ilm.ziyo.constant.PaymentStatus;
 import com.qorakol.ilm.ziyo.constant.RoleContants;
 import com.qorakol.ilm.ziyo.model.dto.*;
 import com.qorakol.ilm.ziyo.model.entity.*;
 import com.qorakol.ilm.ziyo.repository.*;
 import com.qorakol.ilm.ziyo.service.interfaces.AdminService;
+import com.qorakol.ilm.ziyo.utils.DateParser;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -54,7 +56,7 @@ public class AdminServiceImpl implements AdminService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.roleRepository = roleRepository;
         this.subjectsRepository = subjectsRepository;
-        fileStoragePath = Paths.get("/domains/qorakol-ilm-ziyo.uz/public_html/java/java_img").toAbsolutePath().normalize();
+        fileStoragePath = Paths.get("java/java_img").toAbsolutePath().normalize();
         if (!Files.exists(fileStoragePath)){
             try {
                 Files.createDirectories(fileStoragePath);
@@ -62,7 +64,6 @@ public class AdminServiceImpl implements AdminService {
                 e.printStackTrace();
             }
         }
-
     }
 
 
@@ -152,6 +153,22 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public void deleteGroup(Long id) throws Exception  {
+        Groups groups = groupsRepository.findById(id).orElse(null);
+        if (groups == null) throw new Exception("ERROR");
+        groups.setDelete(true);
+        groupsRepository.saveAndFlush(groups);
+    }
+
+    @Override
+    public void deleteTeacher(Long id) throws Exception {
+        Teacher teacher = teacherRepository.findByIdAndDeleteIsFalse(id).orElse(null);
+        if (teacher == null) throw new Exception();
+        teacher.setDelete(true);
+        teacherRepository.save(teacher);
+    }
+
+    @Override
     public void addMainImage(MainImageDto mainImageDto) throws IOException {
         MainImage mainImage = new MainImage();
         mainImage.setDescription(mainImageDto.getDescryption());
@@ -182,8 +199,8 @@ public class AdminServiceImpl implements AdminService {
         groups.setName(newGroup.getName());
         groups.setLanguageId(newGroup.getLanguageId());
         groups.setSubjectId(newGroup.getSubjectId());
-        groups.setBegin(newGroup.getBegin());
-        groups.setFinish(newGroup.getFinish());
+        groups.setBegin(DateParser.TryParse(newGroup.getBegin(), Common.uzbekistanDateFormat));
+        groups.setFinish(DateParser.TryParse(newGroup.getFinish(), Common.uzbekistanDateFormat));
         groups.setTeacherId(newGroup.getTeacherId());
         groups.setPrice(newGroup.getPrice());
             MultipartFile multipartFile = newGroup.getFiles();

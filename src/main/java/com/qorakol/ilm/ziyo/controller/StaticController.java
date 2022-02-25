@@ -24,9 +24,18 @@ public class StaticController {
 
 
     @GetMapping(path = "/get_teachers_list")
-    public ResponseEntity getTeachers(@RequestParam(name = "limit") int limit, @RequestParam(name = "page") int page){
+    public ResponseEntity getTeachers(@RequestParam(name = "limit", defaultValue = "10", required = false) int limit, @RequestParam(name = "page", required = false, defaultValue = "0") int page){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(service.getTeachers(limit, page));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
+    @GetMapping(path = "/get_single_teacher")
+    public ResponseEntity getSingleTeacher(@RequestParam(name = "id") Long id ){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getSingleTeacher(id));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }
@@ -104,7 +113,7 @@ public class StaticController {
         }
     }
 
-    @GetMapping(value = "/get_group")
+    @GetMapping(value = "/get_group_list")
     public ResponseEntity getGroup(@RequestParam(name = "limit") int limit, @RequestParam(name = "page") int page){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(service.getGroup(limit, page));

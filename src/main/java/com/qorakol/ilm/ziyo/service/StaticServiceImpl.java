@@ -185,25 +185,28 @@ public class StaticServiceImpl implements StaticService {
 
 
     @Override
-    public List<Map> getTeachers(int limit, int page) throws Exception {
+    public Map<String, Object> getTeachers(int limit, int page) throws Exception {
+        Map<String, Object> returnMap = new HashMap<>();
+        if (page < 0) throw new Exception("bunday page bolmaydi");
         if (page > 0) page--;
         Pageable pageable = PageRequest.of(page, limit);
-        Page<Teacher> list = teacherRepository.findAll(pageable);
+        Page<Teacher> list = teacherRepository.findAllByDeleteIsFalse(pageable);
         List<Map> returns = new ArrayList<>();
-        System.out.println(list.getTotalElements());
         for (Teacher teacher: list.getContent()){
             Map<String, Object> map = new HashMap<>();
             List<Groups> groups = groupsRepository.findAllByTeacherIdAndDeleteIsFalse(teacher.getId());
             map.put("groups", groups.size());
-            map.put("teachers", teacher);
+            map.put("teacher", teacher);
             returns.add(map);
         }
-        Map<String, Object> map2 = new HashMap<>();
-        map2.put("total_elements", list.getTotalElements());
-        map2.put("total_pages", list.getTotalPages());
-        map2.put("number_od_elements", list.getNumberOfElements());
-        returns.add(map2);
-        return returns;
+        Map<String, Object> paginations = new HashMap<>();
+        paginations.put("total", list.getTotalElements());
+        paginations.put("total_pages", list.getTotalPages());
+        paginations.put("current", page+1);
+        paginations.put("pageSize", limit);
+        returnMap.put("pagination", paginations);
+        returnMap.put("returns", returns);
+        return returnMap;
     }
 
     @Override
@@ -229,6 +232,19 @@ public class StaticServiceImpl implements StaticService {
     public List<Events> landingEvent() {
         List<Events> eventsList = eventRepository.findAllByDeleteIsFalse();
         return eventsList;
+    }
+
+    @Override
+    public Object getSingleTeacher(Long id) throws Exception {
+        Teacher teacher = teacherRepository.findByIdAndDeleteIsFalse(id).orElse(null);
+        if (teacher == null) throw new Exception();
+
+        List<Groups> groupsList = groupsRepository.findAllByTeacherIdAndDeleteIsFalse(teacher.getId());
+        Map<String, Object> map = new HashMap<>();
+        map.put("teacher", teacher);
+        map.put("groups", groupsList);
+
+        return map;
     }
 
 }

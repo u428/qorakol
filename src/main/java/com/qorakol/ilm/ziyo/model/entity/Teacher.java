@@ -50,14 +50,20 @@ public class Teacher {
     private Long imagesId;
 
     @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "auth_id", updatable = false, insertable = false)
     private AuthEntity authEntity;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany()
+    @JoinTable(name = "teacher_languages",
+            joinColumns = {@JoinColumn(name = "teacher_id")},
+            inverseJoinColumns = {@JoinColumn(name = "lang_id")})
     private List<Language> languages;
 
     @ManyToMany()
+    @JoinTable(name = "teacher_subject",
+            joinColumns = {@JoinColumn(name = "teacher_id")},
+            inverseJoinColumns = {@JoinColumn(name = "subject_id")})
     private List<Subjects> subjects;
 
     @JsonIgnore

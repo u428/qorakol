@@ -38,6 +38,15 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }
     }
+    @DeleteMapping(path = "/delete_teacher")
+    public ResponseEntity deleteTeacher(@RequestParam(name ="id") Long id){
+        try {
+            adminService.deleteTeacher(id);
+            return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
 
 
     @GetMapping(path = "/remove_student_group")
@@ -75,12 +84,15 @@ public class AdminController {
     @DeleteMapping(path = "/delete_group/{id}")
     public ResponseEntity deleteGroup(@PathVariable(name = "id") Long id){
         try{
-//            adminService.changeGroup(newGroup, id);
+            adminService.deleteGroup(id);
             return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }
     }
+
+
+//    Main Image CRUD
 
     @PostMapping(value = "/main_image")
     public ResponseEntity mainImage(@ModelAttribute MainImageDto mainImageDto){
@@ -102,8 +114,7 @@ public class AdminController {
         }
     }
 
-
-    @DeleteMapping(value = "/delete_image")
+    @DeleteMapping(value = "/delete_main_image")
     public ResponseEntity deleteImage(@RequestParam Long id){
         try{
 //            adminService.deleteImage(id);
@@ -112,6 +123,9 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }
     }
+
+
+//      Payment CRUD
 
     @PostMapping(value = "/payment")
     public ResponseEntity payment(@RequestBody PaymentDto paymentDto){

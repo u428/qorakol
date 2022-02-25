@@ -27,4 +27,8 @@ public interface AdminService {
     void changeEvent(EventDto eventDto, long id) throws Exception;
 
     void deleteEvent(long id) throws Exception;
+
+    void deleteGroup(Long id) throws Exception;
+
+    void deleteTeacher(Long id) throws Exception;
 }
