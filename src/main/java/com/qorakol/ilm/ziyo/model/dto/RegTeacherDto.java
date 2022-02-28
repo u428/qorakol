@@ -34,7 +34,7 @@ public class RegTeacherDto {
     @NotEmpty
     public String password;
 
-    public MultipartFile files;
+    public Long fileId;
 
     public List<Long> subjectIds;
 

@@ -331,4 +331,22 @@ public class AdminServiceImpl implements AdminService {
             Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 //            Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.ATOMIC_MOVE);
     }
+
+    @Override
+    public Long addImage(MultipartFile multipartFile) throws IOException {
+        Images images = new Images();
+        images.setContentType(multipartFile.getContentType());
+        images.setName(multipartFile.getOriginalFilename());
+        images.setFileSize(multipartFile.getSize());
+        imagesRepository.save(images);
+        String AA = multipartFile.getOriginalFilename();
+        String fileName = String.valueOf(images.getId()) + AA.substring(AA.length() - 4, AA.length());
+        images.setExtension(AA.substring(AA.length() - 4));
+        System.out.println(fileStoragePath);
+        Path filePath = Paths.get(fileStoragePath + "//" + fileName);
+        images.setUploadPath(String.valueOf(filePath));
+        Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        imagesRepository.save(images);
+        return images.getId();
+    }
 }

@@ -28,9 +28,8 @@ public class AdminController {
         this.adminService = adminService;
     }
 
-    @PostMapping(value = "/add_teacher",
-            consumes = {"multipart/form-data", "application/json"})
-    public ResponseEntity<?> regTeacher(@Valid @ModelAttribute RegTeacherDto regTeacherDto){
+    @PostMapping(value = "/add_teacher")
+    public ResponseEntity<?> regTeacher(@Valid @RequestBody RegTeacherDto regTeacherDto){
         try {
             adminService.createTeacher(regTeacherDto);
             return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
@@ -208,6 +207,16 @@ public class AdminController {
         try{
             adminService.deleteEvent(id);
             return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
+
+    @PostMapping(path = "/add_image")
+    public ResponseEntity addImage(@RequestBody MultipartFile file){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(adminService.addImage(file));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }

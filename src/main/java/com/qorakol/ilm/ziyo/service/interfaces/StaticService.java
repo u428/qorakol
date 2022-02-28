@@ -6,6 +6,7 @@ import com.qorakol.ilm.ziyo.model.entity.Events;
 import com.qorakol.ilm.ziyo.model.entity.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.MalformedURLException;
 import java.util.List;

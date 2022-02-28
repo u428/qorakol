@@ -1,6 +1,7 @@
 package com.qorakol.ilm.ziyo.service.interfaces;
 
 import com.qorakol.ilm.ziyo.model.dto.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -31,4 +32,6 @@ public interface AdminService {
     void deleteGroup(Long id) throws Exception;
 
     void deleteTeacher(Long id) throws Exception;
+
+    Long addImage(MultipartFile multipartFile) throws IOException;
 }
