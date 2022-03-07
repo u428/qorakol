@@ -37,8 +37,19 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }
     }
+
+    @PutMapping(value = "/put_teacher")
+    public ResponseEntity<?> changeTeacher(@Valid @RequestBody RegTeacherDto regTeacherDto){
+        try {
+            adminService.changeTeacher(regTeacherDto);
+            return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
     @DeleteMapping(path = "/delete_teacher")
-    public ResponseEntity deleteTeacher(@RequestParam(name ="id") Long id){
+    public ResponseEntity<?> deleteTeacher(@RequestParam(name ="id") Long id){
         try {
             adminService.deleteTeacher(id);
             return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
@@ -49,7 +60,7 @@ public class AdminController {
 
 
     @GetMapping(path = "/remove_student_group")
-    public ResponseEntity removeStudent(@RequestParam Long studentId, @RequestParam Long groupId){
+    public ResponseEntity<?> removeStudent(@RequestParam Long studentId, @RequestParam Long groupId){
         try {
             adminService.removeStudentFromGroup(studentId,groupId);
             return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
@@ -60,7 +71,7 @@ public class AdminController {
 
     @PostMapping(value = "/add_group",
             consumes = {"multipart/form-data", "application/json"})
-    public ResponseEntity addGroup(@Valid @ModelAttribute NewGroup newGroup){
+    public ResponseEntity<?> addGroup(@Valid @ModelAttribute NewGroup newGroup){
         try{
             adminService.save(newGroup);
             return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
@@ -71,7 +82,7 @@ public class AdminController {
 
     @PutMapping(value = "/put_group/{id}",
             consumes = {"multipart/form-data", "application/json"})
-    public ResponseEntity putGroup(@Valid @ModelAttribute NewGroup newGroup, @PathVariable Long id){
+    public ResponseEntity<?> putGroup(@Valid @ModelAttribute NewGroup newGroup, @PathVariable Long id){
         try{
             adminService.changeGroup(newGroup, id);
             return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
@@ -81,7 +92,7 @@ public class AdminController {
     }
 
     @DeleteMapping(path = "/delete_group/{id}")
-    public ResponseEntity deleteGroup(@PathVariable(name = "id") Long id){
+    public ResponseEntity<?> deleteGroup(@PathVariable(name = "id") Long id){
         try{
             adminService.deleteGroup(id);
             return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
@@ -94,7 +105,7 @@ public class AdminController {
 //    Main Image CRUD
 
     @PostMapping(value = "/main_image")
-    public ResponseEntity mainImage(@ModelAttribute MainImageDto mainImageDto){
+    public ResponseEntity<?> mainImage(@ModelAttribute MainImageDto mainImageDto){
         try{
             adminService.addMainImage(mainImageDto);
             return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
@@ -104,7 +115,7 @@ public class AdminController {
     }
 
     @PutMapping(value = "/put_main_image")
-    public ResponseEntity putMainImage(@ModelAttribute MainImageDto mainImageDto){
+    public ResponseEntity<?> putMainImage(@ModelAttribute MainImageDto mainImageDto){
         try{
             adminService.putImage(mainImageDto);
             return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
@@ -114,7 +125,7 @@ public class AdminController {
     }
 
     @DeleteMapping(value = "/delete_main_image")
-    public ResponseEntity deleteImage(@RequestParam Long id){
+    public ResponseEntity<?> deleteImage(@RequestParam Long id){
         try{
 //            adminService.deleteImage(id);
             return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
@@ -127,7 +138,7 @@ public class AdminController {
 //      Payment CRUD
 
     @PostMapping(value = "/payment")
-    public ResponseEntity payment(@RequestBody PaymentDto paymentDto){
+    public ResponseEntity<?> payment(@RequestBody PaymentDto paymentDto){
         try{
             adminService.paying(paymentDto);
             return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
@@ -137,7 +148,7 @@ public class AdminController {
     }
 
     @PutMapping(value = "/change_payment")
-    public ResponseEntity changePayment(@RequestBody PaymentDto paymentDto){
+    public ResponseEntity<?> changePayment(@RequestBody PaymentDto paymentDto){
         try{
             adminService.changePayment(paymentDto);
             return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
@@ -151,7 +162,7 @@ public class AdminController {
 //    @Value bu yerda subject larni CRUD i bor
 
     @PostMapping(value = "/add_subject")
-    public ResponseEntity addSubject(@RequestBody SubjectDto subjectDto){
+    public ResponseEntity<?> addSubject(@RequestBody SubjectDto subjectDto){
         try{
             service.addSubject(subjectDto);
             return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");

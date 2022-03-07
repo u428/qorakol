@@ -238,7 +238,7 @@ public class StaticServiceImpl implements StaticService {
     }
 
     @Override
-    public Object getSingleTeacher(Long id) throws Exception {
+    public Map<String, Object> getSingleTeacher(Long id) throws Exception {
         Teacher teacher = teacherRepository.findByIdAndDeleteIsFalse(id).orElse(null);
         if (teacher == null) throw new Exception();
 
@@ -248,7 +248,7 @@ public class StaticServiceImpl implements StaticService {
         map.put("groups", groupsList);
 
         return map;
-    }
+    }                                                                                                    
 
 
 

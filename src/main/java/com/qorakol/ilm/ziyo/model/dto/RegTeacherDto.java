@@ -9,8 +9,10 @@ import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Data
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class RegTeacherDto {
+
+    public Long id;
+
     @NotEmpty
     public String firstName;
     @NotEmpty
@@ -19,6 +21,8 @@ public class RegTeacherDto {
     public String middleName;
     @NotEmpty
     public String telNomer;
+
+    public int gender;
 
     public String tgLink;
 

@@ -49,5 +49,5 @@ public interface StaticService {
 
     List<Events> landingEvent();
 
-    Object getSingleTeacher(Long id) throws Exception;
+    Map<String, Object> getSingleTeacher(Long id) throws Exception;
 }

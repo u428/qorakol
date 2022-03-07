@@ -17,7 +17,7 @@ public interface AdminService {
 
     Object deleteImage(Long id);
 
-    void createTeacher(RegTeacherDto regTeacherDto) throws IOException;
+    void createTeacher(RegTeacherDto regTeacherDto) throws Exception;
 
     void changeGroup(NewGroup newGroup, Long id) throws IOException;
 
@@ -34,4 +34,6 @@ public interface AdminService {
     void deleteTeacher(Long id) throws Exception;
 
     Long addImage(MultipartFile multipartFile) throws IOException;
+
+    void changeTeacher(RegTeacherDto regTeacherDto) throws Exception;
 }

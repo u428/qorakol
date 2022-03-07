@@ -68,7 +68,7 @@ public class AdminServiceImpl implements AdminService {
 
 
     @Override
-    public void createTeacher(RegTeacherDto regTeacherDto) throws IOException {
+    public void createTeacher(RegTeacherDto regTeacherDto) throws Exception {
         Teacher teacher = new Teacher();
         BeanUtils.copyProperties(regTeacherDto, teacher);
         AuthEntity authEntity=new AuthEntity();
@@ -80,25 +80,42 @@ public class AdminServiceImpl implements AdminService {
         List<Language> languageList = languageRepository.findAllByIdIn(regTeacherDto.getLangIds());
         teacher.setLanguages(languageList);
         teacher.setSubjects(subjectsList);
-            MultipartFile multipartFile = regTeacherDto.getFiles();
-            Images images = new Images();
-            images.setContentType(multipartFile.getContentType());
-            images.setName(multipartFile.getOriginalFilename());
-            images.setFileSize(multipartFile.getSize());
-            imagesRepository.save(images);
-            String AA = multipartFile.getOriginalFilename();
-            String fileName = String.valueOf(images.getId()) + AA.substring(AA.length() - 4);
-            images.setExtension(AA.substring(AA.length() - 4));
-            System.out.println(fileStoragePath);
-            Path filePath = Paths.get(fileStoragePath + "//" + fileName);
-            images.setUploadPath(String.valueOf(filePath));
-            Files.createDirectories(fileStoragePath);
-            Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-            imagesRepository.save(images);
+        Images images = imagesRepository.findById(regTeacherDto.getFileId()).orElse(null);
+        if (images == null) throw new Exception();
+
+//            MultipartFile multipartFile = regTeacherDto.getFiles();
+//            Images images = new Images();
+//            images.setContentType(multipartFile.getContentType());
+//            images.setName(multipartFile.getOriginalFilename());
+//            images.setFileSize(multipartFile.getSize());
+//            imagesRepository.save(images);
+//            String AA = multipartFile.getOriginalFilename();
+//            String fileName = String.valueOf(images.getId()) + AA.substring(AA.length() - 4);
+//            images.setExtension(AA.substring(AA.length() - 4));
+//            System.out.println(fileStoragePath);
+//            Path filePath = Paths.get(fileStoragePath + "//" + fileName);
+//            images.setUploadPath(String.valueOf(filePath));
+//            Files.createDirectories(fileStoragePath);
+//            Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+//            imagesRepository.save(images);
+
             teacher.setImagesId(images.getId());
             authRepository.save(authEntity);
             teacher.setAuthId(authEntity.getId());
             teacherRepository.save(teacher);
+    }
+
+    @Override
+    public void changeTeacher(RegTeacherDto regTeacherDto) throws Exception {
+        Teacher teacher = teacherRepository.findByIdAndDeleteIsFalse(regTeacherDto.getId()).orElse(null);
+        if (teacher == null ) throw new Exception();
+        BeanUtils.copyProperties(regTeacherDto, teacher);
+        List<Subjects> subjectsList = subjectsRepository.findAllByIdIn(regTeacherDto.getSubjectIds());
+        List<Language> languageList = languageRepository.findAllByIdIn(regTeacherDto.getLangIds());
+        teacher.setLanguages(languageList);
+        teacher.setSubjects(subjectsList);
+        teacher.setImagesId(regTeacherDto.getFileId());
+        teacherRepository.saveAndFlush(teacher);
     }
 
     @Override
@@ -349,4 +366,6 @@ public class AdminServiceImpl implements AdminService {
         imagesRepository.save(images);
         return images.getId();
     }
+
+
 }
