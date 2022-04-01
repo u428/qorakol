@@ -7,9 +7,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+
 @Data
 public class NewGroup {
+
+    public Long id;
 
     public String name;
 
@@ -17,14 +19,16 @@ public class NewGroup {
 
     public String finish;
 
-    public Long teacherId;
+    public String description;
 
     public double price;
+
+    public Long teacherId;
 
     public Long subjectId;
 
     public Long languageId;
 
-    public MultipartFile files;
+    public Long filesId;
 
 }

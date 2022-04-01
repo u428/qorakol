@@ -6,8 +6,9 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 
 @Data
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class SubjectDto {
+
+    public Long id;
 
     public String nameUz;
 

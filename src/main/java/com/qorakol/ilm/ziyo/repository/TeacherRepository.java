@@ -16,8 +16,12 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     Teacher findByAuthEntity(AuthEntity authEntity);
 
     Page<Teacher> findAllByDeleteIsFalse(Pageable pageable);
+    Page<Teacher> findAllByDeleteIsFalseOrderByIdDesc(Pageable pageable);
 
     List<Teacher> findAllByDeleteIsFalse();
 
     Optional<Teacher> findByIdAndDeleteIsFalse(Long id);
+
+    List<Teacher> findAllByFirstNameContainsAndDeleteIsFalse(String name);
+    List<Teacher> findAllByFirstNameContainingAndDeleteIsFalse(String name);
 }

@@ -1,6 +1,7 @@
 package com.qorakol.ilm.ziyo.model.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -26,10 +27,12 @@ public class Activation {
     @Column(name = "group_id")
     private Long groupId;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "student_id", insertable = false, updatable = false)
     private Student student;
 
+    @JsonIgnore
     @OneToOne()
     @JoinColumn(name = "group_id", insertable = false, updatable = false)
     private Groups groups;

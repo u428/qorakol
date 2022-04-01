@@ -5,6 +5,7 @@ import com.qorakol.ilm.ziyo.constant.StudentStatus;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +37,10 @@ public class Student {
 
     @Column(name = "auth_id")
     private Long authId;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "date_birth")
+    private Date dateBirth;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JsonIgnore

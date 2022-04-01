@@ -14,4 +14,8 @@ public interface GroupsRepository extends JpaRepository<Groups, Long> {
     List<Groups> findAllByTeacherIdAndDeleteIsFalse(Long id);
     Page<Groups> findAllByDeleteIsFalse(Pageable pageable);
 
+    Groups findByActivationIdAndDeleteIsFalse(Long id);
+
+    List<Groups> findAllByNameContainingAndDeleteFalse(String name);
+
 }

@@ -69,9 +69,8 @@ public class AdminController {
         }
     }
 
-    @PostMapping(value = "/add_group",
-            consumes = {"multipart/form-data", "application/json"})
-    public ResponseEntity<?> addGroup(@Valid @ModelAttribute NewGroup newGroup){
+    @PostMapping(value = "/add_group")
+    public ResponseEntity<?> addGroup(@Valid @RequestBody NewGroup newGroup){
         try{
             adminService.save(newGroup);
             return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
@@ -80,19 +79,18 @@ public class AdminController {
         }
     }
 
-    @PutMapping(value = "/put_group/{id}",
-            consumes = {"multipart/form-data", "application/json"})
-    public ResponseEntity<?> putGroup(@Valid @ModelAttribute NewGroup newGroup, @PathVariable Long id){
+    @PutMapping(value = "/put_group")
+    public ResponseEntity<?> putGroup(@Valid @RequestBody NewGroup newGroup){
         try{
-            adminService.changeGroup(newGroup, id);
+            adminService.changeGroup(newGroup);
             return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }
     }
 
-    @DeleteMapping(path = "/delete_group/{id}")
-    public ResponseEntity<?> deleteGroup(@PathVariable(name = "id") Long id){
+    @DeleteMapping(path = "/delete_group")
+    public ResponseEntity<?> deleteGroup(@RequestParam(name = "id") Long id){
         try{
             adminService.deleteGroup(id);
             return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
@@ -171,18 +169,18 @@ public class AdminController {
         }
     }
 
-    @PutMapping(value = "/put_subject/{id}")
-    public ResponseEntity putSubject(@PathVariable(name = "id") Long id, @RequestBody SubjectDto subjectDto){
+    @PutMapping(value = "/put_subject")
+    public ResponseEntity putSubject(@RequestBody SubjectDto subjectDto){
         try{
-            service.putSubject(id, subjectDto);
+            service.putSubject(subjectDto);
             return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }
     }
 
-    @DeleteMapping(value = "/delete_subject/{id}")
-    public ResponseEntity deleteSubject(@PathVariable(name = "id") Long id){
+    @DeleteMapping(value = "/delete_subject")
+    public ResponseEntity deleteSubject(@RequestParam(name = "id") Long id){
         try{
             service.deleteSubject(id);
             return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");

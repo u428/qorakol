@@ -19,13 +19,11 @@ public class Groups {
     @Column(name = "name")
     private String name;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column
-    private Date begin;
+    private String begin;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column
-    private Date finish;
+    private String finish;
 
     @Column(name = "price")
     private double price;
@@ -62,6 +60,7 @@ public class Groups {
     private Language language;
 
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "image_id", insertable = false, updatable = false)
     private Images images;
 

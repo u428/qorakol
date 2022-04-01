@@ -14,17 +14,11 @@ public interface AuthService extends UserDetailsService {
 
     Roles getRoles(String login) throws Exception;
 
-    Long createStudent(RegStudentDto regStudentDto);
-
     Map<String, Object> getCurrentUser(String login);
-
-    void studentAddGroup(SToGroup sToGroup) throws Exception;
 
     void addAdmin(AdminDto adminDto) throws Exception;
 
     void addRole();
 
     Object getAdmins();
-
-    void addStudentLogin(StudentLogin studentLogin) throws Exception;
 }

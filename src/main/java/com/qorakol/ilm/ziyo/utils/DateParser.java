@@ -6,7 +6,7 @@ import java.util.Date;
 public class DateParser {
 
     private static SimpleDateFormat dateAndTimeMysqlFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-    private static SimpleDateFormat dateMysqlFormat = new SimpleDateFormat("dd.MM.yyyy");
+    private static SimpleDateFormat dateUzbekistan = new SimpleDateFormat("dd.MM.yyyy");
 
     /**
      * Try to parse the date from the string
@@ -36,7 +36,7 @@ public class DateParser {
 
     public static String FormatToDate(Date dateAsString) {
         try{
-            return dateMysqlFormat.format(dateAsString);
+            return dateUzbekistan.format(dateAsString);
         }
         catch (Exception ignored) {
 

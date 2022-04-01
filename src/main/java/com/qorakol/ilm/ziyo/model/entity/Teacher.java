@@ -2,8 +2,10 @@ package com.qorakol.ilm.ziyo.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -44,6 +46,10 @@ public class Teacher {
     private String gmail;
 
     private String description;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "date_birth")
+    private Date dateBirth;
 
     @JsonIgnore
     @Column(name = "auth_id", unique = false)

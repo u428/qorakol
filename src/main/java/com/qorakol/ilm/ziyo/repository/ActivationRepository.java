@@ -11,6 +11,8 @@ public interface ActivationRepository extends JpaRepository<Activation, Long> {
 
     List<Activation> findAllByGroupIdAndDeleteIsFalse(Long id);
 
+    List<Activation> findAllByStudentIdAndDeleteIsFalse(Long id);
+
     Activation findByStudentIdAndDeleteIsFalse(Long id);
 
     Activation findByStudentIdAndGroupId(Long ids, Long idg);

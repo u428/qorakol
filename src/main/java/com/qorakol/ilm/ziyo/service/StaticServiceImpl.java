@@ -16,13 +16,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.net.MalformedURLException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 
@@ -74,14 +71,11 @@ public class StaticServiceImpl implements StaticService {
     }
 
     @Override
-    public void putSubject(Long id, SubjectDto subjectDto)throws Exception {
-        Subjects subject = subjectsRepository.findByIdAndDeleteIsFalse(id);
-        if (subject !=null) {
-            BeanUtils.copyProperties(subjectDto, subjectDto);
-            subjectsRepository.save(subject);
-        }else{
-            throw new Exception();
-        }
+    public void putSubject(SubjectDto subjectDto)throws Exception {
+        Subjects subject = subjectsRepository.findByIdAndDeleteIsFalse(subjectDto.getId());
+        if (subject ==null) throw new Exception();
+        BeanUtils.copyProperties(subjectDto, subject);
+        subjectsRepository.save(subject);
     }
 
     @Override
@@ -97,51 +91,61 @@ public class StaticServiceImpl implements StaticService {
         Pageable pageable = PageRequest.of(page, limit);
         List<Map<String, Object>> list = new ArrayList<>();
         Page<Groups> groupsList = groupsRepository.findAllByDeleteIsFalse(pageable);
-        for(Groups groups: groupsList.getContent()){
-            Map<String, Object> map = new HashMap<>();
-            map.put("group", groups);
-            map.put("soni", activationRepository.findAllByGroupIdAndDeleteIsFalse(groups.getId()).size());
-            map.put("language", languageRepository.findById(groups.getLanguageId()).get());
-            map.put("subject", subjectsRepository.findById(groups.getSubjectId()).get());
-            map.put("teacher", teacherRepository.findById(groups.getTeacherId()).get());
-            list.add(map);
-        }
+//        for(Groups groups: groupsList.getContent()){
+//            Map<String, Object> map = new HashMap<>();
+//            map.put("group", groups);
+//            map.put("soni", activationRepository.findAllByGroupIdAndDeleteIsFalse(groups.getId()).size());
+//            map.put("language", languageRepository.findById(groups.getLanguageId()).get());
+//            map.put("subject", subjectsRepository.findById(groups.getSubjectId()).get());
+//            map.put("teacher", teacherRepository.findById(groups.getTeacherId()).get());
+//            list.add(map);
+//        }
+        Map<String, Object> paginations = new HashMap<>();
+        paginations.put("total", groupsList.getTotalElements());
+        paginations.put("current", page+1);
+        paginations.put("pageSize", limit);
         Map<String, Object> map2 = new HashMap<>();
-        map2.put("total_pages", groupsList.getTotalPages());
-        map2.put("total_elements", groupsList.getTotalElements());
+        map2.put("pagination", paginations);
+        map2.put("groups", groupsList.getContent());
 
-        return "sdadawd";
+        return map2;
     }
 
     @Override
-    public Map<String, Object> getStudent(Long id) throws Exception {
+    public Object getStudent(Long id) throws Exception {
         Student student = studentRepository.findById(id).get();
-        Activation activation = activationRepository.findByStudentIdAndDeleteIsFalse(id);
-        Groups groups = groupsRepository.findById(activation.getGroupId()).get();
-        List<Attendances> attendancesLIst = attendanceRepository.findAllByCountedIsTrueAndActivationId(activation.getId());
-        Map<String, Object> map = new HashMap<>();
-        map.put("student", student);
-        map.put("tolanmagan_darslari", attendancesLIst);
-        map.put("xolati", activation);
-        map.put("groups", groups);
-        return map;
+//        List<Activation> activationList = activationRepository.findAllByStudentIdAndDeleteIsFalse(student.getId());
+//        List<Groups> groupsList = new ArrayList<>();
+//        for(Activation activation: activationList){
+//            Groups groups = groupsRepository.findByActivationIdAndDeleteIsFalse(activation.getId());
+//            groupsList.add(groups);
+//        }
+
+//        Activation activation = activationRepository.findByStudentIdAndDeleteIsFalse(id);
+
+//        Groups groups = groupsRepository.findById(activation.getGroupId()).get();
+//        List<Attendances> attendancesLIst = attendanceRepository.findAllByCountedIsTrueAndActivationId(activation.getId());
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("student", student);
+//        map.put("tolanmagan_darslari", attendancesLIst);
+//        map.put("xolati", activation);
+//        map.put("groups", groups);
+        return student;
     }
 
     @Override
-    public Page<Student> getStudentNew(int limit, int page) {
+    public Map<String, Object> getStudentNew(int limit, int page) {
         if (page > 0) page--;
         Pageable pageable = PageRequest.of(page, limit);
         Page<Student> studentList = studentRepository.findByStatusAndDeleteIsFalse(StudentStatus.YANGI, pageable);
-        return studentList;
-    }
-
-    @Override
-    public Object getStudentPayed(int limit, int page) {
-        if (page > 0) page--;
-        Pageable pageable = PageRequest.of(page, limit);
-
-        activationDetailsRepository.countByStatusAndDeleteIsFalse(true);
-        return null;
+        Map<String, Object> map = new HashMap<>();
+        map.put("students", studentList.getContent());
+        Map<String, Long> pagable = new HashMap<>();
+        pagable.put("current", (long) ++page);
+        pagable.put("pageSize", (long) limit);
+        pagable.put("total", studentList.getTotalElements());
+        map.put("pagination", pagable);
+        return map;
     }
 
     @Override
@@ -193,7 +197,7 @@ public class StaticServiceImpl implements StaticService {
         if (page < 0) throw new Exception("bunday page bolmaydi");
         if (page > 0) page--;
         Pageable pageable = PageRequest.of(page, limit);
-        Page<Teacher> list = teacherRepository.findAllByDeleteIsFalse(pageable);
+        Page<Teacher> list = teacherRepository.findAllByDeleteIsFalseOrderByIdDesc(pageable);
         List<Map> returns = new ArrayList<>();
         for (Teacher teacher: list.getContent()){
             Map<String, Object> map = new HashMap<>();
@@ -248,8 +252,26 @@ public class StaticServiceImpl implements StaticService {
         map.put("groups", groupsList);
 
         return map;
-    }                                                                                                    
+    }
+
+    @Override
+    public Subjects getViewSubject(Long id) throws Exception {
+        Subjects subjects =subjectsRepository.findById(id).orElse(null);
+        if (subjects == null) throw new Exception();
+        return subjects;
+    }
 
 
+    @Override
+    public Object getGroupOne(Long id) throws Exception {
+        Groups group = groupsRepository.findById(id).orElse(null);
+        if (group == null) throw new Exception();
+        return group;
+    }
 
+    @Override
+    public  List<Teacher> getTeachersList(String name) {
+        List<Teacher> teacherList = teacherRepository.findAllByFirstNameContainingAndDeleteIsFalse(name);
+        return teacherList;
+    }
 }

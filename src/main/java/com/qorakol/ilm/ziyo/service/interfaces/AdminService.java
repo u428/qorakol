@@ -19,7 +19,7 @@ public interface AdminService {
 
     void createTeacher(RegTeacherDto regTeacherDto) throws Exception;
 
-    void changeGroup(NewGroup newGroup, Long id) throws IOException;
+    void changeGroup(NewGroup newGroup) throws IOException;
 
     void removeStudentFromGroup(Long studentId, Long groupId) throws Exception;
 

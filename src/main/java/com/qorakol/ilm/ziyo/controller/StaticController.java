@@ -30,6 +30,15 @@ public class StaticController {
         }
     }
 
+    @GetMapping(path = "/get_teachers_list_search")
+    public ResponseEntity getTeachersList(@RequestParam(name = "name", defaultValue = "", required = false) String name){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getTeachersList(name));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
     @GetMapping(path = "/get_single_teacher")
     public ResponseEntity getSingleTeacher(@RequestParam(name = "id") Long id ){
         try {
@@ -49,22 +58,15 @@ public class StaticController {
     }
 
     @GetMapping(path = "/get_students_new")
-    public ResponseEntity getStudentsNew(@RequestParam(name = "limit") int limit, @RequestParam(name = "page") int page){
+    public ResponseEntity getStudentsNew(@RequestParam(name = "pageSize") int pageSize, @RequestParam(name = "current") int current){
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(service.getStudentNew(limit, page));
+            return ResponseEntity.status(HttpStatus.OK).body(service.getStudentNew(pageSize, current));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }
     }
 
-    @GetMapping(path = "/get_students_payed")
-    public ResponseEntity getStudentsPayed(@RequestParam(name = "limit") int limit, @RequestParam(name = "page") int page){
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(service.getStudentPayed(limit, page));
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
-        }
-    }
+
 
     @GetMapping(path = "/get_students_not_payed")
     public ResponseEntity getStudentsNotPayed(){
@@ -85,7 +87,7 @@ public class StaticController {
     }
 
     @GetMapping(path = "/get_language")
-    public ResponseEntity getSubjects(){
+    public ResponseEntity getLang(){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(service.getAllLang());
         }catch (Exception e){
@@ -94,9 +96,18 @@ public class StaticController {
     }
 
     @GetMapping(value = "/get_subjects")
-    public ResponseEntity getLang(){
+    public ResponseEntity getSubjects(){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(service.getAllSubjects());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
+    @GetMapping(value = "/get_subject_one")
+    public ResponseEntity getViewSubject(@RequestParam Long id){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getViewSubject(id));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }
@@ -112,9 +123,18 @@ public class StaticController {
     }
 
     @GetMapping(value = "/get_group_list")
-    public ResponseEntity getGroup(@RequestParam(name = "limit") int limit, @RequestParam(name = "page") int page){
+    public ResponseEntity getGroup(@RequestParam(name = "pageSize") int pageSize, @RequestParam(name = "current") int current){
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(service.getGroup(limit, page));
+            return ResponseEntity.status(HttpStatus.OK).body(service.getGroup(pageSize, current));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
+    @GetMapping(value = "/get_group_one")
+    public ResponseEntity getGroupOne(@RequestParam Long id){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getGroupOne(id));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }

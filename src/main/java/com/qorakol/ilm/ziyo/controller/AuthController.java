@@ -28,36 +28,6 @@ public class AuthController {
         return ResponseEntity.ok(authService.checkLogin(login));
     }
 
-    @PostMapping(path = "/add_student_login")
-    public ResponseEntity addStudentLogin(@Valid @RequestBody StudentLogin studentLogin){
-        try {
-            authService.addStudentLogin(studentLogin);
-            return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
-        }
-    }
-
-    @PostMapping(value = "/student_group")
-    public ResponseEntity studentGroup(@Valid @RequestBody SToGroup sToGroup){
-        try {
-            authService.studentAddGroup(sToGroup);
-            return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
-        }
-    }
-
-    @PostMapping(value = "/add_student")
-    public ResponseEntity<?> regStudent(@Valid @RequestBody RegStudentDto regStudentDto){
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(authService.createStudent(regStudentDto));
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
-        }
-    }
-
-
 
     @GetMapping(value = "/get_role")
     public ResponseEntity getRole(@CurrentUser String login){

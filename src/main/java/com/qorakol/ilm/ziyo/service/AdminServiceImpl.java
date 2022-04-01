@@ -80,25 +80,9 @@ public class AdminServiceImpl implements AdminService {
         List<Language> languageList = languageRepository.findAllByIdIn(regTeacherDto.getLangIds());
         teacher.setLanguages(languageList);
         teacher.setSubjects(subjectsList);
+        teacher.setDateBirth(DateParser.TryParse(regTeacherDto.getDateBirth(), Common.uzbekistanDateFormat));
         Images images = imagesRepository.findById(regTeacherDto.getFileId()).orElse(null);
         if (images == null) throw new Exception();
-
-//            MultipartFile multipartFile = regTeacherDto.getFiles();
-//            Images images = new Images();
-//            images.setContentType(multipartFile.getContentType());
-//            images.setName(multipartFile.getOriginalFilename());
-//            images.setFileSize(multipartFile.getSize());
-//            imagesRepository.save(images);
-//            String AA = multipartFile.getOriginalFilename();
-//            String fileName = String.valueOf(images.getId()) + AA.substring(AA.length() - 4);
-//            images.setExtension(AA.substring(AA.length() - 4));
-//            System.out.println(fileStoragePath);
-//            Path filePath = Paths.get(fileStoragePath + "//" + fileName);
-//            images.setUploadPath(String.valueOf(filePath));
-//            Files.createDirectories(fileStoragePath);
-//            Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-//            imagesRepository.save(images);
-
             teacher.setImagesId(images.getId());
             authRepository.save(authEntity);
             teacher.setAuthId(authEntity.getId());
@@ -119,28 +103,11 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void changeGroup(NewGroup newGroup, Long id) throws IOException {
-        Groups groups = groupsRepository.findById(id).get();
+    public void changeGroup(NewGroup newGroup) throws IOException {
+        Groups groups = groupsRepository.findById(newGroup.getId()).get();
         BeanUtils.copyProperties(newGroup, groups);
-            MultipartFile multipartFile = newGroup.getFiles();
-            Images images = groups.getImages();
-            images.setContentType(multipartFile.getContentType());
-            images.setName(multipartFile.getOriginalFilename());
-            images.setFileSize(multipartFile.getSize());
-
-            String AA = multipartFile.getOriginalFilename();
-            String fileName = String.valueOf(images.getId()) + AA.substring(AA.length() - 4, AA.length());
-            images.setExtension(AA.substring(AA.length() - 4));
-
-            Path path=Paths.get(images.getUploadPath());
-            Files.deleteIfExists(path);
-
-            Path filePath = Paths.get(fileStoragePath + "//" + fileName);
-            images.setUploadPath(String.valueOf(filePath));
-            Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-            imagesRepository.save(images);
-            groupsRepository.save(groups);
-
+        groups.setImagesId(newGroup.getFilesId());
+        groupsRepository.save(groups);
     }
 
     @Override
@@ -215,27 +182,15 @@ public class AdminServiceImpl implements AdminService {
         BeanUtils.copyProperties(newGroup, groups);
         groups.setName(newGroup.getName());
         groups.setLanguageId(newGroup.getLanguageId());
+        groups.setDescription(newGroup.getDescription());
         groups.setSubjectId(newGroup.getSubjectId());
-        groups.setBegin(DateParser.TryParse(newGroup.getBegin(), Common.uzbekistanDateFormat));
-        groups.setFinish(DateParser.TryParse(newGroup.getFinish(), Common.uzbekistanDateFormat));
+        groups.setBegin(newGroup.getBegin());
+        groups.setFinish(newGroup.getFinish());
         groups.setTeacherId(newGroup.getTeacherId());
         groups.setPrice(newGroup.getPrice());
-            MultipartFile multipartFile = newGroup.getFiles();
-            Images images = new Images();
-            images.setContentType(multipartFile.getContentType());
-            images.setName(multipartFile.getOriginalFilename());
-            images.setFileSize(multipartFile.getSize());
-            imagesRepository.save(images);
-            String AA = multipartFile.getOriginalFilename();
-            String fileName = String.valueOf(images.getId()) + AA.substring(AA.length() - 4, AA.length());
-            images.setExtension(AA.substring(AA.length() - 4));
-            System.out.println(fileStoragePath);
-            Path filePath = Paths.get(fileStoragePath + "//" + fileName);
-            images.setUploadPath(String.valueOf(filePath));
-            Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-            imagesRepository.save(images);
-            groups.setImagesId(images.getId());
-            groupsRepository.save(groups);
+
+        groups.setImagesId(newGroup.getFilesId());
+        groupsRepository.save(groups);
     }
 
     @Override

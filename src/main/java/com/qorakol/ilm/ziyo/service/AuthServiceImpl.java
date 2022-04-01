@@ -54,16 +54,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-
-    @Override
-    public Long createStudent(RegStudentDto regStudentDto) {
-        Student student =  new Student();
-        BeanUtils.copyProperties(regStudentDto, student);
-        student.setStatus(StudentStatus.YANGI);
-        Long result = studentRepository.save(student).getId();
-        return result;
-    }
-
     @Override
     public Map<String, Object> getCurrentUser(String login){
         AuthEntity authEntity = authRepository.findByLogin(login);
@@ -87,31 +77,7 @@ public class AuthServiceImpl implements AuthService {
         return result;
     }
 
-    @Override
-    public void studentAddGroup(SToGroup sToGroup) throws Exception {
-        Student student = studentRepository.findById(sToGroup.getStudentId()).get();
-        if (student.getAuthId() == null) throw new UsernameNotFoundException("oldin login parol bering");
-        Groups groups = groupsRepository.findById(sToGroup.getGroupId()).get();
-        if (groups == null) throw new UsernameNotFoundException("id li group topilmadi");
-        Activation activation = new Activation();
-        activation.setActive(true);
-        activation.setGroupId(sToGroup.getGroupId());
-        activation.setStudentId(sToGroup.getStudentId());
 
-        ActivationDetails activationDetails =  new ActivationDetails();
-        activationDetails.setLessonPayed(0);
-        activationDetails.setStatus(true);
-        activationRepository.save(activation);
-        activationDetails.setActivationId(activation.getId());
-        activationDetailsRepository.save(activationDetails);
-        if (student.getActivation() == null){
-            student.setActivation(new ArrayList<>());
-        }
-        List<Activation> list = student.getActivation();
-        list.add(activation);
-        student.setActivation(list);
-        studentRepository.save(student);
-    }
 
     @Override
     public void addAdmin(AdminDto adminDto) throws Exception {
@@ -184,21 +150,5 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public Object getAdmins() {
         return null;
-    }
-
-    @Override
-    public void addStudentLogin(StudentLogin studentLogin) throws Exception {
-        AuthEntity authEntity = authRepository.findByLogin(studentLogin.getLogin());
-        if (authEntity !=null) throw new UsernameNotFoundException("login found in database");
-        authEntity = new AuthEntity();
-        authEntity.setLogin(studentLogin.getLogin());
-        authEntity.setPassword(bCryptPasswordEncoder.encode(studentLogin.getPassword()));
-        Roles roles = roleRepository.findByName(RoleContants.STUDENT);
-        authEntity.setRoles(roles);
-        Student student = studentRepository.findById(studentLogin.getStudentId()).get();
-        if (student == null)throw new UsernameNotFoundException("student not found");
-        authRepository.save(authEntity);
-        student.setAuthId(authEntity.getId());
-        studentRepository.save(student);
     }
 }

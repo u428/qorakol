@@ -17,6 +17,12 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     Page<Student> findByStatusAndDeleteIsFalse(StudentStatus studentStatus, Pageable pageable);
 
+    Student findByIdAndDeleteIsFalse(Long id);
+
+    List<Student> findAllByFirstNameContainingAndDeleteIsFalse(String name);
+
+    List<Student> findAllByStatusAndFirstNameContainingAndDeleteIsFalse(StudentStatus studentStatus,String name);
+
     long countByStatusAndDeleteIsFalse(StudentStatus studentStatus);
     long countByDeleteIsFalse();
 }
