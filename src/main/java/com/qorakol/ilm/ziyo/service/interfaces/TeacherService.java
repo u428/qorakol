@@ -8,4 +8,6 @@ public interface TeacherService {
     Object getGroupStudents(String login, Long id);
 
     void checkStudent(String login, CheckStudents checkStudents) throws Exception;
+
+    Object getGroups(String login) throws Exception;
 }

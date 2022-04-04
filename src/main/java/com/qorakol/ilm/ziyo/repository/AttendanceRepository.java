@@ -15,4 +15,10 @@ public interface AttendanceRepository extends JpaRepository<Attendances, Long> {
 
     List<Attendances> findAllByCountedIsTrueAndActivationId(Long id);
 
+    List<Attendances> findAllByActivationIdAndDeleteIsFalse(Long id);
+
+    long countAllByActivationIdAndDeleteIsFalse(Long id);
+
+
+
 }

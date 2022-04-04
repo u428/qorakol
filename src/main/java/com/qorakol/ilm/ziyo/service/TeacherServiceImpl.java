@@ -1,12 +1,14 @@
 package com.qorakol.ilm.ziyo.service;
 
 import com.qorakol.ilm.ziyo.model.dto.CheckStudents;
+import com.qorakol.ilm.ziyo.model.dto.GroupsTeacher;
 import com.qorakol.ilm.ziyo.model.entity.*;
 import com.qorakol.ilm.ziyo.repository.*;
 import com.qorakol.ilm.ziyo.service.interfaces.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -70,4 +72,23 @@ public class TeacherServiceImpl implements TeacherService {
         }
     }
 
+    @Override
+    public Object getGroups(String login) throws Exception {
+        AuthEntity authEntity = authRepository.findByLogin(login);
+        if (authEntity == null) throw new Exception();
+        Teacher teacher = teacherRepository.findByAuthIdAndDeleteIsFalse(authEntity.getId());
+        if (teacher == null) throw new Exception();
+        List<Groups> groupList = groupsRepository.findAllByTeacherId(teacher.getId());
+        List<GroupsTeacher> groupsTeacherList = new ArrayList<>();
+        for (Groups groups: groupList){
+            GroupsTeacher groupsTeacher = new GroupsTeacher();
+            groupsTeacher.setId(groups.getId());
+            groupsTeacher.setName(groups.getName());
+            groupsTeacher.setPrice(groups.getPrice());
+
+            groupsTeacher.setStudents(15);
+            groupsTeacherList.add(groupsTeacher);
+        }
+        return groupsTeacherList;
+    }
 }

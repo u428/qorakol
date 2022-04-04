@@ -82,8 +82,6 @@ public class DependController {
         }
     }
 
-
-
     @GetMapping(path = "/get_group_list_search")
     public ResponseEntity getGroupsListSearch(@RequestParam(name = "name", defaultValue = "") String name){
         try {
@@ -92,4 +90,23 @@ public class DependController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }
     }
+
+    @GetMapping(path = "/get_group_list_student")
+    public ResponseEntity getGroupsListStudent(@RequestParam(name = "id") Long id){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(dependService.getGroupListStudent(id));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
+    @GetMapping(path = "/get_student_list_by_group")
+    public ResponseEntity getStudentListByGroup(@RequestParam(name = "id") Long id){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(dependService.getStudentListByGroup(id));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
 }

@@ -4,13 +4,13 @@ import com.qorakol.ilm.ziyo.constant.Common;
 import com.qorakol.ilm.ziyo.constant.RoleContants;
 import com.qorakol.ilm.ziyo.constant.StudentStatus;
 import com.qorakol.ilm.ziyo.model.dto.RegStudentDto;
+import com.qorakol.ilm.ziyo.model.dto.ResponseGroupList;
 import com.qorakol.ilm.ziyo.model.dto.SToGroup;
 import com.qorakol.ilm.ziyo.model.dto.StudentLogin;
 import com.qorakol.ilm.ziyo.model.entity.*;
 import com.qorakol.ilm.ziyo.repository.*;
 import com.qorakol.ilm.ziyo.service.interfaces.DependService;
 import com.qorakol.ilm.ziyo.utils.DateParser;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,15 +32,17 @@ public class DependServiceImpl implements DependService {
     private final GroupsRepository groupsRepository;
     private final ActivationRepository activationRepository;
     private final ActivationDetailsRepository activationDetailsRepository;
+    private final AttendanceRepository attendanceRepository;
     private final AuthRepository authRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RoleRepository roleRepository;
 
-    public DependServiceImpl(StudentRepository studentRepository, GroupsRepository groupsRepository, ActivationRepository activationRepository, ActivationDetailsRepository activationDetailsRepository, AuthRepository authRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository) {
+    public DependServiceImpl(StudentRepository studentRepository, GroupsRepository groupsRepository, ActivationRepository activationRepository, ActivationDetailsRepository activationDetailsRepository, AttendanceRepository attendanceRepository, AuthRepository authRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository) {
         this.studentRepository = studentRepository;
         this.groupsRepository = groupsRepository;
         this.activationRepository = activationRepository;
         this.activationDetailsRepository = activationDetailsRepository;
+        this.attendanceRepository = attendanceRepository;
         this.authRepository = authRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.roleRepository = roleRepository;
@@ -152,5 +154,41 @@ public class DependServiceImpl implements DependService {
     public Object getGroupListSearch(String name) {
         List<Groups> groupsList = groupsRepository.findAllByNameContainingAndDeleteFalse(name);
         return groupsList;
+    }
+
+    @Override
+    public Object getGroupListStudent(Long id) {
+
+        List<ResponseGroupList> lists = new ArrayList<>();
+        List<Activation> activationList = activationRepository.findAllByStudentIdAndDeleteIsFalse(id);
+
+        List<Groups> groupsList = new ArrayList<>();
+
+        for (Activation activation: activationList){
+            ResponseGroupList responseGroupList = new ResponseGroupList();
+            Groups groups = groupsRepository.findByIdAndDeleteIsFalse(activation.getGroupId());
+            responseGroupList.setId(groups.getId());
+            responseGroupList.setName(groups.getName());
+            responseGroupList.setPrice(groups.getPrice());
+            responseGroupList.setStatus(activation.isActive());
+            groupsList.add(groups);
+
+            long lessonAttendance = attendanceRepository.countAllByActivationIdAndDeleteIsFalse(activation.getId());
+            responseGroupList.setAttendance(lessonAttendance);
+            lists.add(responseGroupList);
+        }
+        return lists;
+    }
+
+
+    @Override
+    public Object getStudentListByGroup(Long id) {
+        List<Student> studentList = new ArrayList<>();
+        List<Activation> activationList = activationRepository.findAllByGroupIdAndDeleteIsFalse(id);
+        for (Activation activation: activationList){
+            Student student = studentRepository.findByIdAndDeleteIsFalse(activation.getStudentId());
+            studentList.add(student);
+        }
+        return studentList;
     }
 }

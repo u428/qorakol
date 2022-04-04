@@ -42,7 +42,7 @@ public class Student {
     @Column(name = "date_birth")
     private Date dateBirth;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name = "auth_id", insertable = false, updatable = false)
     private AuthEntity authEntity;
@@ -51,7 +51,7 @@ public class Student {
     @Enumerated(EnumType.STRING)
     private StudentStatus status;
 
-    @OneToMany()
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Activation> activation;
 
 

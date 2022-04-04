@@ -15,6 +15,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     Student findByAuthEntity(AuthEntity authEntity);
 
+
+
     Page<Student> findByStatusAndDeleteIsFalse(StudentStatus studentStatus, Pageable pageable);
 
     Student findByIdAndDeleteIsFalse(Long id);

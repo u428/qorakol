@@ -22,4 +22,8 @@ public interface DependService {
     Object getStudentSearchList(String name);
 
     Object getGroupListSearch(String name);
+
+    Object getGroupListStudent(Long id);
+
+    Object getStudentListByGroup(Long id);
 }

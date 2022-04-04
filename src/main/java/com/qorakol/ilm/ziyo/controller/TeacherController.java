@@ -35,9 +35,8 @@ public class TeacherController {
 
     @GetMapping(value = "/groups")
     public ResponseEntity getRoles(@CurrentUser String login){
-//        return ResponseEntity.ok(teacherService.getGroups(login));
         try {
-            return ResponseEntity.status(HttpStatus.OK).body("SUCESS");
+            return ResponseEntity.status(HttpStatus.OK).body(teacherService.getGroups(login));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }

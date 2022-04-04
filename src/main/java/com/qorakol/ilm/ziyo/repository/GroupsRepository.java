@@ -12,9 +12,10 @@ import java.util.List;
 public interface GroupsRepository extends JpaRepository<Groups, Long> {
 
     List<Groups> findAllByTeacherIdAndDeleteIsFalse(Long id);
+    List<Groups> findAllByTeacherId(Long id);
     Page<Groups> findAllByDeleteIsFalse(Pageable pageable);
 
-    Groups findByActivationIdAndDeleteIsFalse(Long id);
+    Groups findByIdAndDeleteIsFalse(Long id);
 
     List<Groups> findAllByNameContainingAndDeleteFalse(String name);
 
