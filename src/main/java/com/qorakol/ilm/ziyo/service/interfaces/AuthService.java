@@ -19,6 +19,4 @@ public interface AuthService extends UserDetailsService {
     void addAdmin(AdminDto adminDto) throws Exception;
 
     void addRole();
-
-    Object getAdmins();
 }

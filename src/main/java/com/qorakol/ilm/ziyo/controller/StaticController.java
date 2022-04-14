@@ -15,14 +15,14 @@ public class StaticController {
 
     private final StaticService service;
 
-    @Autowired
+
     public StaticController(StaticService service) {
         this.service = service;
     }
 
 
     @GetMapping(path = "/get_teachers_list")
-    public ResponseEntity getTeachers(@RequestParam(name = "limit", defaultValue = "10", required = false) int limit, @RequestParam(name = "page", required = false, defaultValue = "0") int page){
+    public ResponseEntity<Object> getTeachers(@RequestParam(name = "limit", defaultValue = "10", required = false) int limit, @RequestParam(name = "page", required = false, defaultValue = "0") int page){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(service.getTeachers(limit, page));
         }catch (Exception e){

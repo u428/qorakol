@@ -145,10 +145,18 @@ public class AuthServiceImpl implements AuthService {
         languageRepository.save(language2);
         languageRepository.save(language);
 
-    }
+        AuthEntity authEntity = new AuthEntity();
+        authEntity.setLogin("admin");
+        authEntity.setPassword(bCryptPasswordEncoder.encode("admin"));
+        authEntity.setRolesId(roles2.getId());
+        authRepository.save(authEntity);
 
-    @Override
-    public Object getAdmins() {
-        return null;
+        Student student = new Student();
+        student.setStatus(StudentStatus.YANGI);
+        student.setFirstName("Admin");
+        student.setLastName("Admin");
+        student.setAuthId(authEntity.getId());
+        studentRepository.save(student);
+
     }
 }

@@ -72,9 +72,4 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }
     }
-
-    @GetMapping(value = "/get_admin")
-    public ResponseEntity getAdmins(){
-        return ResponseEntity.ok(authService.getAdmins());
-    }
 }

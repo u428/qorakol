@@ -192,7 +192,7 @@ public class StaticServiceImpl implements StaticService {
 
 
     @Override
-    public Map<String, Object> getTeachers(int limit, int page) throws Exception {
+    public Object getTeachers(int limit, int page) throws Exception {
         Map<String, Object> returnMap = new HashMap<>();
         if (page < 0) throw new Exception("bunday page bolmaydi");
         if (page > 0) page--;
