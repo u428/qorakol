@@ -1,4 +1,4 @@
-version: '3.1'
+version: '4.1'
 services:
   app:
     container_name: app-springboot-postgresql
@@ -13,6 +13,6 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_PASSWORD=12345
-      - POSTGRES_USER=qorakoli_db
-      - POSTGRES_DB=qorakoli_db
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_USER: qorakoli_db
+      POSTGRES_DB: qorakoli_db
