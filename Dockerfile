@@ -1,5 +1,5 @@
 FROM openjdk:11
-COPY target/ /app/
+COPY /app/ .
 WORKDIR /app/
 EXPOSE 8080
 #HEALTHCHECK --interval=30s --timeout=10s --start-period=10s \

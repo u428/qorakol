@@ -1,8 +1,8 @@
 version: '4.1'
 services:
   app:
-    container_name: app-springboot-postgresql
-    image: app-springboot-postgresql
+    container_name: qorakoli_db
+    image: qorakoli_db
     build: ./
     ports:
       - "8080:8080"
