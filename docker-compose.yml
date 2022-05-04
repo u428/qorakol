@@ -1,15 +1,15 @@
 version: '4.1'
 services:
   app:
-    container_name: qorakoli_db
-    image: qorakoli_db
+    container_name: qorakol
+    image: qorakol
     build: ./
     ports:
       - "8080:8080"
     depends_on:
-      - qorakoli_db
+      - dbpostgresql
   dbpostgresql:
-    image: qorakoli_db
+    image: qorakol
     ports:
       - "5432:5432"
     environment:
