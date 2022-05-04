@@ -1,18 +1,25 @@
 version: '4.1'
 services:
   app:
-    container_name: qorakol
+    container_name: app
     image: qorakol
-    build: ./
+    build:
+      dockerfile: Dockerfile
+      context: ./qorakol
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://dbpostgresql:5432/qorakoli_db
     ports:
       - "8080:8080"
     depends_on:
       - dbpostgresql
   dbpostgresql:
-    image: qorakol
+    container_name: dbpostgresql
+    image: qorakol_postgresql
     ports:
-      - "5431:5432"
+      - "5432:5432"
     environment:
       POSTGRES_PASSWORD: 12345
       POSTGRES_USER: qorakoli_db
       POSTGRES_DB: qorakoli_db
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
