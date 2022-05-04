@@ -108,6 +108,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>qorakol</finalName>
     </build>
 
 </project>
