@@ -7,9 +7,9 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - dbpostgresql
+      - qorakoli_db
   dbpostgresql:
-    image: postgres
+    image: qorakoli_db
     ports:
       - "5432:5432"
     environment:
