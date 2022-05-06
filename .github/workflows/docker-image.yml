@@ -43,4 +43,4 @@ jobs:
           context: .
           file: ./DockerFile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/qorakol:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/qorakol
