@@ -18,20 +18,23 @@
 #ENTRYPOINT ["java", "-jar", "java-app-1.0-SNAPSHOT.jar"]
 
 
-FROM maven:3.6.3-jdk-11 AS MAVEN_BUILD
-
+#FROM maven:3.6.3-jdk-8-slim AS MAVEN_BUILD
+FROM maven:3-openjdk-15 AS MAVEN_BUILD
 # copy the pom and src code to the container
 COPY ./ ./
 
 # package our application code
-RUN mvn clean package
+#RUN mvn clean package
+RUN mvn -f pom.xml clean package -DskipTests
 
 # the second stage of our build will use open jdk 11 on alpine 3.9
-FROM openjdk:11.0.7-jdk-slim
+#FROM openjdk:11.0.7-jdk-slim
+#FROM openjdk:8-alpine
+FROM openjdk:15.0.1
 
 # copy only the artifacts we need from the first stage and discard the rest
-COPY --from=MAVEN_BUILD /target/qorakol.jar /app/qorakol.jar
+COPY --from=MAVEN_BUILD /target/qorakol.jar ./qorakol.jar
 
 EXPOSE 8080
 # set the startup command to execute the jar
-CMD ["java", "-jar", "/app/qorakol.jar"]
+CMD ["java", "-jar", "/qorakol.jar"]

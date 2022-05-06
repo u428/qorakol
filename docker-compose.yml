@@ -2,15 +2,17 @@ version: '4.1'
 services:
   db:
     container_name: db
-    image: postgres:10.4
+    image: postgres:13
     ports:
       - "2222:5432"
     environment:
-      POSTGRES_PASSWORD: 12345
-      POSTGRES_USER: qorakoli_db
       POSTGRES_DB: qorakoli_db
+      POSTGRES_USER: qorakoli_db
+      POSTGRES_PASSWORD: 12345
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
+      - pg13data:/var/lib/postgresql/data
+    networks:
+      app-network:
   postgrs_admin:
     image: dpage/pgadmin4:4.28
     depends_on:
@@ -20,6 +22,8 @@ services:
       PGADMIN_DEFAULT_PASSWORD: 123
     ports:
       - "5050:80"
+    networks:
+      app-network:
   app:
     container_name: app
     build:
@@ -28,9 +32,24 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: jdbc:postgresql://db:5432/qorakoli_db
-      DATABASE_USER: qorakoli_db
-      DATABASE_PASSWORD: 12345
+      DB_SERVER: db
+      POSTGRE_DB: qorakoli_db
+      POSTGRES_USER: qorakoli_db
+      POSTGRES_PASSWORD: 12345
+      PG_URL: jdbc:postgresql://192.168.1.170:2222/qorakoli_db
     ports:
       - "8080:8080"
+    networks:
+      app-network:
+
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db:
+  pg13data:
+  app:
+  postgrs_admin:
 
