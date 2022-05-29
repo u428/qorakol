@@ -2,6 +2,7 @@ package com.qorakol.ilm.ziyo.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -63,7 +64,7 @@ public class Teacher {
     @JoinColumn(name = "auth_id", updatable = false, insertable = false)
     private AuthEntity authEntity;
 
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "teacher_languages",
             joinColumns = {@JoinColumn(name = "teacher_id")},
             inverseJoinColumns = {@JoinColumn(name = "lang_id")})

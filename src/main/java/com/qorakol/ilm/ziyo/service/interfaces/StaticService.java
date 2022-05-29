@@ -29,9 +29,9 @@ public interface StaticService {
 
     void deleteSubject(Long id) throws Exception;
 
-    Object getGroup(int limit, int page) throws Exception;
+    Map<String, Object> getGroup(int limit, int page) throws Exception;
 
-    Object getTeachers(int limit, int page) throws Exception;
+    Map<String, Object> getTeachers(int limit, int page) throws Exception;
 
     Object getStudent(Long id) throws Exception;
 
@@ -56,4 +56,6 @@ public interface StaticService {
     Object getGroupOne(Long id) throws Exception;
 
     List<Teacher> getTeachersList(String name);
+
+    Object viewTeacher(Long id) throws Exception;
 }

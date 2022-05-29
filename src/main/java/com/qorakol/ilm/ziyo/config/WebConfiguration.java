@@ -1,7 +1,7 @@
 package com.qorakol.ilm.ziyo.config;
 
 import com.qorakol.ilm.ziyo.constant.SecurityConstants;
-import com.qorakol.ilm.ziyo.security.AuthenticationFilter;
+//import com.qorakol.ilm.ziyo.security.AuthenticationFilter;
 import com.qorakol.ilm.ziyo.security.AuthorizationFilter;
 import com.qorakol.ilm.ziyo.service.interfaces.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,6 +35,13 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+
     @Autowired
     public WebConfiguration(AuthService authService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.authService = authService;
@@ -57,7 +65,7 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
 
-                .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
+                .antMatchers(HttpMethod.OPTIONS, "/**")
                 .permitAll()
                 .antMatchers(HttpMethod.GET, "/auth/check_login")
                 .permitAll()
@@ -67,9 +75,13 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/add_admin")
                 .permitAll()
+                .antMatchers(HttpMethod.POST, "/auth/login")
+                .permitAll()
                 .antMatchers(HttpMethod.GET, "/auth")
                 .permitAll()
                 .antMatchers(HttpMethod.GET, "/static/**")
+                .permitAll()
+                .antMatchers("/static/only_post")
                 .permitAll()
                 .antMatchers(HttpMethod.POST, "/a23d_m23_i23n/add_image")
                 .permitAll()
@@ -79,9 +91,12 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticated()
                 .and()
 
+//                .cors().configurationSource(corsConfigurationSource())
+//                .and()
+
                 .cors().disable()
 
-                .addFilter(getAuthenticationFilter())
+//                .addFilter(getAuthenticationFilter())
                 .addFilter(new AuthorizationFilter(authenticationManager()))
 
                 .sessionManagement()
@@ -96,18 +111,19 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(authService).passwordEncoder(bCryptPasswordEncoder);
     }
 
-    public AuthenticationFilter getAuthenticationFilter() throws Exception{
-        final AuthenticationFilter filter=new AuthenticationFilter(authenticationManager(), authService);
-        filter.setFilterProcessesUrl("/auth/login");
-        filter.setPostOnly(true);
-        return filter;
-    }
+//    public AuthenticationFilter getAuthenticationFilter() throws Exception{
+//        final AuthenticationFilter filter=new AuthenticationFilter(authenticationManager(), authService);
+//        filter.setFilterProcessesUrl("/auth/login");
+////        filter.setPostOnly(true);
+//        return filter;
+//    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList("/**")); // <-- you may change "*"
-        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
+        configuration.setAllowedOrigins(Collections.singletonList("*")); // <-- you may change "*"
+        configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Arrays.asList(
                 "Accept", "Origin", "Content-Type", "Depth", "User-Agent", "If-Modified-Since,",

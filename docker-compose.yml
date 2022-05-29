@@ -36,7 +36,7 @@ services:
       POSTGRE_DB: qorakoli_db
       POSTGRES_USER: qorakoli_db
       POSTGRES_PASSWORD: 12345
-      PG_URL: jdbc:postgresql://192.168.1.170:2222/qorakoli_db
+      PG_URL: jdbc:postgresql://db:5432/qorakoli_db
     ports:
       - "8080:8080"
     networks:

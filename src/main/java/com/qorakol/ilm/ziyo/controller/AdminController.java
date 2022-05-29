@@ -16,6 +16,7 @@ import javax.validation.Valid;
 
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping(value = "/a23d_m23_i23n")
 public class AdminController {
 

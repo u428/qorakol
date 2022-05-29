@@ -43,6 +43,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
         try {
+            System.out.println(request.getInputStream());
             AuthDto creds=new ObjectMapper().readValue(request.getInputStream(), AuthDto.class);
             System.out.println(creds);
 

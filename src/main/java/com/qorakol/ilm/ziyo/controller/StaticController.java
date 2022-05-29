@@ -1,5 +1,6 @@
 package com.qorakol.ilm.ziyo.controller;
 
+import com.qorakol.ilm.ziyo.model.dto.OnlyPost;
 import com.qorakol.ilm.ziyo.service.interfaces.StaticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.net.MalformedURLException;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping(value = "/static")
 public class StaticController {
 
@@ -19,7 +21,6 @@ public class StaticController {
     public StaticController(StaticService service) {
         this.service = service;
     }
-
 
     @GetMapping(path = "/get_teachers_list")
     public ResponseEntity<Object> getTeachers(@RequestParam(name = "limit", defaultValue = "10", required = false) int limit, @RequestParam(name = "page", required = false, defaultValue = "0") int page){
@@ -43,6 +44,15 @@ public class StaticController {
     public ResponseEntity getSingleTeacher(@RequestParam(name = "id") Long id ){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(service.getSingleTeacher(id));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
+    @GetMapping(path = "/view_teacher")
+    public ResponseEntity getViewTeacher(@RequestParam(name = "id") Long id ){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.viewTeacher(id));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }
