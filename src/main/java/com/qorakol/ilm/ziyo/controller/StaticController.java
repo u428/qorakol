@@ -68,13 +68,24 @@ public class StaticController {
     }
 
     @GetMapping(path = "/get_students_new")
-    public ResponseEntity getStudentsNew(@RequestParam(name = "pageSize") int pageSize, @RequestParam(name = "current") int current){
+    public ResponseEntity<?> getStudentsNew(@RequestParam(name = "pageSize") int pageSize, @RequestParam(name = "current") int current){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(service.getStudentNew(pageSize, current));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }
     }
+
+    @GetMapping(path = "/get_student_statistic")
+    public ResponseEntity<?> getStudentStatistic(){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getStudentStatistic());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
+
 
 
 

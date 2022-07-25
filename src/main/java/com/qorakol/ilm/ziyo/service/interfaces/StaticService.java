@@ -58,4 +58,6 @@ public interface StaticService {
     List<Teacher> getTeachersList(String name);
 
     Object viewTeacher(Long id) throws Exception;
+
+    Object getStudentStatistic();
 }

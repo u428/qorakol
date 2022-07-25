@@ -56,6 +56,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Map<String, Object> getCurrentUser(String login){
+        System.out.println(login);
         AuthEntity authEntity = authRepository.findByLogin(login);
         Teacher teacher = teacherRepository.findByAuthEntity(authEntity);
         Student student = null;

@@ -2,6 +2,8 @@ package com.qorakol.ilm.ziyo.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -9,7 +11,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "groups")
-@Data
+@Getter
+@Setter
 public class Groups {
 
     @Id
@@ -46,17 +49,17 @@ public class Groups {
     private Long ImagesId;
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "teacher_id", insertable = false, updatable = false)
     private Teacher teacher;
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "subject_id", insertable = false, updatable = false)
     private Subjects subjects;
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "lang_id", insertable = false, updatable = false)
     private Language language;
 

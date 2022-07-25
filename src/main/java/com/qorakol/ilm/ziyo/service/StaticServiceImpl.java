@@ -172,6 +172,7 @@ public class StaticServiceImpl implements StaticService {
 
     @Override
     public Object lineGraph() {
+
         return null;
     }
 
@@ -299,5 +300,13 @@ public class StaticServiceImpl implements StaticService {
     public  List<Teacher> getTeachersList(String name) {
         List<Teacher> teacherList = teacherRepository.findAllByFirstNameContainingAndDeleteIsFalse(name);
         return teacherList;
+    }
+
+    @Override
+    public Object getStudentStatistic() {
+
+
+
+        return null;
     }
 }

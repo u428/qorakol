@@ -74,6 +74,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Object getGroups(String login) throws Exception {
+        System.out.println(login);
         AuthEntity authEntity = authRepository.findByLogin(login);
         if (authEntity == null) throw new Exception();
         Teacher teacher = teacherRepository.findByAuthIdAndDeleteIsFalse(authEntity.getId());
@@ -85,8 +86,8 @@ public class TeacherServiceImpl implements TeacherService {
             groupsTeacher.setId(groups.getId());
             groupsTeacher.setName(groups.getName());
             groupsTeacher.setPrice(groups.getPrice());
-
-            groupsTeacher.setStudents(15);
+            int soni = activationRepository.findAllByGroupIdAndDeleteIsFalse(groups.getId()).size();
+            groupsTeacher.setStudents(soni);
             groupsTeacherList.add(groupsTeacher);
         }
         return groupsTeacherList;

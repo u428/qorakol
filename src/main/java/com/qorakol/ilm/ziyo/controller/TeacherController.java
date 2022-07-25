@@ -43,7 +43,7 @@ public class TeacherController {
         }
     }
 
-    @GetMapping(value ="group_students")
+    @GetMapping(value ="/group_students")
     public ResponseEntity getGroupStudents(@CurrentUser String login, @RequestParam(value = "id") Long id){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(teacherService.getGroupStudents(login, id));
