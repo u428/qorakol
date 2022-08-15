@@ -1,5 +1,6 @@
 package com.qorakol.ilm.ziyo.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.CollectionId;
 
@@ -24,6 +25,7 @@ public class ActivationDetails {
     @Column(name = "activation_id")
     private Long activationId;
 
+    @JsonIgnore
     @OneToOne()
     @JoinColumn(name = "activation_id", insertable = false, updatable = false)
     private Activation activation;

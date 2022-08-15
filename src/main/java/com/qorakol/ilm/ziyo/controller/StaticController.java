@@ -76,10 +76,10 @@ public class StaticController {
         }
     }
 
-    @GetMapping(path = "/get_student_statistic")
+    @GetMapping(path = "/get_statistic_data")
     public ResponseEntity<?> getStudentStatistic(){
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(service.getStudentStatistic());
+            return ResponseEntity.status(HttpStatus.OK).body(service.getStatistic());
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }

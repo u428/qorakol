@@ -214,8 +214,13 @@ public class AdminServiceImpl implements AdminService {
         Groups group = groupsRepository.findById(paymentDto.getGroupId()).orElse(null);
 
         if (group == null) throw new Exception();
-        double summ = paymentDto.getSumma()/group.getPrice();
-        ActivationDetails activationDetails =  new ActivationDetails();
+        double summ = paymentDto.getSumma()*12/group.getPrice();
+        ActivationDetails activationDetails;
+        activationDetails = activationDetailsRepository.findByActivationIdAndDeleteIsFalse(activation.getId());
+        if (activationDetails == null){
+            activationDetails = new ActivationDetails();
+            activationDetails.setActivationId(activation.getId());
+        }
         int peyd = activationDetails.getLessonPayed();
         peyd += summ;
 

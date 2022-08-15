@@ -12,11 +12,13 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Predicate;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -303,10 +305,28 @@ public class StaticServiceImpl implements StaticService {
     }
 
     @Override
-    public Object getStudentStatistic() {
+    public Object getStatistic() {
+        Integer active = studentRepository.findAll(getFilteringSpecification(true)).size();
+        Integer disactive = studentRepository.findAll(getFilteringSpecification(false)).size();
+        Map<String, Integer> ret = new HashMap<>();
+        ret.put("active", active);
+        ret.put("disactive", disactive);
+        Integer teacher = teacherRepository.findAllByDeleteIsFalse().size();
+        ret.put("teacher", teacher);
+        long groups = groupsRepository.findAllByDeleteIsFalse((Pageable) PageRequest.of(1, 10)).getTotalElements();
+        ret.put("groups", Integer.parseInt(String.valueOf(groups)));
 
+        return ret;
+    }
 
+    private static Specification<Student> getFilteringSpecification(boolean status){
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            List<Predicate> predicates = new LinkedList<>();
+            predicates.add(criteriaBuilder.equal(root.join("activation").join("activationDetails").get("status"), status));
 
-        return null;
+            Predicate notDeleted = criteriaBuilder.equal(root.get("delete"), false);
+            predicates.add(notDeleted);
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
     }
 }

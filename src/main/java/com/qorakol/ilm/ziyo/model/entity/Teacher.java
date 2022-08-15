@@ -1,5 +1,6 @@
 package com.qorakol.ilm.ziyo.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.Fetch;
@@ -48,6 +49,7 @@ public class Teacher {
 
     private String description;
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy", timezone="Asia/Tashkent")
     @Temporal(TemporalType.DATE)
     @Column(name = "date_birth")
     private Date dateBirth;

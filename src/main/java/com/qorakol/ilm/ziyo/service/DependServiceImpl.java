@@ -165,12 +165,13 @@ public class DependServiceImpl implements DependService {
         List<Groups> groupsList = new ArrayList<>();
 
         for (Activation activation: activationList){
+            ActivationDetails activationDetails = activationDetailsRepository.findByActivationIdAndDeleteIsFalse(activation.getId());
             ResponseGroupList responseGroupList = new ResponseGroupList();
             Groups groups = groupsRepository.findByIdAndDeleteIsFalse(activation.getGroupId());
             responseGroupList.setId(groups.getId());
             responseGroupList.setName(groups.getName());
             responseGroupList.setPrice(groups.getPrice());
-            responseGroupList.setStatus(activation.isActive());
+            responseGroupList.setStatus(activationDetails.isStatus());
             groupsList.add(groups);
 
             long lessonAttendance = attendanceRepository.countAllByActivationIdAndDeleteIsFalse(activation.getId());

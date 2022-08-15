@@ -59,5 +59,5 @@ public interface StaticService {
 
     Object viewTeacher(Long id) throws Exception;
 
-    Object getStudentStatistic();
+    Object getStatistic();
 }

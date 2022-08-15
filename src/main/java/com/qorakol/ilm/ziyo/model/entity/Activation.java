@@ -37,8 +37,7 @@ public class Activation {
     @JoinColumn(name = "group_id", insertable = false, updatable = false)
     private Groups groups;
 
-//    @OneToOne()
-//    @JoinColumn(name = "detail_id")
-//    private ActivationDetails activationDetails;
+    @OneToOne(mappedBy = "activation")
+    private ActivationDetails activationDetails;
 }
 

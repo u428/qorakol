@@ -60,6 +60,11 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+//        I resolved this issue by configuring the HSTS header as follows:
+        http.headers().httpStrictTransportSecurity()
+                .maxAgeInSeconds(0)
+                .includeSubDomains(true);
         http
                 .csrf().disable()
 
@@ -91,10 +96,10 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticated()
                 .and()
 
-                .cors()
-                .and()
+//                .cors()
+//                .and()
 
-//                .cors().disable()
+                .cors().disable()
 
 //                .addFilter(getAuthenticationFilter())
                 .addFilter(new AuthorizationFilter(authenticationManager()))

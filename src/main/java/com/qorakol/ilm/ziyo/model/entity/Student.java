@@ -1,5 +1,6 @@
 package com.qorakol.ilm.ziyo.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qorakol.ilm.ziyo.constant.StudentStatus;
 import lombok.Data;
@@ -38,6 +39,7 @@ public class Student {
     @Column(name = "auth_id")
     private Long authId;
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy", timezone="Asia/Tashkent")
     @Temporal(TemporalType.DATE)
     @Column(name = "date_birth")
     private Date dateBirth;
