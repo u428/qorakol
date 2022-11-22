@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.qorakol.ilm.ziyo.constant.StudentStatus;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -33,6 +34,11 @@ public class Student {
     private String qTelNomer;
 
     private String description;
+
+    @Temporal(TemporalType.DATE)
+    @CreatedDate
+    @Column(name = "created_at")
+    private Date createdAt;
 
     private boolean delete = false;
 

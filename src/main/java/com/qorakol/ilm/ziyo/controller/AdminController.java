@@ -1,5 +1,7 @@
 package com.qorakol.ilm.ziyo.controller;
 
+import com.qorakol.ilm.ziyo.constant.AddController;
+import com.qorakol.ilm.ziyo.constant.ChangePasswordAdmin;
 import com.qorakol.ilm.ziyo.constant.reg.Registers;
 import com.qorakol.ilm.ziyo.model.dto.*;
 import com.qorakol.ilm.ziyo.service.interfaces.AdminService;
@@ -234,4 +236,48 @@ public class AdminController {
         }
     }
 
+//    Super Admin
+
+    @GetMapping(path = "/get-all-controllers")
+    public ResponseEntity getAllControllers(){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(adminService.getAllControllers());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
+    @GetMapping(path = "/get-controller")
+    public ResponseEntity getController(
+            @RequestParam(name = "id") Long id
+    ){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(adminService.getController(id));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
+    @PostMapping(path = "/change-password-controller")
+    public ResponseEntity<?> changePassword(
+            @RequestBody ChangePasswordAdmin changePasswordAdmin
+            ){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(adminService.changePassword(changePasswordAdmin));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
+    @PostMapping(path = "/add-controller")
+    public ResponseEntity<?> addController(
+            @RequestBody AddController addController
+    ){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(adminService.addController(addController));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
 }
+

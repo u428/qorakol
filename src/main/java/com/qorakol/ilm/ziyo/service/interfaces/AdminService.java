@@ -1,5 +1,7 @@
 package com.qorakol.ilm.ziyo.service.interfaces;
 
+import com.qorakol.ilm.ziyo.constant.AddController;
+import com.qorakol.ilm.ziyo.constant.ChangePasswordAdmin;
 import com.qorakol.ilm.ziyo.model.dto.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,4 +38,11 @@ public interface AdminService {
     Long addImage(MultipartFile multipartFile) throws IOException;
 
     void changeTeacher(RegTeacherDto regTeacherDto) throws Exception;
+
+    Object getAllControllers();
+
+    Object getController(Long id);
+    Object changePassword(ChangePasswordAdmin changePasswordAdmin);
+
+    Object addController(AddController addController);
 }

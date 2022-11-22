@@ -54,5 +54,4 @@ public class Payments {
     private ActivationDetails activationDetails;
 
 
-
 }

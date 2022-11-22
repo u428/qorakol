@@ -54,7 +54,6 @@ public class Teacher {
     @Column(name = "date_birth")
     private Date dateBirth;
 
-    @JsonIgnore
     @Column(name = "auth_id", unique = false)
     private Long authId;
 

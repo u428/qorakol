@@ -74,6 +74,17 @@ public class AuthController {
         }
     }
 
+
+    @GetMapping(value = "/change-password")
+    public ResponseEntity changePassword(@RequestParam String password, @RequestParam Long authId){
+        try {
+            authService.changePassword(password, authId);
+            return ResponseEntity.status(HttpStatus.OK).body("SUCCESS");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
     @GetMapping()
     public String addRole(){
         authService.addRole();

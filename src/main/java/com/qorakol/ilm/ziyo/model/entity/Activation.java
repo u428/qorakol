@@ -3,8 +3,10 @@ package com.qorakol.ilm.ziyo.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "activation")
@@ -23,6 +25,11 @@ public class Activation {
 
     @Column(name = "student_id")
     private Long studentId;
+
+    @Temporal(TemporalType.DATE)
+    @CreatedDate
+    @Column(name = "created_at")
+    private Date createdAt;
 
     @Column(name = "group_id")
     private Long groupId;

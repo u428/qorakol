@@ -56,16 +56,19 @@ public class TeacherServiceImpl implements TeacherService {
         if (groups.getTeacherId() != teacher.getId()) throw new Exception();
         for (Long id: checkStudents.getIds()){
             Activation activation = activationRepository.findByStudentIdAndGroupId(id, groups.getId());
-            ActivationDetails activationDetails = activationDetailsRepository.findByActivationIdAndDeleteIsFalse(activation.getId());
-            activationDetails.lessonPayedDecrease();
-            if (activationDetails.getLessonPayed() < 0){
-                activationDetails.setStatus(false);
-            }else {
-                activationDetails.setStatus(true);
+            if (!checkStudents.isFreeLesson()) {
+                ActivationDetails activationDetails = activationDetailsRepository.findByActivationIdAndDeleteIsFalse(activation.getId());
+                activationDetails.lessonPayedDecrease();
+                if (activationDetails.getLessonPayed() < 0) {
+                    activationDetails.setStatus(false);
+                } else {
+                    activationDetails.setStatus(true);
+                }
+                activationDetailsRepository.save(activationDetails);
             }
-            activationDetailsRepository.save(activationDetails);
 
             Attendances attendances = new Attendances();
+            attendances.setFreeLesson(checkStudents.isFreeLesson());
             attendances.setActivationId(activation.getId());
             attendances.setTime(new Date());
             attendanceRepository.save(attendances);

@@ -14,4 +14,6 @@ public class CheckStudents {
 
     public Long groupId;
 
+    public boolean freeLesson;
+
 }

@@ -1,19 +1,20 @@
 package com.qorakol.ilm.ziyo.service;
 
-import com.qorakol.ilm.ziyo.constant.Common;
-import com.qorakol.ilm.ziyo.constant.PaymentStatus;
-import com.qorakol.ilm.ziyo.constant.RoleContants;
+import com.qorakol.ilm.ziyo.constant.*;
 import com.qorakol.ilm.ziyo.model.dto.*;
 import com.qorakol.ilm.ziyo.model.entity.*;
 import com.qorakol.ilm.ziyo.repository.*;
 import com.qorakol.ilm.ziyo.service.interfaces.AdminService;
 import com.qorakol.ilm.ziyo.utils.DateParser;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.criteria.Predicate;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -328,4 +329,74 @@ public class AdminServiceImpl implements AdminService {
     }
 
 
+    @Override
+    public Object getAllControllers() {
+        List<Map<String,  Object>> list = new ArrayList<>();
+        List<Teacher> teacherList = teacherRepository.findAll(getFilteringSpecification());
+
+        for (Teacher teacher: teacherList){
+            Map<String , Object> map = new HashMap<>();
+            AuthEntity authEntity = authRepository.findById(teacher.getAuthId()).get();
+            map.put("teacher", teacher);
+            map.put("auth", authEntity);
+            list.add(map);
+        }
+
+    return list;
+    }
+
+
+    private static Specification<Teacher> getFilteringSpecification(){
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            List<Predicate> predicates = new LinkedList<>();
+            List<Long> longs = new ArrayList<>();
+            longs.add(2L);
+            longs.add(3L);
+            predicates.add(criteriaBuilder.in(root.join("authEntity").get("rolesId")).value(longs));
+
+            Predicate notDeleted = criteriaBuilder.equal(root.get("delete"), true);
+            predicates.add(notDeleted);
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
+    @Override
+    public Object getController(Long id) {
+        Teacher teacher = teacherRepository.findById(id).get();
+        AuthEntity authEntity =authRepository.findById(teacher.getAuthId()).get();
+        return authEntity;
+    }
+
+
+    @Override
+    public Object changePassword(ChangePasswordAdmin changePasswordAdmin) {
+        Teacher teacher = teacherRepository.findById(changePasswordAdmin.getId()).get();
+        AuthEntity authEntity =authRepository.findById(teacher.getAuthId()).get();
+        authEntity.setLogin(changePasswordAdmin.getLogin());
+        Roles roles = roleRepository.findById(changePasswordAdmin.getRoleId()).get();
+        if (roles != null)
+            authEntity.setRolesId(roles.getId());
+        authEntity.setPassword(bCryptPasswordEncoder.encode(changePasswordAdmin.getPassword()));
+        authRepository.save(authEntity);
+        return 1;
+    }
+
+    @Override
+    public Object addController(AddController addController) {
+        Teacher teacher = new Teacher();
+        teacher.setFirstName(addController.getFirstName());
+        teacher.setLastName(addController.getLastName());
+        AuthEntity authEntity = new AuthEntity();
+        authEntity.setLogin(addController.getLogin());
+        Roles roles = roleRepository.findById(addController.getRoleId()).get();
+        if (roles != null)
+            authEntity.setRolesId(roles.getId());
+        authEntity.setPassword(bCryptPasswordEncoder.encode(addController.getPassword()));
+        teacher.setDelete(true);
+        teacher.setGender(0);
+        authRepository.save(authEntity);
+        teacher.setAuthId(authEntity.getId());
+        teacherRepository.save(teacher);
+        return 1;
+    }
 }

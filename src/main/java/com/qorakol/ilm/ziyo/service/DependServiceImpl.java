@@ -20,10 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class DependServiceImpl implements DependService {
@@ -87,6 +84,7 @@ public class DependServiceImpl implements DependService {
         student.setQTelNomer(regStudentDto.getQTelNumber());
         student.setDescription(regStudentDto.getDescription());
         student.setDateBirth(DateParser.TryParse(regStudentDto.getBirthDate(), Common.uzbekistanDateFormat));
+        student.setCreatedAt(new Date());
         student.setStatus(StudentStatus.YANGI);
         Long result = studentRepository.save(student).getId();
         return result;

@@ -86,9 +86,6 @@ public class StaticController {
     }
 
 
-
-
-
     @GetMapping(path = "/get_students_not_payed")
     public ResponseEntity getStudentsNotPayed(){
         try {
@@ -203,6 +200,17 @@ public class StaticController {
     public ResponseEntity landingEvent(){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(service.landingEvent());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
+    @GetMapping(path = "/get-teacher-groups")
+    public ResponseEntity landingEvent(
+            @RequestParam(name = "id") Long id
+    ){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getTeacherGroups(id));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
         }

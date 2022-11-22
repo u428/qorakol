@@ -1,6 +1,8 @@
 package com.qorakol.ilm.ziyo.service;
 
 import com.qorakol.ilm.ziyo.constant.StudentStatus;
+import com.qorakol.ilm.ziyo.model.dto.ChartDto;
+import com.qorakol.ilm.ziyo.model.dto.GroupsTeacher;
 import com.qorakol.ilm.ziyo.model.dto.SubjectDto;
 import com.qorakol.ilm.ziyo.model.entity.*;
 import com.qorakol.ilm.ziyo.repository.*;
@@ -38,10 +40,11 @@ public class StaticServiceImpl implements StaticService {
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
     private final EventRepository eventRepository;
+    private final PaymentRepository paymentRepository;
 
 
     @Autowired
-    public StaticServiceImpl(LanguageRepository languageRepository, SubjectsRepository subjectsRepository, MainImagesRepository mainImagesRepository, ImagesRepository imagesRepository, GroupsRepository groupsRepository, ActivationRepository activationRepository, ActivationDetailsRepository activationDetailsRepository, AttendanceRepository attendanceRepository, TeacherRepository teacherRepository, StudentRepository studentRepository, EventRepository eventRepository) {
+    public StaticServiceImpl(LanguageRepository languageRepository, SubjectsRepository subjectsRepository, MainImagesRepository mainImagesRepository, ImagesRepository imagesRepository, GroupsRepository groupsRepository, ActivationRepository activationRepository, ActivationDetailsRepository activationDetailsRepository, AttendanceRepository attendanceRepository, TeacherRepository teacherRepository, StudentRepository studentRepository, EventRepository eventRepository, PaymentRepository paymentRepository) {
         this.languageRepository = languageRepository;
         this.subjectsRepository = subjectsRepository;
         this.mainImagesRepository = mainImagesRepository;
@@ -53,6 +56,7 @@ public class StaticServiceImpl implements StaticService {
         this.teacherRepository = teacherRepository;
         this.studentRepository = studentRepository;
         this.eventRepository = eventRepository;
+        this.paymentRepository = paymentRepository;
     }
 
     @Override
@@ -174,8 +178,13 @@ public class StaticServiceImpl implements StaticService {
 
     @Override
     public Object lineGraph() {
+        Map<String, Object> map = new HashMap<>();
+        List<ChartDto> li  = studentRepository.findStatisticsChart();
+        List<ChartDto> liPay = paymentRepository.findStatisticsChart();
+//        map.put("student number", );
 
-        return null;
+//        map.put("datasets", )
+        return map;
     }
 
 
@@ -214,6 +223,7 @@ public class StaticServiceImpl implements StaticService {
             List<Groups> groups = groupsRepository.findAllByTeacherIdAndDeleteIsFalse(teacher.getId());
             map.put("groups", groups.size());
             map.put("teacher", teacher);
+            map.put("login", teacher.getAuthEntity().getLogin());
             returns.add(map);
         }
         Map<String, Object> paginations = new HashMap<>();
@@ -235,14 +245,9 @@ public class StaticServiceImpl implements StaticService {
     @Override
     public Object landingGroups() {
         Page<Groups> groupsList;
-        for (;;) {
-            Pageable pageable = PageRequest.of(new Random(3).nextInt(), 4);
+            Pageable pageable = PageRequest.of(0, 6);
             groupsList = groupsRepository.findAllByDeleteIsFalse(pageable);
-            if (groupsList.getContent().size() != 0){
-                break;
-            }
-        }
-        return groupsList;
+        return groupsList.getContent();
     }
 
     @Override
@@ -284,9 +289,6 @@ public class StaticServiceImpl implements StaticService {
     public Subjects getViewSubject(Long id) throws Exception {
         Subjects subjects =subjectsRepository.findById(id).orElse(null);
         if (subjects == null) throw new Exception();
-
-
-
         return subjects;
     }
 
@@ -328,5 +330,23 @@ public class StaticServiceImpl implements StaticService {
             predicates.add(notDeleted);
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
+    }
+
+    @Override
+    public Object getTeacherGroups(Long id) {
+        Teacher teacher = teacherRepository.findByAuthIdAndDeleteIsFalse(id);
+        if (teacher == null) return null;
+        List<Groups> groupsList = groupsRepository.findAllByTeacherIdAndDeleteIsFalse(id);
+        List<GroupsTeacher> groupsTeacherList = new ArrayList<>();
+        for (Groups groups: groupsList){
+            GroupsTeacher groupsTeacher = new GroupsTeacher();
+            groupsTeacher.setId(groups.getId());
+            groupsTeacher.setName(groups.getName());
+            groupsTeacher.setPrice(groups.getPrice());
+            int soni = activationRepository.findAllByGroupIdAndDeleteIsFalse(groups.getId()).size();
+            groupsTeacher.setStudents(soni);
+            groupsTeacherList.add(groupsTeacher);
+        }
+        return groupsTeacherList;
     }
 }

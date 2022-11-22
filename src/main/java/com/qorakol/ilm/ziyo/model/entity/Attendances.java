@@ -24,6 +24,9 @@ public class Attendances {
     @Column(name = "activation_id")
     private Long activationId;
 
+    @Column(name = "free_lesson")
+    private boolean freeLesson = false;
+
     @Temporal(TemporalType.DATE)
     @CreatedDate
     @Column

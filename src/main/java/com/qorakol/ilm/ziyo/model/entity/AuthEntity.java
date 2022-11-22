@@ -13,11 +13,9 @@ public class AuthEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private Long id;
 
     @Column(name = "login", nullable = false, unique = true)
-    @JsonIgnore
     private String login;
 
     @Column(name = "password", nullable = false)
@@ -33,7 +31,6 @@ public class AuthEntity {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "role_id", nullable = false, insertable = false, updatable = false)
-    @JsonIgnore
     private Roles roles;
 
 }

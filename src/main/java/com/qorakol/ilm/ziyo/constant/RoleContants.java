@@ -5,5 +5,6 @@ public enum RoleContants {
     STUDENT,
     TEACHER,
     ADMIN,
-    SUPER_ADMIN
+    SUPER_ADMIN,
+    MODERATOR
 }

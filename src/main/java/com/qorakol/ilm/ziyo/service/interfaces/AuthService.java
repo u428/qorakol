@@ -19,4 +19,6 @@ public interface AuthService extends UserDetailsService {
     void addAdmin(AdminDto adminDto) throws Exception;
 
     void addRole();
+
+    void changePassword(String password, Long id);
 }

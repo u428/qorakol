@@ -3,13 +3,9 @@ package com.qorakol.ilm.ziyo.service;
 import com.qorakol.ilm.ziyo.constant.RoleContants;
 import com.qorakol.ilm.ziyo.constant.StudentStatus;
 import com.qorakol.ilm.ziyo.model.dto.AdminDto;
-import com.qorakol.ilm.ziyo.model.dto.RegStudentDto;
-import com.qorakol.ilm.ziyo.model.dto.SToGroup;
-import com.qorakol.ilm.ziyo.model.dto.StudentLogin;
 import com.qorakol.ilm.ziyo.model.entity.*;
 import com.qorakol.ilm.ziyo.repository.*;
 import com.qorakol.ilm.ziyo.service.interfaces.AuthService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -119,6 +115,15 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    public void changePassword(String password, Long authId) {
+        AuthEntity authEntity = authRepository.findById(authId).get();
+        if (authEntity == null) throw new UsernameNotFoundException("authId");
+
+        authEntity.setPassword(bCryptPasswordEncoder.encode(password));
+        authRepository.save(authEntity);
+    }
+
+    @Override
     public void addRole(){
         Roles roles = new Roles();
         roles.setLevel(1);
@@ -130,12 +135,16 @@ public class AuthServiceImpl implements AuthService {
         roleRepository.save(roles2);
         Roles roles3 = new Roles();
         roles3.setLevel(3);
-        roles3.setName(RoleContants.TEACHER);
+        roles3.setName(RoleContants.MODERATOR);
         roleRepository.save(roles3);
         Roles roles4 = new Roles();
         roles4.setLevel(4);
-        roles4.setName(RoleContants.STUDENT);
+        roles4.setName(RoleContants.TEACHER);
         roleRepository.save(roles4);
+        Roles roles5 = new Roles();
+        roles5.setLevel(5);
+        roles5.setName(RoleContants.STUDENT);
+        roleRepository.save(roles5);
         Language language = new Language();
         language.setName("English");
         Language language2 = new Language();
@@ -152,12 +161,27 @@ public class AuthServiceImpl implements AuthService {
         authEntity.setRolesId(roles2.getId());
         authRepository.save(authEntity);
 
-        Student student = new Student();
-        student.setStatus(StudentStatus.YANGI);
-        student.setFirstName("Admin");
-        student.setLastName("Admin");
-        student.setAuthId(authEntity.getId());
-        studentRepository.save(student);
+        Teacher teacher = new Teacher();
+        teacher.setFirstName("Admin");
+        teacher.setLastName("Admin");
+        teacher.setDelete(true);
+        teacher.setAuthId(authEntity.getId());
+        teacherRepository.save(teacher);
+
+        AuthEntity authEntity2 = new AuthEntity();
+        authEntity2.setLogin("super_admin");
+        authEntity2.setPassword(bCryptPasswordEncoder.encode("super_admin"));
+        authEntity2.setRolesId(roles.getId());
+        authRepository.save(authEntity2);
+
+        Teacher superadmin = new Teacher();
+        superadmin.setFirstName("Admin");
+        superadmin.setLastName("Admin");
+        superadmin.setDelete(true);
+        superadmin.setAuthId(authEntity.getId());
+        teacherRepository.save(superadmin);
+
+
 
     }
 }

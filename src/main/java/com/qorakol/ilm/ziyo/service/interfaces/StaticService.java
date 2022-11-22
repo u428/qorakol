@@ -60,4 +60,6 @@ public interface StaticService {
     Object viewTeacher(Long id) throws Exception;
 
     Object getStatistic();
+
+    Object getTeacherGroups(Long id);
 }
