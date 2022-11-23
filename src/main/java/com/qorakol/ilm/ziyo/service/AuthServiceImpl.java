@@ -162,8 +162,8 @@ public class AuthServiceImpl implements AuthService {
         authRepository.save(authEntity);
 
         Teacher teacher = new Teacher();
-        teacher.setFirstName("Admin");
-        teacher.setLastName("Admin");
+        teacher.setFirstName("Admin2");
+        teacher.setLastName("Admin2");
         teacher.setDelete(true);
         teacher.setAuthId(authEntity.getId());
         teacherRepository.save(teacher);
@@ -175,8 +175,8 @@ public class AuthServiceImpl implements AuthService {
         authRepository.save(authEntity2);
 
         Teacher superadmin = new Teacher();
-        superadmin.setFirstName("Admin");
-        superadmin.setLastName("Admin");
+        superadmin.setFirstName("Admin3");
+        superadmin.setLastName("Admin3");
         superadmin.setDelete(true);
         superadmin.setAuthId(authEntity.getId());
         teacherRepository.save(superadmin);
