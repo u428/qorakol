@@ -62,4 +62,6 @@ public interface StaticService {
     Object getStatistic();
 
     Object getTeacherGroups(Long id);
+
+    List getStudentHistoryAttendance(Long idGroup, Long idStudent);
 }

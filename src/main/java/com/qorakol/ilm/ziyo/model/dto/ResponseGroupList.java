@@ -17,6 +17,8 @@ public class ResponseGroupList {
 
     private int lessonPayed;
 
+    private long deposite;
+
     private long attendance;
 
 }

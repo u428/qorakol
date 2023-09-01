@@ -349,4 +349,12 @@ public class StaticServiceImpl implements StaticService {
         }
         return groupsTeacherList;
     }
+
+
+    @Override
+    public List<Attendances> getStudentHistoryAttendance(Long idGroup, Long idStudent) {
+        Activation activation = activationRepository.findByStudentIdAndGroupId(idStudent, idGroup);
+        List<Attendances> list = attendanceRepository.findAllByActivationIdAndDeleteIsFalse(activation.getId());
+        return list;
+    }
 }

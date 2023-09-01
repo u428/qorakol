@@ -216,5 +216,17 @@ public class StaticController {
         }
     }
 
+    @GetMapping(path = "/history-student")
+    public ResponseEntity historyStudent(
+            @RequestParam(name = "idGroup") Long idGroup,
+            @RequestParam(name = "idStudent") Long idStudent
+    ){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getStudentHistoryAttendance(idGroup, idStudent));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("ERROR");
+        }
+    }
+
 
 }

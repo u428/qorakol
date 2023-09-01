@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.Subject;
 import java.util.*;
 
 @Service
@@ -33,8 +34,10 @@ public class DependServiceImpl implements DependService {
     private final AuthRepository authRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RoleRepository roleRepository;
+    private final SubjectsRepository subjectsRepository;
 
-    public DependServiceImpl(StudentRepository studentRepository, GroupsRepository groupsRepository, ActivationRepository activationRepository, ActivationDetailsRepository activationDetailsRepository, AttendanceRepository attendanceRepository, AuthRepository authRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository) {
+    public DependServiceImpl(StudentRepository studentRepository, GroupsRepository groupsRepository, ActivationRepository activationRepository, ActivationDetailsRepository activationDetailsRepository, AttendanceRepository attendanceRepository, AuthRepository authRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository,
+                             SubjectsRepository subjectsRepository) {
         this.studentRepository = studentRepository;
         this.groupsRepository = groupsRepository;
         this.activationRepository = activationRepository;
@@ -43,6 +46,7 @@ public class DependServiceImpl implements DependService {
         this.authRepository = authRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.roleRepository = roleRepository;
+        this.subjectsRepository = subjectsRepository;
     }
 
     @Override
@@ -86,6 +90,12 @@ public class DependServiceImpl implements DependService {
         student.setDateBirth(DateParser.TryParse(regStudentDto.getBirthDate(), Common.uzbekistanDateFormat));
         student.setCreatedAt(new Date());
         student.setStatus(StudentStatus.YANGI);
+        List<Subjects> subjectsList = new ArrayList<>();
+        for (int i =0; i < regStudentDto.getSubjectsId().size(); i++){
+            Subjects subjects = subjectsRepository.findByIdAndDeleteIsFalse(regStudentDto.getSubjectsId().get(i));
+            subjectsList.add(subjects);
+        }
+        student.setSubjects(subjectsList);
         Long result = studentRepository.save(student).getId();
         return result;
     }
@@ -174,6 +184,7 @@ public class DependServiceImpl implements DependService {
 
             long lessonAttendance = attendanceRepository.countAllByActivationIdAndDeleteIsFalse(activation.getId());
             responseGroupList.setAttendance(lessonAttendance);
+            responseGroupList.setDeposite(activationDetails.getLessonPayed());
             lists.add(responseGroupList);
         }
         return lists;

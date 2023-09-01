@@ -1,6 +1,7 @@
 package com.qorakol.ilm.ziyo.model.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -17,10 +18,12 @@ public class Attendances {
     @Column(name = "id")
     private Long id;
 
+    @JsonIgnore
     private boolean delete = false;
 
     private boolean counted = false;
 
+    @JsonIgnore
     @Column(name = "activation_id")
     private Long activationId;
 
@@ -32,6 +35,7 @@ public class Attendances {
     @Column
     private Date time;
 
+    @JsonIgnore
     @ManyToOne()
     @JoinColumn(name = "activation_id", insertable = false, updatable = false)
     private Activation activation;

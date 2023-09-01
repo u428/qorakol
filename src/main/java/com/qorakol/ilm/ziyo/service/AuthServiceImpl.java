@@ -178,7 +178,7 @@ public class AuthServiceImpl implements AuthService {
         superadmin.setFirstName("Admin3");
         superadmin.setLastName("Admin3");
         superadmin.setDelete(true);
-        superadmin.setAuthId(authEntity.getId());
+        superadmin.setAuthId(authEntity2.getId());
         teacherRepository.save(superadmin);
 
 

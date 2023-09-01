@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 
 @Data
@@ -22,5 +23,7 @@ public class RegStudentDto {
     public String qTelNumber;
 
     public String description;
+
+    public List<Long> subjectsId;
 
 }

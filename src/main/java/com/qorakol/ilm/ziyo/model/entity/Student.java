@@ -62,7 +62,11 @@ public class Student {
     @OneToMany(fetch = FetchType.LAZY)
     private List<Activation> activation;
 
-
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "student_interest_subjects",
+            joinColumns = {@JoinColumn(name = "student_id")},
+            inverseJoinColumns = {@JoinColumn(name = "subject_id")})
+    private List<Subjects> subjects;
 
 
 
